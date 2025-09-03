@@ -18,7 +18,9 @@
     'depends': ['base','website'],
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'security/correspondence_security.xml',
+        'views/menu_views.xml',
     ],
     'demo': [
     ],

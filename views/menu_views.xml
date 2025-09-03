@@ -1,0 +1,52 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.actions.act_window" id="department_action">
+      <field name="name">Departamentos</field>
+      <field name="res_model">correspondence_department</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="web_drivers.action_window">
+      <field name="name">web_drivers window</field>
+      <field name="res_model">web_drivers.web_drivers</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="web_drivers.action_server">
+      <field name="name">web_drivers server</field>
+      <field name="model_id" ref="model_web_drivers_web_drivers"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+    <menuitem name="Correspondencia" id="correspondence_menu"/>
+
+    <!-- Configuracion menu item -->
+    <menuitem name="Configuracion" id="correspondence_menu_config" parent="correspondence_menu"/>
+    <menuitem name="Departamentos" id="correspondence_menu_config_department" parent="correspondence_menu_config"
+              action="department_action"/>
+
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="web_drivers.menu_1_list" parent="web_drivers.menu_1"
+              action="web_drivers.action_window"/>
+    <menuitem name="Server to list" id="web_drivers" parent="web_drivers.menu_2"
+              action="web_drivers.action_server"/>
+-->
+  </data>
+</odoo>
