@@ -8,8 +8,10 @@ class correspondence(models.Model):
     _name = 'correspondence'
     _description = 'correspondence'
 
-    name = fields.Char('Nombre')
-    department = fields.Many2one('correspondence_department', string='Departamento')
+    name = fields.Char('Asunto')
+    type = fields.Many2one('correspondence_type', string='Tipo de Correspondencia')
+    department_transmitter = fields.Many2one('correspondence_department', string='Emisor')
+    department_receiver = fields.Many2many('correspondence_department', string='Receptores')
 
 #     value = fields.Integer()
 #     value2 = fields.Float(compute="_value_pc", store=True)
