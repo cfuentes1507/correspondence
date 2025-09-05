@@ -1,13 +1,14 @@
+
 # -*- coding: utf-8 -*-
 
-# from odoo import models, fields, api
+from odoo import models, fields
 
 
-# class web_drivers(models.Model):
-#     _name = 'web_drivers.web_drivers'
-#     _description = 'web_drivers.web_drivers'
+class correspondence_type(models.Model):
+    _name = 'correspondence_type'
+    _description = 'correspondence type'
 
-#     name = fields.Char()
+    name = fields.Char('Nombre')
 #     value = fields.Integer()
 #     value2 = fields.Float(compute="_value_pc", store=True)
 #     description = fields.Text()

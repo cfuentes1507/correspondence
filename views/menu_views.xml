@@ -2,9 +2,22 @@
   <data>
     <!-- explicit list view definition -->
 
+    <record model="ir.actions.act_window" id="correspondence_action">
+      <field name="name">Correspondencia</field>
+      <field name="res_model">correspondence</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
     <record model="ir.actions.act_window" id="department_action">
       <field name="name">Departamentos</field>
       <field name="res_model">correspondence_department</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="type_action">
+      <field name="name">Tipos de Correspondencia</field>
+      <field name="res_model">correspondence_type</field>
       <field name="view_mode">tree,form</field>
     </record>
 
@@ -36,10 +49,16 @@
     <!-- Top menu item -->
     <menuitem name="Correspondencia" id="correspondence_menu"/>
 
+    <!-- Correspondence menu item -->
+    <menuitem name="Correspondencia" id="correspondence" parent="correspondence_menu"
+              action="correspondence_action" sequence="1"/>
+
     <!-- Configuracion menu item -->
-    <menuitem name="Configuracion" id="correspondence_menu_config" parent="correspondence_menu"/>
+    <menuitem name="Configuracion" id="correspondence_menu_config" parent="correspondence_menu" sequence="2"/>
     <menuitem name="Departamentos" id="correspondence_menu_config_department" parent="correspondence_menu_config"
               action="department_action"/>
+    <menuitem name="Tipos de Correspondencia" id="correspondence_menu_config_type" parent="correspondence_menu_config"
+              action="type_action"/>
 
     <!-- actions -->
 <!--

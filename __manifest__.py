@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "web_drivers",
+    'name': "Correspondencia Institucional",
     'summary': """
-        Este modulo tiene como proposito ofrecer Controladores para el Website
+        Esto es un modulo diseñado para Odoo 15. Su funcion basica es el correcto envio, recepcion y almacenamiento, de la correspondencia institucional.
     """,
     'description': """
-        Controladores para el Website
+        Correspondencia Institucional
     """,
     'author': "Carlos Fuentes (CFuentes.Dev)",
     'website': "",
@@ -15,11 +15,11 @@
     'category': 'Uncategorized',
     'version': '0.1',
     # any module necessary for this one to work correctly
-    'depends': ['base','website'],
+    'depends': ['base'],
     # always loaded
     'data': [
-        'security/ir.model.access.csv',
         'security/correspondence_security.xml',
+        'security/ir.model.access.csv',
         'views/menu_views.xml',
     ],
     'demo': [
