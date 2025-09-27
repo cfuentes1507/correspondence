@@ -1,0 +1,77 @@
+<odoo>
+    <data>
+        <record id="correspondence_document_view_form" model="ir.ui.view">
+            <field name="name">correspondence_document.form</field>
+            <field name="model">correspondence_document</field>
+            <field name="arch" type="xml">
+                <form string="Documento de Correspondencia">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="Asunto del documento"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="correlative"/>
+                                <field name="author_id"/>
+                                <field name="recipient_department_id"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="tipo"/>
+                                <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,signed,sent,read"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Detalles">
+                                <field name="descripcion"/>
+                            </page>
+                            <page string="Observaciones">
+                                <field name="observaciones"/>
+                            </page>
+                            <page string="Adjuntos" name="attachments">
+                                <group>
+                                    <field name="document_file" filename="file_name"/>
+                                    <field name="file_name" invisible="1"/>
+                                </group>
+                            </page>
+                            <page string="Respuestas">
+                                <field name="child_document_ids"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="correspondence_document_view_tree" model="ir.ui.view">
+            <field name="name">correspondence_document.tree</field>
+            <field name="model">correspondence_document</field>
+            <field name="arch" type="xml">
+                <tree string="Correspondencia">
+                    <field name="correlative"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="author_id"/>
+                    <field name="recipient_department_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="correspondence_document_action" model="ir.actions.act_window">
+            <field name="name">Documentos de Correspondencia</field>
+            <field name="res_model">correspondence_document</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="correspondence_menu_root" name="Correspondencia" sequence="10"/>
+        <menuitem id="correspondence_documents_menu" name="Documentos" 
+                  parent="correspondence_menu_root" action="correspondence_document_action" sequence="10"/>
+    </data>
+</odoo>

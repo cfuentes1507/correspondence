@@ -6,7 +6,7 @@ from odoo import models, fields
 
 class correspondence_type(models.Model):
     _name = 'correspondence_type'
-    _description = 'correspondence type'
+    _description = 'Tipo de Correspondencia'
 
     name = fields.Char('Nombre')
 #     value = fields.Integer()

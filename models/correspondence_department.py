@@ -5,9 +5,9 @@ from odoo import models, fields
 
 class correspondence_department(models.Model):
     _name = 'correspondence_department'
-    _description = 'Department'
+    _description = 'Departamento de Correspondencia'
 
-    name = fields.Char('Nombre')
+    name = fields.Char(string='Nombre del Departamento', required=True)
 #     value = fields.Integer()
 #     value2 = fields.Float(compute="_value_pc", store=True)
 #     description = fields.Text()

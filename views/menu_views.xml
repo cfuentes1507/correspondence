@@ -4,7 +4,7 @@
 
     <record model="ir.actions.act_window" id="correspondence_action">
       <field name="name">Correspondencia</field>
-      <field name="res_model">correspondence</field>
+      <field name="res_model">correspondence_document</field>
       <field name="view_mode">tree,form</field>
     </record>
 
