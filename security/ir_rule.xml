@@ -4,7 +4,7 @@
 
         <record id="correspondence_document_user_rule" model="ir.rule">
             <field name="name">Documentos de correspondencia por usuario</field>
-            <field name="model_id" ref="model_correspondence_document"/> 
+            <field name="model_id" ref="model_correspondence_document"/>
             <field name="groups" eval="[(4, ref('correspondence.correspondence_group_user'))]"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
@@ -12,11 +12,6 @@
             <field name="perm_unlink" eval="1"/>
             <field name="domain_force">['|', ('author_id', '=', user.id), ('recipient_department_ids', '=', user.department_id.id)]</field>
         </record>
-
-        <record model="ir.rule" id="correspondence_document_user_rule">
-            <field name="groups" eval="[(3, ref('correspondence.correspondence_group_admin'))]"/>
-        </record>
-
 
         <record id="correspondence_document_admin_rule" model="ir.rule">
             <field name="name">Todos los documentos para administrador</field>

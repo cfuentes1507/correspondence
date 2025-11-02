@@ -1,13 +1,15 @@
 
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 def _get_recipient_department_domain(self):
     """Devuelve un dominio para excluir el departamento del usuario actual."""
-    if self.env.user.department_id:
+    # Esta restricción solo debe aplicarse al crear un nuevo documento,
+    # no al visualizar registros existentes, para evitar conflictos con las reglas de seguridad.
+    if self.env.context.get('form_view_ref') and self.env.user.department_id:
         return [('id', '!=', self.env.user.department_id.id)]
-    return []
+    return [] # Sin restricción al ver listas o registros existentes
 
 class correspondence_document(models.Model):
     _name = 'correspondence_document'
