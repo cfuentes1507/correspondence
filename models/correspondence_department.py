@@ -15,13 +15,8 @@ class correspondence_department(models.Model):
     @api.depends('director_history_ids.director_id', 'director_history_ids.date_start', 'director_history_ids.date_end')
     def _compute_current_director(self):
         for department in self:
-            # Búsqueda optimizada del director actual
-            today = fields.Date.today()
-            current_director_record = self.env['correspondence.department.director'].search([
-                ('department_id', '=', department.id),
-                ('date_start', '<=', today),
-                '|',
-                ('date_end', '=', False),
-                ('date_end', '>=', today)
-            ], order='date_start desc', limit=1)
-            department.current_director_id = current_director_record.director_id if current_director_record else False
+            # Busca el director actual (sin fecha de fin o con fecha de fin en el futuro)
+            current_director = department.director_history_ids.filtered(
+                lambda h: not h.date_end or h.date_end >= fields.Date.today()
+            )
+            department.current_director_id = current_director[0].director_id if current_director else False

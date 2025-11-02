@@ -28,18 +28,10 @@ class DepartmentDirector(models.Model):
             domain = [
                 ('id', '!=', record.id),
                 ('department_id', '=', record.department_id.id),
-                # Un registro existente no puede terminar antes de que el nuevo comience
-                # Y no puede comenzar después de que el nuevo termine.
-                # Esto previene cualquier tipo de solapamiento.
+                ('date_end', '>=', record.date_start), # Un registro existente termina después de que el nuevo comienza
             ]
-
-            # Caso 1: El nuevo registro no tiene fecha de fin (es indefinido)
-            # Buscamos cualquier otro registro que no tenga fecha de fin o que termine después de que el nuevo comience.
-            overlap_domain = list(domain) # Copiamos el dominio base
             if record.date_end:
-                overlap_domain.extend(['|', ('date_end', '=', False), ('date_end', '>', record.date_start)])
-                overlap_domain.append(('date_start', '<', record.date_end))
-            else: # El nuevo registro es indefinido
-                overlap_domain.append(('date_end', '>=', record.date_start))
-            if self.search_count(overlap_domain) > 0:
+                domain.append(('date_start', '<=', record.date_end)) # Y un registro existente comienza antes de que el nuevo termine
+            
+            if self.search_count(domain) > 0:
                 raise ValidationError('No puede haber dos directores en el mismo período de tiempo para un departamento.')
