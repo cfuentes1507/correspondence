@@ -52,12 +52,5 @@
     <menuitem name="Tipos de Correspondencia" id="correspondence_menu_config_type" parent="correspondence_menu_config"
               action="type_action"/>
 
-    <!-- actions -->
-<!--
-    <menuitem name="List" id="web_drivers.menu_1_list" parent="web_drivers.menu_1"
-              action="web_drivers.action_window"/>
-    <menuitem name="Server to list" id="web_drivers" parent="web_drivers.menu_2"
-              action="web_drivers.action_server"/>
--->
   </data>
 </odoo>

@@ -7,3 +7,6 @@ access_correspondence_department_admin,Acceso de Admin a Departamentos,model_cor
 
 access_correspondence_type_user,Acceso de Usuario a Tipos de Correspondencia,model_correspondence_type,correspondence.correspondence_group_user,1,0,0,0
 access_correspondence_type_admin,Acceso de Admin a Tipos de Correspondencia,model_correspondence_type,correspondence.correspondence_group_admin,1,1,1,1
+
+access_department_director_user,Acceso de Usuario a Historial de Directores,model_correspondence_department_director,correspondence.correspondence_group_user,1,0,0,0
+access_department_director_admin,Acceso de Admin a Historial de Directores,model_correspondence_department_director,correspondence.correspondence_group_admin,1,1,1,1

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class correspondence_department(models.Model):
@@ -9,11 +9,14 @@ class correspondence_department(models.Model):
 
     name = fields.Char(string='Nombre del Departamento', required=True)
     user_ids = fields.One2many('res.users', 'department_id', string='Usuarios')
-#     value = fields.Integer()
-#     value2 = fields.Float(compute="_value_pc", store=True)
-#     description = fields.Text()
-#
-#     @api.depends('value')
-#     def _value_pc(self):
-#         for record in self:
-#             record.value2 = float(record.value) / 100
+    director_history_ids = fields.One2many('correspondence.department.director', 'department_id', string='Historial de Directores')
+    current_director_id = fields.Many2one('res.users', string='Director Actual', compute='_compute_current_director', store=True)
+
+    @api.depends('director_history_ids.director_id', 'director_history_ids.date_start', 'director_history_ids.date_end')
+    def _compute_current_director(self):
+        for department in self:
+            # Busca el director actual (sin fecha de fin o con fecha de fin en el futuro)
+            current_director = department.director_history_ids.filtered(
+                lambda h: not h.date_end or h.date_end >= fields.Date.today()
+            )
+            department.current_director_id = current_director[0].director_id if current_director else False

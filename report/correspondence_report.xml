@@ -37,9 +37,14 @@
                                     <p class="m-0" t-field="doc.send_department_id"/>
                                 </div>
                                 <div class="col-auto col-3 mw-100 mb-2">
+                                    <strong>Director Remitente:</strong>
+                                    <p class="m-0" t-field="doc.send_department_id.current_director_id"/>
+                                </div>
+                                <div class="col-auto col-3 mw-100 mb-2">
                                     <strong>Departamentos Destinatarios:</strong>
                                     <p class="m-0" t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/>
                                 </div>
+
                             </div>
 
                             <h4>Descripción</h4>
