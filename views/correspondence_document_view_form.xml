@@ -20,13 +20,15 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="Asunto del documento" attrs="{'readonly': [('state', '!=', 'draft')]}"/></h1>
                         </div>
+                        <group attrs="{'invisible': [('parent_document_id', '=', False)]}">
+                            <field string="En respuesta a:" name="parent_document_id" readonly="1"/>
+                        </group>
                         <group>
-                            <field name="parent_document_id" readonly="1" attrs="{'invisible': [('parent_document_id', '=', False)]}"/>
                             <group>
                                 <field name="correlative" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="author_id" invisible="1"/>
                                 <field name="send_department_id"/>
-                                <field name="recipient_department_ids" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="recipient_department_ids" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('id', '!=', send_department_id)]"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

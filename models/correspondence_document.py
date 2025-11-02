@@ -90,10 +90,21 @@ class correspondence_document(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'correspondence_document',
             'view_mode': 'form',
-            'target': 'new',  # Abrir en una ventana emergente (pop-up)
+            'target': 'current',  # Abrir en la ventana principal
             'context': ctx,
         }
 
+    @api.model
+    def create(self, vals):
+        # Primero, creamos el nuevo documento de correspondencia
+        new_document = super(correspondence_document, self).create(vals)
+
+        # Si este nuevo documento es una respuesta a otro (tiene un padre)
+        if new_document.parent_document_id:
+            # Cambiamos el estado del documento padre a 'Respondido'
+            new_document.parent_document_id.write({'state': 'replied'})
+
+        return new_document
 
     document_file = fields.Binary(string='Archivo', attachment=True, copy=False, help="El documento firmado y sellado.")
     file_name = fields.Char(string="Nombre de Archivo")
