@@ -23,7 +23,7 @@ class correspondence_document(models.Model):
     send_department_id = fields.Many2one(related='author_id.department_id', string="Departamento Remitente", store=True, readonly=True)
     correspondence_type = fields.Many2one('correspondence_type', string='Tipo de Correspondencia', required=True)
     recipient_department_ids = fields.Many2many('correspondence_department', string='Departamentos Destinatarios', required=True, domain=_get_recipient_department_domain)
-    descripcion = fields.Text(string='Descripción', required=True)
+    descripcion = fields.Html(string='Descripción', required=True)
     observaciones = fields.Text(string='Observaciones')
 
     state = fields.Selection([
@@ -48,7 +48,16 @@ class correspondence_document(models.Model):
             doc.already_read_by_my_department = user_department in doc.read_status_ids.mapped('department_id')
 
     def action_sign(self):
-        self.write({'state': 'signed'})
+        return {
+            'name': _('Subir Documento Firmado'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'correspondence.upload.signed.document.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_active_id': self.id,
+            }
+        }
 
     def action_send(self):
         self.write({'state': 'sent'})

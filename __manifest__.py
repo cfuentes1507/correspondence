@@ -18,6 +18,7 @@
         'data/correspondence_type_data.xml',
         'security/ir_rule.xml',
         'security/ir.model.access.csv',
+        'wizard/upload_signed_document_wizard_view.xml',
         'views/menu_views.xml',
         'views/correspondence_department_view.xml',
         'views/correspondence_document_view_form.xml',

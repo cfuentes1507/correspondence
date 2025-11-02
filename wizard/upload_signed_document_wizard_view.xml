@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_upload_signed_document_wizard_form" model="ir.ui.view">
+            <field name="name">correspondence.upload.signed.document.wizard.form</field>
+            <field name="model">correspondence.upload.signed.document.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Subir Documento Firmado">
+                    <group>
+                        <field name="signed_file" filename="file_name"/>
+                        <field name="file_name"/>
+                    </group>
+                    <footer>
+                        <button name="upload_and_sign" string="Confirmar y Firmar" type="object" class="oe_highlight"/>
+                        <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
