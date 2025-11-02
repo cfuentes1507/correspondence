@@ -5,39 +5,49 @@
             <field name="model">correspondence_document</field>
             <field name="arch" type="xml">
                 <form string="Documento de Correspondencia">
+                    <header>
+                        <button name="action_generate_report" string="Generar Archivo" type="object" states="draft" class="btn-secondary"/>
+                        <button name="action_sign" string="Firmar" type="object" states="draft" class="oe_highlight"/>
+                        <field name="is_recipient_user" invisible="1"/>
+                        <button name="action_send" string="Enviar" type="object" states="signed" class="oe_highlight"/>
+                        <button name="action_read" string="Marcar como Leído" type="object" states="sent" attrs="{'invisible': [('is_recipient_user', '=', False)]}"/>
+                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_recipient_user', '=', False), ('state', 'not in', ['sent', 'read'])]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,signed,sent,read"/>
+                    </header>
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" placeholder="Asunto del documento"/></h1>
+                            <h1><field name="name" placeholder="Asunto del documento" attrs="{'readonly': [('state', '!=', 'draft')]}"/></h1>
                         </div>
                         <group>
+                            <field name="parent_document_id" readonly="1" attrs="{'invisible': [('parent_document_id', '=', False)]}"/>
                             <group>
-                                <field name="correlative"/>
+                                <field name="correlative" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="author_id" invisible="1"/>
                                 <field name="send_department_id"/>
-                                <field name="recipient_department_id"/>
+                                <field name="recipient_department_ids" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
-                                <field name="date"/>
-                                <field name="correspondence_type"/>
-                                <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,signed,sent,read"/>
+                                <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="correspondence_type" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Descripción">
-                                <field name="descripcion"/>
+                                <field name="descripcion" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </page>
                             <page string="Observaciones">
-                                <field name="observaciones"/>
+                                <field name="observaciones" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </page>
                             <page string="Adjuntos" name="attachments">
                                 <group>
-                                    <field name="document_file" filename="file_name"/>
+                                    <field name="document_file" filename="file_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="file_name" invisible="1"/>
                                 </group>
                             </page>
                             <page string="Respuestas">
-                                <field name="child_document_ids"/>
+                                <field name="child_document_ids" force_save="1" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_recipient_user', '=', False)]}">
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -59,7 +69,7 @@
                     <field name="name"/>
                     <field name="date"/>
                     <field name="send_department_id"/>
-                    <field name="recipient_department_id"/>
+                    <field name="recipient_department_ids" widget="many2many_tags"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -70,9 +80,9 @@
             <field name="model">correspondence_document</field>
             <field name="arch" type="xml">
                 <search>
-                    <filter string="Mi Departamento" name="my_department" context="{'group_by': 'recipient_department_id'}"/>
+                    <filter string="Mi Departamento" name="my_department" context="{'my_department_filter': True}"/>
                     <separator/>
-                    <field name="recipient_department_id" string="Departamento Destinatario"/>
+                    <field name="recipient_department_ids" string="Departamento Destinatario"/>
                 </search>
             </field>
         </record>

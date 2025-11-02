@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Acción del Informe -->
+        <record id="action_report_correspondence_document" model="ir.actions.report">
+            <field name="name">Documento de Correspondencia</field>
+            <field name="model">correspondence_document</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">correspondence.report_correspondence_document_template</field>
+            <field name="report_file">correspondence.report_correspondence_document_template</field>
+            <field name="print_report_name">(object.name)</field>
+            <field name="binding_model_id" eval="False"/>
+        </record>
+
+        <!-- Plantilla QWeb del Informe -->
+        <template id="report_correspondence_document_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            <h2 class="mt16">
+                                <strong>Correspondencia: <span t-field="doc.name"/></strong>
+                            </h2>
+
+                            <div class="row mt32 mb32" id="informations">
+                                <div class="col-auto col-3 mw-100 mb-2">
+                                    <strong>Correlativo:</strong>
+                                    <p class="m-0" t-field="doc.correlative"/>
+                                </div>
+                                <div class="col-auto col-3 mw-100 mb-2">
+                                    <strong>Fecha:</strong>
+                                    <p class="m-0" t-field="doc.date"/>
+                                </div>
+                                <div class="col-auto col-3 mw-100 mb-2">
+                                    <strong>Departamento Remitente:</strong>
+                                    <p class="m-0" t-field="doc.send_department_id"/>
+                                </div>
+                                <div class="col-auto col-3 mw-100 mb-2">
+                                    <strong>Departamentos Destinatarios:</strong>
+                                    <p class="m-0" t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/>
+                                </div>
+                            </div>
+
+                            <h4>Descripción</h4>
+                            <p t-field="doc.descripcion"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

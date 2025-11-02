@@ -12,8 +12,8 @@
       <field name="name">Correspondencia Recibida</field>
       <field name="res_model">correspondence_document</field>
       <field name="view_mode">tree,form</field>
-      <field name="domain">[('recipient_department_id', '!=', False), ('state', 'in', ['sent', 'read'])]</field>
-      <field name="context">{'default_recipient_department_id': 'search_default_my_department', 'create': False}</field>
+      <field name="domain">[('recipient_department_ids', '!=', False), ('state', 'in', ['sent', 'read'])]</field>
+      <field name="context">{'default_recipient_department_ids': 'search_default_my_department', 'create': False}</field>
     </record>
 
     <record model="ir.actions.act_window" id="correspondence_action_sent">
@@ -46,7 +46,7 @@
     <menuitem name="Recibidas" id="correspondence_menu_received" parent="correspondence"
               action="correspondence_action_received" />
     <!-- Configuracion menu item -->
-    <menuitem name="Configuracion" id="correspondence_menu_config" parent="correspondence_menu" sequence="2"/>
+    <menuitem name="Configuracion" id="correspondence_menu_config" parent="correspondence_menu" sequence="2" groups="correspondence.correspondence_group_admin"/>
     <menuitem name="Departamentos" id="correspondence_menu_config_department" parent="correspondence_menu_config"
               action="department_action"/>
     <menuitem name="Tipos de Correspondencia" id="correspondence_menu_config_type" parent="correspondence_menu_config"

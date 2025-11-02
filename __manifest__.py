@@ -18,7 +18,8 @@
         'security/ir.model.access.csv',
         'views/menu_views.xml',
         'views/correspondence_department_view.xml',
-        'views/correspondence_document_view_form.xml'
+        'views/correspondence_document_view_form.xml',
+        'report/correspondence_report.xml',
     ],
     'demo': [
     ],
