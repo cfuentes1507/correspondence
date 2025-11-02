@@ -12,8 +12,8 @@
       <field name="name">Correspondencia Recibida</field>
       <field name="res_model">correspondence_document</field>
       <field name="view_mode">tree,form</field>
-      <field name="domain">[('recipient_department_ids', '!=', False), ('state', 'in', ['sent', 'read'])]</field>
-      <field name="context">{'default_recipient_department_ids': 'search_default_my_department', 'create': False}</field>
+      <field name="domain">[('recipient_department_ids.user_ids', '=', uid), ('state', 'in', ['sent', 'replied'])]</field>
+      <field name="context">{'create': False}</field>
     </record>
 
     <record model="ir.actions.act_window" id="correspondence_action_sent">

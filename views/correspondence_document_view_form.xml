@@ -8,11 +8,12 @@
                     <header>
                         <button name="action_generate_report" string="Generar Archivo" type="object" states="draft" class="btn-secondary"/>
                         <button name="action_sign" string="Firmar" type="object" states="draft" class="oe_highlight"/>
-                        <field name="is_recipient_user" invisible="1"/>
+                        <field name="is_current_user_recipient" invisible="1"/>
+                        <field name="already_read_by_my_department" invisible="1"/>
                         <button name="action_send" string="Enviar" type="object" states="signed" class="oe_highlight"/>
-                        <button name="action_read" string="Marcar como Leído" type="object" states="sent" attrs="{'invisible': [('is_recipient_user', '=', False)]}"/>
-                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_recipient_user', '=', False), ('state', 'not in', ['sent', 'read'])]}"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,signed,sent,read"/>
+                        <button name="action_read" string="Marcar como Leído" type="object" states="sent" class="btn-secondary" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('already_read_by_my_department', '=', True)]}"/>
+                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('state', '!=', 'sent')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,signed,sent,replied"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -46,7 +47,12 @@
                                 </group>
                             </page>
                             <page string="Respuestas">
-                                <field name="child_document_ids" force_save="1" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_recipient_user', '=', False)]}">
+                                <field name="child_document_ids" force_save="1" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_current_user_recipient', '=', False)]}">
+                                </field>
+                            </page>
+                            <page string="Estado de Lectura" name="read_status">
+                                <field name="read_status_ids" readonly="1">
+                                    <tree><field name="department_id"/><field name="read_by_user_id"/><field name="read_date"/></tree>
                                 </field>
                             </page>
                         </notebook>

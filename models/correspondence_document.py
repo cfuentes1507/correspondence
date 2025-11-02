@@ -30,17 +30,22 @@ class correspondence_document(models.Model):
         ('draft', 'Borrador'),
         ('signed', 'Firmado'),
         ('sent', 'Enviado'),
-        ('read', 'Leído'),
         ('replied', 'Respondido')
     ], string='Estado', default='draft', tracking=True)
     
-    is_recipient_user = fields.Boolean(
-        string="Es usuario destinatario", compute='_compute_is_recipient_user')
+    read_status_ids = fields.One2many('correspondence.document.read_status', 'document_id', string='Estados de Lectura')
+    
+    is_current_user_recipient = fields.Boolean(
+        string="¿Usuario actual es destinatario?", compute='_compute_is_current_user_recipient')
+    
+    already_read_by_my_department = fields.Boolean(
+        string="¿Ya leído por mi departamento?", compute='_compute_is_current_user_recipient')
 
-    def _compute_is_recipient_user(self):
+    def _compute_is_current_user_recipient(self):
         for doc in self:
-            # Comprueba si el departamento del usuario actual está en la lista de departamentos destinatarios
-            doc.is_recipient_user = self.env.user.department_id in doc.recipient_department_ids
+            user_department = self.env.user.department_id
+            doc.is_current_user_recipient = user_department in doc.recipient_department_ids
+            doc.already_read_by_my_department = user_department in doc.read_status_ids.mapped('department_id')
 
     def action_sign(self):
         self.write({'state': 'signed'})
@@ -49,7 +54,24 @@ class correspondence_document(models.Model):
         self.write({'state': 'sent'})
 
     def action_read(self):
-        self.write({'state': 'read'})
+        self.ensure_one()
+        user_department = self.env.user.department_id
+
+        # Validación de seguridad: Solo los usuarios de un departamento destinatario pueden marcar como leído.
+        if not user_department or user_department not in self.recipient_department_ids:
+            raise models.ValidationError(_("Solo los usuarios de un departamento destinatario pueden marcar este documento como leído."))
+
+        self.env['correspondence.document.read_status'].create({
+            'document_id': self.id,
+            'department_id': user_department.id,
+            'read_by_user_id': self.env.user.id,
+        })
+
+        # Devolver una acción para recargar la vista y reevaluar los attrs de los botones.
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
     
     def action_generate_report(self):
         return self.env.ref('correspondence.action_report_correspondence_document').report_action(self)
