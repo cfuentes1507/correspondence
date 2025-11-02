@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Datos precargados para Tipos de Correspondencia -->
+
+        <record id="tipo_informe" model="correspondence_type">
+            <field name="name">Informe</field>
+        </record>
+
+        <record id="tipo_memorando" model="correspondence_type">
+            <field name="name">Memorando</field>
+        </record>
+
+        <record id="tipo_circular" model="correspondence_type">
+            <field name="name">Circular</field>
+        </record>
+
+        <record id="tipo_oficio" model="correspondence_type">
+            <field name="name">Oficio</field>
+        </record>
+
+    </data>
+</odoo>

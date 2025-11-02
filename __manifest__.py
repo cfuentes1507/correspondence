@@ -14,6 +14,8 @@
     'depends': ['base','mail'],
     'data': [
         'security/correspondence_security.xml',
+        'data/correspondence_department_data.xml',
+        'data/correspondence_type_data.xml',
         'security/ir_rule.xml',
         'security/ir.model.access.csv',
         'views/menu_views.xml',
