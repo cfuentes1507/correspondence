@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="correspondence_department_view_form">
+            <field name="name">correspondence_department.form</field>
+            <field name="model">correspondence_department</field>
+            <field name="arch" type="xml">
+                <form string="Departamento">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <notebook>
+                            <page string="Usuarios">
+                                <field name="user_ids"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -6,14 +6,8 @@ from odoo import models, fields
 
 class correspondence_type(models.Model):
     _name = 'correspondence_type'
-    _description = 'Tipo de Correspondencia'
+    _description = 'Tipos de Correspondencia'
+    """Modelo para catalogar los diferentes tipos de correspondencia que se pueden generar.
+    Ejemplos: Memorando, Circular, Oficio, etc."""
 
     name = fields.Char('Nombre')
-#     value = fields.Integer()
-#     value2 = fields.Float(compute="_value_pc", store=True)
-#     description = fields.Text()
-#
-#     @api.depends('value')
-#     def _value_pc(self):
-#         for record in self:
-#             record.value2 = float(record.value) / 100

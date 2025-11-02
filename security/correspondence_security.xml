@@ -1,13 +1,35 @@
 <odoo>
-    <!-- explicit list view definition -->
 
     <record model="ir.module.category" id="category_model_correspondence">
-      <field name="name">Correspondencia</field>
+        <field name="name">Correspondencia</field>
+        <field name="description">Permisos de acceso para el módulo de Correspondencia</field>
     </record>
+
+    <record id="correspondence_group_user" model="res.groups">
+        <field name="name">Usuario</field>
+        <field name="category_id" ref="category_model_correspondence"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
     <record id="correspondence_group_admin" model="res.groups">
         <field name="name">Administrador</field>
         <field name="category_id" ref="category_model_correspondence"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('correspondence_group_user'))]"/>
+    </record>
+
+    <record id="view_users_form_inherit_correspondence" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.correspondence</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='access_rights']" position="inside">
+                <group string="Correspondencia">
+                    <group>
+                        <field name="department_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
     </record>
 
 </odoo>

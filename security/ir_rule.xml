@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="correspondence_document_user_rule" model="ir.rule">
+            <field name="name">Documentos de correspondencia por usuario</field>
+            <field name="model_id" ref="model_correspondence_document"/>
+            <field name="groups" eval="[(4, ref('correspondence.correspondence_group_user'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="domain_force">['|', ('author_id', '=', user.id), ('recipient_department_id', '=', user.department_id.id)]</field>
+        </record>
+
+        <record id="correspondence_document_admin_rule" model="ir.rule">
+            <field name="name">Todos los documentos para administrador</field>
+            <field name="model_id" ref="model_correspondence_document"/>
+            <field name="groups" eval="[(4, ref('correspondence.correspondence_group_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,13 +1,27 @@
 <odoo>
   <data>
-    <!-- explicit list view definition -->
-
     <record model="ir.actions.act_window" id="correspondence_action">
-      <field name="name">Correspondencia</field>
+      <field name="name">Todas las Correspondencias</field>
       <field name="res_model">correspondence_document</field>
       <field name="view_mode">tree,form</field>
+      <field name="domain">[]</field>
+      <field name="context">{}</field>
     </record>
 
+    <record model="ir.actions.act_window" id="correspondence_action_received">
+      <field name="name">Correspondencia Recibida</field>
+      <field name="res_model">correspondence_document</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('recipient_department_id', '!=', False), ('state', 'in', ['sent', 'read'])]</field>
+      <field name="context">{'default_recipient_department_id': 'search_default_my_department', 'create': False}</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="correspondence_action_sent">
+      <field name="name">Correspondencia Enviada</field>
+      <field name="res_model">correspondence_document</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('author_id', '=', uid)]</field>
+    </record>
 
     <record model="ir.actions.act_window" id="department_action">
       <field name="name">Departamentos</field>
@@ -21,38 +35,16 @@
       <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- actions opening views on models -->
-<!--
-    <record model="ir.actions.act_window" id="web_drivers.action_window">
-      <field name="name">web_drivers window</field>
-      <field name="res_model">web_drivers.web_drivers</field>
-      <field name="view_mode">tree,form</field>
-    </record>
--->
-
-    <!-- server action to the one above -->
-<!--
-    <record model="ir.actions.server" id="web_drivers.action_server">
-      <field name="name">web_drivers server</field>
-      <field name="model_id" ref="model_web_drivers_web_drivers"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": model._name,
-        }
-      </field>
-    </record>
--->
-
     <!-- Top menu item -->
-    <menuitem name="Correspondencia" id="correspondence_menu"/>
+    <menuitem name="Correspondencia" id="correspondence_menu" action="correspondence_action"/>
 
     <!-- Correspondence menu item -->
     <menuitem name="Correspondencia" id="correspondence" parent="correspondence_menu"
-              action="correspondence_action" sequence="1"/>
-
+              sequence="1"/>
+    <menuitem name="Enviadas" id="correspondence_menu_send" parent="correspondence"
+              action="correspondence_action_sent"/>
+    <menuitem name="Recibidas" id="correspondence_menu_received" parent="correspondence"
+              action="correspondence_action_received" />
     <!-- Configuracion menu item -->
     <menuitem name="Configuracion" id="correspondence_menu_config" parent="correspondence_menu" sequence="2"/>
     <menuitem name="Departamentos" id="correspondence_menu_config_department" parent="correspondence_menu_config"

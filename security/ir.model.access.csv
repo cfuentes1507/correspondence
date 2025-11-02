@@ -1,4 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_department_admin,Acceso a Departamentos,model_correspondence_department,correspondence_group_admin,1,1,1,1
-access_correspondence_type_admin,Acceso a Tipos de Correspondencia,model_correspondence_type,correspondence_group_admin,1,1,1,1
-access_correspondence_admin,Acceso a Correspondencia,model_correspondence_document,correspondence_group_admin,1,1,1,1
+access_correspondence_document_user,Acceso de Usuario a Documentos,model_correspondence_document,correspondence.correspondence_group_user,1,1,1,0
+access_correspondence_document_admin,Acceso de Admin a Documentos,model_correspondence_document,correspondence.correspondence_group_admin,1,1,1,1
+
+access_correspondence_department_user,Acceso de Usuario a Departamentos,model_correspondence_department,correspondence.correspondence_group_user,0,0,0,0
+access_correspondence_department_admin,Acceso de Admin a Departamentos,model_correspondence_department,correspondence.correspondence_group_admin,1,1,1,1
+
+access_correspondence_type_user,Acceso de Usuario a Tipos de Correspondencia,model_correspondence_type,correspondence.correspondence_group_user,0,0,0,0
+access_correspondence_type_admin,Acceso de Admin a Tipos de Correspondencia,model_correspondence_type,correspondence.correspondence_group_admin,1,1,1,1

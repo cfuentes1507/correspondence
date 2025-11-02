@@ -8,6 +8,7 @@ class correspondence_department(models.Model):
     _description = 'Departamento de Correspondencia'
 
     name = fields.Char(string='Nombre del Departamento', required=True)
+    user_ids = fields.One2many('res.users', 'department_id', string='Usuarios')
 #     value = fields.Integer()
 #     value2 = fields.Float(compute="_value_pc", store=True)
 #     description = fields.Text()

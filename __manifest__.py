@@ -2,10 +2,10 @@
 {
     'name': "Correspondencia Institucional",
     'summary': """
-        Correspondencia Institucional
+        Gestión de correspondencia y comunicados internos.
     """,
     'description': """
-        Esto es un modulo diseñado para Odoo 15. Su funcion basica es el correcto envio, recepcion y almacenamiento, de la correspondencia institucional.
+        Este módulo tiene como objetivo digitalizar y centralizar el proceso de envío, recepción, seguimiento y archivo de documentos y comunicados internos entre los diferentes departamentos de una organización.
     """,
     'author': "Carlos Fuentes (CFuentes.Dev)",
     'website': "",
@@ -14,8 +14,10 @@
     'depends': ['base','mail'],
     'data': [
         'security/correspondence_security.xml',
+        'security/ir_rule.xml',
         'security/ir.model.access.csv',
         'views/menu_views.xml',
+        'views/correspondence_department_view.xml',
         'views/correspondence_document_view_form.xml'
     ],
     'demo': [
