@@ -1,58 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- Acción del Informe -->
-        <record id="action_report_correspondence_document" model="ir.actions.report">
-            <field name="name">Documento de Correspondencia</field>
-            <field name="model">correspondence_document</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">correspondence.report_correspondence_document_template</field>
-            <field name="report_file">correspondence.report_correspondence_document_template</field>
-            <field name="print_report_name">(object.name)</field>
-            <field name="binding_model_id" eval="False"/>
-        </record>
+    <!-- =================================================================== -->
+    <!--         LAYOUT PERSONALIZADO PARA TODOS LOS REPORTES                -->
+    <!-- =================================================================== -->
+    <template id="external_layout_correspondence" inherit_id="web.external_layout_standard">
+        <xpath expr="/t/div[1]" position="replace">
+            <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+                <div class="d-flex justify-content-between align-items-center" style="border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 20px; width: 100%;">
+                    <div> 
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 80px;" alt="Company Logo"/>
+                    </div>
+                    <div style="width: 50%;">
+                    </div>
+                    <div>
+                        <img src="/correspondence/static/src/img/logo-derecha.png" style="max-height: 80px;" alt="Secondary Logo"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="/t/div[3]/div" position="before">
+            <div class="text-center" style="">
+                <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 100px;" alt="Footer Image"/>
+            </div>
+        </xpath>
+    </template>
 
-        <!-- Plantilla QWeb del Informe -->
-        <template id="report_correspondence_document_template">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="doc">
-                    <t t-call="web.external_layout">
-                        <div class="page">
-                            <div class="oe_structure"/>
-                            <h2 class="mt16">
-                                <strong>Correspondencia: <span t-field="doc.name"/></strong>
-                            </h2>
+    <!-- =================================================================== -->
+    <!--                  PLANTILLA PARA MEMORANDOS                          -->
+    <!-- =================================================================== -->
+    <template id="report_correspondence_memorando_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="company" t-value="doc.company_id"/>
+                <t t-call="correspondence.external_layout_correspondence">
+                    <t t-set="doc" t-value="doc.with_context(lang=doc.author_id.lang)"/>
+                    <div class="page">
+                        <!-- Título -->
+                        <h2 class="text-center" style="font-weight: bold;">MEMORANDO</h2>
 
-                            <div class="row mt32 mb32" id="informations">
-                                <div class="col-auto col-3 mw-100 mb-2">
-                                    <strong>Correlativo:</strong>
-                                    <p class="m-0" t-field="doc.correlative"/>
-                                </div>
-                                <div class="col-auto col-3 mw-100 mb-2">
-                                    <strong>Fecha:</strong>
-                                    <p class="m-0" t-field="doc.date"/>
-                                </div>
-                                <div class="col-auto col-3 mw-100 mb-2">
-                                    <strong>Departamento Remitente:</strong>
-                                    <p class="m-0" t-field="doc.send_department_id"/>
-                                </div>
-                                <div class="col-auto col-3 mw-100 mb-2">
-                                    <strong>Director Remitente:</strong>
-                                    <p class="m-0" t-field="doc.send_department_id.current_director_id"/>
-                                </div>
-                                <div class="col-auto col-3 mw-100 mb-2">
-                                    <strong>Departamentos Destinatarios:</strong>
-                                    <p class="m-0" t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/>
-                                </div>
-
-                            </div>
-
-                            <h4>Descripción</h4>
-                            <p t-field="doc.descripcion"/>
-                        </div>
-                    </t>
+                        <!-- Cuerpo del Documento -->
+                        <div class="row mt16"><div class="col-xs-12"><p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p><p><strong>Fecha:</strong> <span t-field="doc.date"/></p></div></div>
+                        <div class="row mt32"><div class="col-xs-12"><p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p><p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p></div></div>
+                        <div class="row mt32"><div class="col-xs-12"><p><strong>Asunto:</strong> <span t-field="doc.name"/></p></div></div>
+                        <hr/>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
+                        <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
+                        <div class="oe_structure"/>
+                    </div>
                 </t>
             </t>
-        </template>
-    </data>
+        </t>
+    </template>
+
+    <!-- =================================================================== -->
+    <!--                   PLANTILLA PARA CIRCULARES                         -->
+    <!-- =================================================================== -->
+    <template id="report_correspondence_circular_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="company" t-value="doc.company_id"/>
+                <t t-call="correspondence.external_layout_correspondence">
+                    <t t-set="doc" t-value="doc.with_context(lang=doc.author_id.lang)"/>
+                    <div class="page">
+                        <!-- Título -->
+                        <h2 class="text-center" style="text-transform: uppercase; letter-spacing: 4px; border: 2px solid black; padding: 10px;">CIRCULAR</h2>
+
+                        <!-- Cuerpo del Documento -->
+                        <div class="row mt16"><div class="col-xs-12"><p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p><p><strong>Fecha:</strong> <span t-field="doc.date"/></p></div></div>
+                        <div class="row mt32"><div class="col-xs-12"><p><strong>De:</strong> <span t-field="doc.author_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p><p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p></div></div>
+                        <div class="row mt32"><div class="col-xs-12"><p><strong>Asunto:</strong> <span t-field="doc.name"/></p></div></div>
+                        <hr/>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
+                        <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- =================================================================== -->
+    <!--                    PLANTILLA PARA OFICIOS                           -->
+    <!-- =================================================================== -->
+    <template id="report_correspondence_oficio_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="company" t-value="doc.company_id"/>
+                <t t-call="correspondence.external_layout_correspondence">
+                    <t t-set="doc" t-value="doc.with_context(lang=doc.author_id.lang)"/>
+                    <div class="page">
+                        <!-- Título -->
+                        <h2 class="text-center" style="font-style: italic; border-bottom: 1px solid #ccc; padding-bottom: 5px;">OFICIO</h2>
+
+                        <!-- Cuerpo del Documento -->
+                        <div class="row mt16"><div class="col-xs-12"><p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p><p><strong>Fecha:</strong> <span t-field="doc.date"/></p></div></div>
+                        <div class="row mt32"><div class="col-xs-12"><p><strong>De:</strong> <span t-field="doc.author_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p><p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p></div></div>
+                        <div class="row mt32"><div class="col-xs-12"><p><strong>Asunto:</strong> <span t-field="doc.name"/></p></div></div>
+                        <hr/>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
+                        <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- =================================================================== -->
+    <!--         PLANTILLA GENÉRICA (FALLBACK) - OPCIONAL PERO RECOMENDADO   -->
+    <!-- =================================================================== -->
+    <template id="report_correspondence_base_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="company" t-value="doc.company_id"/>
+                <t t-call="correspondence.external_layout_correspondence">
+                    <t t-set="doc" t-value="doc.with_context(lang=doc.author_id.lang)"/>
+                    <div class="page">
+                        <!-- Título -->
+                        <h2 class="text-center">DOCUMENTO DE CORRESPONDENCIA</h2>
+
+                        <!-- Cuerpo del Documento -->
+                        <div class="row mt16"><div class="col-xs-12"><p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p><p><strong>Fecha:</strong> <span t-field="doc.date"/></p></div></div>
+                        <div class="row mt32"><div class="col-xs-12"><p><strong>De:</strong> <span t-field="doc.author_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p><p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p></div></div>
+                        <div class="row mt32"><div class="col-xs-12"><p><strong>Asunto:</strong> <span t-field="doc.name"/></p></div></div>
+                        <hr/>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
+                        <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- =================================================================== -->
+    <!--                  ACCIONES DE REPORTE                                -->
+    <!-- =================================================================== -->
+    <!-- Acción de Reporte Genérica (puede servir como fallback) -->
+    <record id="action_report_correspondence_document" model="ir.actions.report">
+        <field name="name">Documento de Correspondencia (Genérico)</field>
+        <field name="model">correspondence_document</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">correspondence.report_correspondence_base_template</field>
+        <field name="report_file">correspondence.report_correspondence_base_template</field>
+        <field name="binding_model_id" eval="False"/> <!-- No lo enlazamos directamente al modelo -->
+    </record>
+
+    <!-- Acción de Reporte para Memorandos -->
+    <record id="action_report_correspondence_memorando" model="ir.actions.report">
+        <field name="name">Memorando de Correspondencia</field>
+        <field name="model">correspondence_document</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">correspondence.report_correspondence_memorando_template</field> <!-- Usamos la nueva plantilla -->
+        <field name="report_file">correspondence.report_correspondence_memorando_template</field> <!-- Usamos la nueva plantilla -->
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+    <!-- Acción de Reporte para Circulares -->
+    <record id="action_report_correspondence_circular" model="ir.actions.report">
+        <field name="name">Circular de Correspondencia</field>
+        <field name="model">correspondence_document</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">correspondence.report_correspondence_circular_template</field>
+        <field name="report_file">correspondence.report_correspondence_circular_template</field>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+    <!-- Acción de Reporte para Oficios -->
+    <record id="action_report_correspondence_oficio" model="ir.actions.report">
+        <field name="name">Oficio de Correspondencia</field>
+        <field name="model">correspondence_document</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">correspondence.report_correspondence_oficio_template</field>
+        <field name="report_file">correspondence.report_correspondence_oficio_template</field>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
 </odoo>

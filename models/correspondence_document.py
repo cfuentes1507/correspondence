@@ -16,6 +16,7 @@ class correspondence_document(models.Model):
     _description = 'Documento de Correspondencia'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    company_id = fields.Many2one('res.company', string='Compañía', required=True, default=lambda self: self.env.company)
     correlative = fields.Char(string='Correlativo', required=True, copy=False, default='Nuevo')
     name = fields.Char(string='Asunto', required=True)
     date = fields.Date(string='Fecha', default=fields.Date.context_today, required=True)
@@ -83,7 +84,15 @@ class correspondence_document(models.Model):
         }
     
     def action_generate_report(self):
-        return self.env.ref('correspondence.action_report_correspondence_document').report_action(self)
+        self.ensure_one()
+        # Usar la acción de reporte definida en el tipo de correspondencia.
+        # Si no hay ninguna, usar una acción de fallback genérica.
+        report_action = self.correspondence_type.report_action_id
+        if not report_action:
+            # Usamos la acción genérica como fallback
+            report_action = self.env.ref('correspondence.action_report_correspondence_document')
+
+        return report_action.report_action(self)
 
     def action_reply(self):
         self.ensure_one()

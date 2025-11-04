@@ -3,20 +3,19 @@
     <data noupdate="1">
         <!-- Datos precargados para Tipos de Correspondencia -->
 
-        <record id="tipo_informe" model="correspondence_type">
-            <field name="name">Informe</field>
-        </record>
-
         <record id="tipo_memorando" model="correspondence_type">
             <field name="name">Memorando</field>
+            <field name="report_action_id" ref="correspondence.action_report_correspondence_memorando"/>
         </record>
 
         <record id="tipo_circular" model="correspondence_type">
             <field name="name">Circular</field>
+            <field name="report_action_id" ref="correspondence.action_report_correspondence_circular"/>
         </record>
 
         <record id="tipo_oficio" model="correspondence_type">
             <field name="name">Oficio</field>
+            <field name="report_action_id" ref="correspondence.action_report_correspondence_oficio"/>
         </record>
 
     </data>
