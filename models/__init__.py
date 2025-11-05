@@ -6,3 +6,4 @@ from . import correspondence_department
 from . import correspondence_type
 from . import correspondence_document
 from . import res_users
+from . import res_partner
