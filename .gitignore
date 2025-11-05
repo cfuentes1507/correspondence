@@ -1,6 +1,5 @@
-/__pycache__
-/controllers/__pycache__
-/models/__pycache__
-/models/__pycache__
-/models/__pycache__
-models/__pycache__
+__pycache__/
+models/__pycache__/
+controllers/__pycache__
+wizard/__pycache__/
+

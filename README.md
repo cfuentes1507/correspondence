@@ -9,10 +9,39 @@ Este módulo tiene como objetivo digitalizar y centralizar el proceso de envío,
 ## Funcionalidades Principales
 
 *   **Gestión de Documentos:** Creación y seguimiento de correspondencia con campos como Correlativo, Asunto, Fecha, Autor y Departamento Destinatario.
-*   **Flujo de Trabajo:** Un ciclo de vida claro para cada documento: `Borrador` -> `Firmado` -> `Enviado` -> `Leído` -> `Respondido`.
+*   **Flujo de Trabajo:** Un ciclo de vida claro para cada documento: `Borrador` -> `Firmado` -> `Enviado` -> `Respondido`.
 *   **Estructura Organizacional:** Permite configurar Departamentos y Tipos de Correspondencia para una mejor clasificación.
 *   **Trazabilidad:** Capacidad de responder a un documento, creando un hilo de conversación.
 *   **Integración con Odoo:** Utiliza el sistema de chatter de Odoo para notificaciones y seguimiento de actividades.
+*   **Reportes Dinámicos:** Asocia plantillas de reportes personalizadas a cada tipo de correspondencia.
+*   **Gestión de Directores:** Mantiene un historial de los directores de cada departamento, calculando automáticamente el director actual.
+
+## Estructura del Módulo
+
+### Modelos de Datos
+
+*   `correspondence_document`: El modelo central que representa cada documento de correspondencia. Gestiona el estado, los adjuntos, y las relaciones entre documentos (respuestas).
+*   `correspondence_department`: Define los departamentos de la organización. Cada usuario está asociado a un departamento.
+*   `correspondence_type`: Permite catalogar los documentos (Ej: Memorando, Circular, Oficio) y asociarles una acción de reporte específica.
+*   `correspondence.department.director`: Almacena el historial de directores por departamento, evitando solapamientos de fechas.
+*   `correspondence.document.read_status`: Registra qué departamento ha leído un documento y cuándo, proporcionando un acuse de recibo.
+
+### Flujo de Trabajo del Documento
+
+1.  **Borrador (`draft`):** El documento es creado por un usuario. Solo él puede verlo y editarlo.
+2.  **Firmado (`signed`):** El autor sube una versión firmada del documento. El contenido principal ya no es editable.
+3.  **Enviado (`sent`):** El documento se envía a los departamentos destinatarios. Aparece en su "Bandeja de Entrada".
+4.  **Leído:** Cuando un miembro de un departamento destinatario abre el documento, se registra un estado de lectura para ese departamento.
+5.  **Respondido (`replied`):** Si un destinatario responde al documento, se crea un nuevo documento enlazado y el estado del documento original cambia a "Respondido".
+
+### Menús y Vistas
+
+*   **Bandeja de Entrada:** Muestra la correspondencia recibida pendiente de acción.
+*   **Bandeja de Salida:** Muestra la correspondencia enviada por el usuario actual.
+*   **Archivo:** Un repositorio completo de toda la correspondencia, con potentes filtros de búsqueda.
+*   **Configuración:**
+    *   **Departamentos:** Para crear y gestionar los departamentos de la organización.
+    *   **Tipos de Correspondencia:** Para definir las categorías de documentos y sus reportes asociados.
 
 ## Instalación
 
