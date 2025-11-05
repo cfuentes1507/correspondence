@@ -13,7 +13,7 @@ class DepartmentDirector(models.Model):
         string='Departamento', 
         required=True, 
         ondelete='cascade')
-    director_id = fields.Many2one('res.users', string='Director', required=True)
+    director_id = fields.Many2one('res.partner', string='Director (Contacto)', required=True, domain="[('is_company', '=', False)]")
     date_start = fields.Date(string='Fecha de Inicio', required=True, default=fields.Date.context_today)
     date_end = fields.Date(string='Fecha de Fin')
 
