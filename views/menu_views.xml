@@ -1,56 +1,68 @@
 <odoo>
   <data>
-    <record model="ir.actions.act_window" id="correspondence_action">
-      <field name="name">Todas las Correspondencias</field>
-      <field name="res_model">correspondence_document</field>
-      <field name="view_mode">tree,form</field>
-      <field name="domain">[]</field>
-      <field name="context">{}</field>
-    </record>
+        <!-- Acción para la Bandeja de Entrada (vista de árbol) -->
+        <record id="action_correspondence_document_tree" model="ir.actions.act_window">
+            <field name="name">Bandeja de Entrada</field>
+            <field name="res_model">correspondence_document</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', 'in', ['sent', 'replied'])]</field>
+            <field name="context">{'search_default_my_department': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Aún no has recibido correspondencia.
+                </p>
+            </field>
+        </record>
 
-    <record model="ir.actions.act_window" id="correspondence_action_received">
-      <field name="name">Correspondencia Recibida</field>
-      <field name="res_model">correspondence_document</field>
-      <field name="view_mode">tree,form</field>
-      <field name="domain">[('recipient_department_ids.user_ids', '=', uid), ('state', 'in', ['sent', 'replied'])]</field>
-      <field name="context">{'create': False}</field>
-    </record>
+        <!-- Acción para el Archivo (vista Kanban) -->
+        <record id="action_correspondence_document_archive" model="ir.actions.act_window">
+            <field name="name">Archivo de Correspondencia</field>
+            <field name="res_model">correspondence_document</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Aquí se mostrarán todos los documentos de correspondencia.
+                </p><p>
+                    Usa el panel de la izquierda para filtrar por estado, tipo o departamento.
+                </p>
+            </field>
+        </record>
 
+        <!-- Acción para la Bandeja de Salida (vista de árbol) -->
     <record model="ir.actions.act_window" id="correspondence_action_sent">
-      <field name="name">Correspondencia Enviada</field>
+      <field name="name">Bandeja de Salida</field>
       <field name="res_model">correspondence_document</field>
       <field name="view_mode">tree,form</field>
       <field name="domain">[('author_id', '=', uid)]</field>
     </record>
+        <!-- Acción para Tipos de Correspondencia -->
+        <record id="action_correspondence_type" model="ir.actions.act_window">
+            <field name="name">Tipos de Correspondencia</field>
+            <field name="res_model">correspondence_type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
-    <record model="ir.actions.act_window" id="department_action">
-      <field name="name">Departamentos</field>
-      <field name="res_model">correspondence_department</field>
-      <field name="view_mode">tree,form</field>
-    </record>
+        <!-- Acción para Departamentos -->
+        <record id="action_correspondence_department" model="ir.actions.act_window">
+            <field name="name">Departamentos</field>
+            <field name="res_model">correspondence_department</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
-    <record model="ir.actions.act_window" id="type_action">
-      <field name="name">Tipos de Correspondencia</field>
-      <field name="res_model">correspondence_type</field>
-      <field name="view_mode">tree,form</field>
-    </record>
+        <!-- Menú principal de Correspondencia -->
+        <menuitem id="menu_correspondence_root" name="Correspondencia" sequence="10" web_icon="correspondence,static/description/icon.png"/>
 
-    <!-- Top menu item -->
-    <menuitem name="Correspondencia" id="correspondence_menu" action="correspondence_action"/>
+        <!-- Menú para Bandeja de Entrada -->
+        <menuitem id="menu_correspondence_inbox" name="Bandeja de Entrada" parent="menu_correspondence_root" sequence="10" action="action_correspondence_document_tree"/>
+        <menuitem name="Bandeja de Salida" id="menu_correspondence_outbox" parent="menu_correspondence_root" sequence="10" action="correspondence_action_sent"/>
+        <!-- Menú para el Archivo -->
+        <menuitem id="menu_correspondence_archive" name="Archivo" parent="menu_correspondence_root" sequence="20" action="action_correspondence_document_archive"/>
 
-    <!-- Correspondence menu item -->
-    <menuitem name="Correspondencia" id="correspondence" parent="correspondence_menu"
-              sequence="1"/>
-    <menuitem name="Enviadas" id="correspondence_menu_send" parent="correspondence"
-              action="correspondence_action_sent"/>
-    <menuitem name="Recibidas" id="correspondence_menu_received" parent="correspondence"
-              action="correspondence_action_received" />
-    <!-- Configuracion menu item -->
-    <menuitem name="Configuracion" id="correspondence_menu_config" parent="correspondence_menu" sequence="2" groups="correspondence.correspondence_group_admin"/>
-    <menuitem name="Departamentos" id="correspondence_menu_config_department" parent="correspondence_menu_config"
-              action="department_action"/>
-    <menuitem name="Tipos de Correspondencia" id="correspondence_menu_config_type" parent="correspondence_menu_config"
-              action="type_action"/>
-
+        <!-- Menú de Configuración -->
+        <menuitem id="menu_correspondence_config" name="Configuración" parent="menu_correspondence_root" sequence="100" groups="correspondence.correspondence_group_admin"/>
+        
+        <!-- Submenús de Configuración -->
+        <menuitem id="menu_correspondence_type" name="Tipos de Correspondencia" parent="menu_correspondence_config" sequence="10" action="action_correspondence_type"/>
+        <menuitem id="menu_correspondence_department" name="Departamentos" parent="menu_correspondence_config" sequence="20" action="action_correspondence_department"/>
   </data>
 </odoo>

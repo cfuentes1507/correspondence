@@ -90,9 +90,14 @@
             <field name="model">correspondence_document</field>
             <field name="arch" type="xml">
                 <search>
-                    <filter string="Mi Departamento" name="my_department" context="{'my_department_filter': True}"/>
                     <separator/>
+                    <field name="name" string="Asunto"/>
                     <field name="recipient_department_ids" string="Departamento Destinatario"/>
+                    <searchpanel>
+                        <field name="state" icon="fa-tasks" select="multi" enable_counters="1"/>
+                        <field name="correspondence_type" icon="fa-folder" select="multi" enable_counters="1"/>
+                        <field name="send_department_id" icon="fa-building-o" select="multi" enable_counters="1"/>
+                    </searchpanel>
                 </search>
             </field>
         </record>

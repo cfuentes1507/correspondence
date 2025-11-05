@@ -23,6 +23,7 @@
         'views/menu_views.xml',
         'views/correspondence_type_view.xml',
         'views/correspondence_department_view.xml',
+        'views/correspondence_document_view_kanban.xml',
         'views/correspondence_document_view_form.xml',
     ],
     'demo': [
