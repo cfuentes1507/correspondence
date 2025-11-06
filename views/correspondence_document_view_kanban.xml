@@ -12,6 +12,7 @@
                     <field name="send_department_id"/>
                     <field name="recipient_department_ids"/>
                     <field name="state"/>
+                    <field name="user_facing_state"/>
                     <field name="correspondence_type"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -38,7 +39,10 @@
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left text-muted"><t t-esc="record.correspondence_type.value"/></div>
+                                    <div class="oe_kanban_bottom_left">
+                                        <span class="oe_kanban_list_many2many"><t t-esc="record.correspondence_type.value"/></span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right"><span t-attf-class="badge #{['draft', 'signed'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : 'badge-success' }"><t t-esc="record.user_facing_state.value"/></span></div>
                                 </div>
                             </div>
                         </t>

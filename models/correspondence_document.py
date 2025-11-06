@@ -42,11 +42,34 @@ class correspondence_document(models.Model):
     already_read_by_my_department = fields.Boolean(
         string="¿Ya leído por mi departamento?", compute='_compute_is_current_user_recipient')
 
+    user_facing_state = fields.Char(
+        string="Estado (Usuario)", compute='_compute_user_facing_state')
+
     def _compute_is_current_user_recipient(self):
         for doc in self:
             user_department = self.env.user.department_id
             doc.is_current_user_recipient = user_department in doc.recipient_department_ids
             doc.already_read_by_my_department = user_department in doc.read_status_ids.mapped('department_id')
+
+    @api.depends('state', 'author_id', 'recipient_department_ids')
+    def _compute_user_facing_state(self):
+        """
+        Calcula la etiqueta del estado que se mostrará al usuario actual
+        dependiendo de si es el autor o un destinatario.
+        """
+        for doc in self:
+            is_author = doc.author_id == self.env.user
+            is_recipient = self.env.user.department_id in doc.recipient_department_ids
+
+            if doc.state == 'sent':
+                if is_author:
+                    doc.user_facing_state = _('Enviado')
+                elif is_recipient:
+                    doc.user_facing_state = _('Recibido')
+                else:
+                    doc.user_facing_state = _('Enviado') # Fallback para otros usuarios (ej. admin)
+            else:
+                doc.user_facing_state = doc.get_state_display_name()
 
     def action_sign(self):
         return {
@@ -133,6 +156,14 @@ class correspondence_document(models.Model):
             name = f"{doc.correlative or 'Nuevo'} - {doc.name}"
             result.append((doc.id, name))
         return result
+
+    def get_state_display_name(self):
+        """Método auxiliar para obtener el nombre legible de un campo de selección."""
+        self.ensure_one()
+        # Obtiene la lista de tuplas (valor, etiqueta) del campo 'state'
+        selection_list = self._fields['state'].selection
+        # Devuelve la etiqueta que corresponde al valor actual del estado
+        return dict(selection_list).get(self.state)
 
     parent_document_id = fields.Many2one('correspondence_document', string='En respuesta a')
     child_document_ids = fields.One2many('correspondence_document', 'parent_document_id', string='Respuestas')

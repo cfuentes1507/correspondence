@@ -1,11 +1,11 @@
 <odoo>
-  <data>
+    <data>
         <!-- Acción para la Bandeja de Entrada (vista de árbol) -->
         <record id="action_correspondence_document_tree" model="ir.actions.act_window">
             <field name="name">Bandeja de Entrada</field>
             <field name="res_model">correspondence_document</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('state', 'in', ['sent', 'replied'])]</field>
+            <field name="domain">[('recipient_department_ids.user_ids', '=', uid), ('state', 'in', ['sent', 'replied'])]</field>
             <field name="context">{'search_default_my_department': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -13,12 +13,20 @@
                 </p>
             </field>
         </record>
+        <!-- Acción para la Bandeja de Salida (vista de árbol) -->
+    <record model="ir.actions.act_window" id="correspondence_action_sent">
+        <field name="name">Bandeja de Salida</field>
+        <field name="res_model">correspondence_document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('author_id', '=', uid)]</field>
+    </record>
 
         <!-- Acción para el Archivo (vista Kanban) -->
         <record id="action_correspondence_document_archive" model="ir.actions.act_window">
             <field name="name">Archivo de Correspondencia</field>
             <field name="res_model">correspondence_document</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('state', 'in', ['sent', 'replied'])]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Aquí se mostrarán todos los documentos de correspondencia.
@@ -28,13 +36,6 @@
             </field>
         </record>
 
-        <!-- Acción para la Bandeja de Salida (vista de árbol) -->
-    <record model="ir.actions.act_window" id="correspondence_action_sent">
-      <field name="name">Bandeja de Salida</field>
-      <field name="res_model">correspondence_document</field>
-      <field name="view_mode">tree,form</field>
-      <field name="domain">[('author_id', '=', uid)]</field>
-    </record>
         <!-- Acción para Tipos de Correspondencia -->
         <record id="action_correspondence_type" model="ir.actions.act_window">
             <field name="name">Tipos de Correspondencia</field>
@@ -64,5 +65,5 @@
         <!-- Submenús de Configuración -->
         <menuitem id="menu_correspondence_type" name="Tipos de Correspondencia" parent="menu_correspondence_config" sequence="10" action="action_correspondence_type"/>
         <menuitem id="menu_correspondence_department" name="Departamentos" parent="menu_correspondence_config" sequence="20" action="action_correspondence_department"/>
-  </data>
+    </data>
 </odoo>

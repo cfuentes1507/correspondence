@@ -3,3 +3,11 @@ models/__pycache__/
 controllers/__pycache__
 wizard/__pycache__/
 
+models/__pycache__/*.pyc
+controllers/__pycache__/*.pyc
+wizard/__pycache__/*.pyc
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+__pycache__/__init__.py[cod]
+__pycache__/*.py[cod]

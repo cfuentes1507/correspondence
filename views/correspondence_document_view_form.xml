@@ -80,7 +80,7 @@
                     <field name="date"/>
                     <field name="send_department_id"/>
                     <field name="recipient_department_ids" widget="many2many_tags"/>
-                    <field name="state"/>
+                    <field name="user_facing_state" string="Estado"/>
                 </tree>
             </field>
         </record>
