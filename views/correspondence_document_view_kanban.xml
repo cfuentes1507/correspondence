@@ -5,7 +5,7 @@
             <field name="name">correspondence.document.kanban</field>
             <field name="model">correspondence_document</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="state" class="o_kanban_mobile">
+                <kanban default_group_by="correspondence_type" class="o_kanban_mobile">
                     <field name="correlative"/>
                     <field name="name"/>
                     <field name="date"/>
