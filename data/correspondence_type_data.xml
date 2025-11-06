@@ -5,16 +5,20 @@
 
         <record id="tipo_memorando" model="correspondence_type">
             <field name="name">Memorando</field>
+            <field name="prefix">MEMO</field>
+
             <field name="report_action_id" ref="correspondence.action_report_correspondence_memorando"/>
         </record>
 
         <record id="tipo_circular" model="correspondence_type">
             <field name="name">Circular</field>
+            <field name="prefix">CIRC</field>
             <field name="report_action_id" ref="correspondence.action_report_correspondence_circular"/>
         </record>
 
         <record id="tipo_oficio" model="correspondence_type">
             <field name="name">Oficio</field>
+            <field name="prefix">OFI</field>
             <field name="report_action_id" ref="correspondence.action_report_correspondence_oficio"/>
         </record>
 

@@ -12,6 +12,7 @@ class correspondence_type(models.Model):
     Ejemplos: Memorando, Circular, Oficio, etc."""
 
     name = fields.Char('Nombre')
+    prefix = fields.Char(string='Prefijo', required=True, help="Prefijo para el correlativo, ej: 'MEMO' para Memorando.")
     report_action_id = fields.Many2one(
         'ir.actions.report',
         string="Acción de Reporte",

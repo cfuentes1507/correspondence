@@ -10,11 +10,12 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="prefix"/>
+                        </group>
+                        <group>
                             <field name="report_action_id"
                                     domain="[('model', '=', 'correspondence_document'), ('report_type', '=', 'qweb-pdf')]"
                                     context="{'default_model': 'correspondence_document', 'default_report_type': 'qweb-pdf'}"/>
-                        </group>
-                        <group>
                             <button name="action_preview_report" type="object" string="Previsualizar" class="oe_link" attrs="{'invisible': [('report_action_id', '=', False)]}"/>
                         </group>
                     </group>

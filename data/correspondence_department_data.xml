@@ -5,18 +5,22 @@
 
         <record id="dep_gerencia" model="correspondence_department">
             <field name="name">Gerencia General</field>
+            <field name="correlative_prefix">GG</field>
         </record>
 
         <record id="dep_rrhh" model="correspondence_department">
             <field name="name">Recursos Humanos</field>
+            <field name="correlative_prefix">RH</field>
         </record>
 
         <record id="dep_contabilidad" model="correspondence_department">
             <field name="name">Contabilidad y Finanzas</field>
+            <field name="correlative_prefix">CF</field>
         </record>
 
         <record id="dep_ti" model="correspondence_department">
             <field name="name">Tecnologías de la Información (TI)</field>
+            <field name="correlative_prefix">OTIC</field>
         </record>
 
     </data>
