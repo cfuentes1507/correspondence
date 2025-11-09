@@ -8,7 +8,7 @@
                 <form string="Subir Documento Firmado">
                     <group>
                         <field name="signed_file" filename="file_name"/>
-                        <field name="file_name"/>
+                        <field name="file_name" invisible="1"/>
                     </group>
                     <footer>
                         <button name="upload_and_sign" string="Confirmar y Firmar" type="object" class="oe_highlight"/>

@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
+
+import qrcode
+import base64
+from io import BytesIO
 
 def _get_recipient_department_domain(self):
     """Devuelve un dominio para excluir el departamento del usuario actual."""
@@ -22,7 +27,7 @@ class correspondence_document(models.Model):
     date = fields.Date(string='Fecha', default=fields.Date.context_today, required=True)
     author_id = fields.Many2one('res.users', string='Autor', default=lambda self: self.env.user, required=True, readonly=True)
     send_department_id = fields.Many2one(related='author_id.department_id', string="Departamento Remitente", store=True, readonly=True)
-    correspondence_type = fields.Many2one('correspondence_type', string='Tipo de Correspondencia', required=True)
+    correspondence_type = fields.Many2one('correspondence_type', string='Tipo de Correspondencia', required=True, readonly=True, states={'draft': [('readonly', False)]})
     recipient_department_ids = fields.Many2many('correspondence_department', string='Departamentos Destinatarios', required=True, domain=_get_recipient_department_domain)
     descripcion = fields.Html(string='Descripción', required=True)
     observaciones = fields.Text(string='Observaciones')
@@ -137,6 +142,11 @@ class correspondence_document(models.Model):
 
     @api.model
     def create(self, vals):
+        # Solución Definitiva: Asegurar que 'correspondence_type' esté en 'vals'.
+        # Al responder, el tipo viene en el contexto pero no en vals. Lo añadimos explícitamente.
+        if 'correspondence_type' not in vals and self.env.context.get('default_correspondence_type'):
+            vals['correspondence_type'] = self.env.context.get('default_correspondence_type')
+
         # Paso 1: Crear el documento con un correlativo temporal.
         new_document = super(correspondence_document, self).create(vals)
 
@@ -176,8 +186,55 @@ class correspondence_document(models.Model):
 
         return new_document
 
+    def unlink(self):
+        """
+        Sobrescribe el método de eliminación para permitirla solo en estado 'borrador'.
+        """
+        for doc in self:
+            if doc.state != 'draft':
+                raise UserError(_('No se puede eliminar un documento de correspondencia que no esté en estado "Borrador".'))
+        return super(correspondence_document, self).unlink()
+
     document_file = fields.Binary(string='Archivo', attachment=True, copy=False, help="El documento firmado y sellado.")
     file_name = fields.Char(string="Nombre de Archivo")
+
+    qr_code_image = fields.Binary("Código QR", compute='_compute_qr_code_image', store=False)
+
+    def action_open_signed_document(self):
+        """
+        Genera una acción para descargar el documento firmado.
+        Si no existe, abre el formulario como fallback.
+        """
+        self.ensure_one()
+        if self.document_file:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/web/content/{self._name}/{self.id}/document_file/{self.file_name}?download=true',
+                'target': 'self',
+            }
+        # Si no hay archivo, informamos al usuario en lugar de abrir el formulario.
+        raise UserError(_("Este documento no tiene un archivo firmado adjunto para descargar."))
+
+    def _compute_qr_code_image(self):
+        """ Genera un código QR que apunta a la URL de descarga del documento firmado. """
+        for doc in self:
+            if doc.document_file:
+                # Construir la URL de descarga del adjunto
+                base_url = self.get_base_url()
+                public_url = f"{base_url}/correspondence/public/{doc.id}"
+
+                # Generar el código QR
+                qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+                qr.add_data(public_url)
+                qr.make(fit=True)
+                img = qr.make_image(fill_color="black", back_color="white")
+                
+                # Convertir la imagen a base64
+                buffered = BytesIO()
+                img.save(buffered, format="PNG")
+                doc.qr_code_image = base64.b64encode(buffered.getvalue())
+            else:
+                doc.qr_code_image = False
 
     def name_get(self):
         result = []

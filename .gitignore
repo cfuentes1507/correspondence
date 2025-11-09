@@ -5,3 +5,4 @@ wizard/__pycache__/
 models/__pycache__/*.pyc
 controllers/__pycache__/*.pyc
 wizard/__pycache__/*.pyc
+controllers/__pycache__/

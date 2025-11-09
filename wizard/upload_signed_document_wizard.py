@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
+import re
 from odoo import models, fields
 
 class UploadSignedDocumentWizard(models.TransientModel):
@@ -15,9 +17,18 @@ class UploadSignedDocumentWizard(models.TransientModel):
         document = self.env['correspondence_document'].browse(doc_id)
         
         if document:
+            # Obtener la extensión del archivo original.
+            _name, extension = os.path.splitext(self.file_name)
+
+            # Sanitizar el asunto para que sea un nombre de archivo válido.
+            sanitized_subject = re.sub(r'[\\/*?:"<>|]', "", document.name)
+
+            # Construir el nuevo nombre de archivo usando el correlativo y el asunto.
+            new_file_name = f"{document.correlative} - {sanitized_subject}{extension}"
+
             document.write({
                 'document_file': self.signed_file,
-                'file_name': self.file_name,
+                'file_name': new_file_name,
                 'state': 'signed'
             })
         return {'type': 'ir.actions.act_window_close'}

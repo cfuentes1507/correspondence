@@ -1,5 +1,6 @@
 <odoo>
     <data>
+        <!-- Vista Formulario -->
         <record id="correspondence_document_view_form" model="ir.ui.view">
             <field name="name">correspondence_document.form</field>
             <field name="model">correspondence_document</field>
@@ -11,8 +12,8 @@
                         <field name="is_current_user_recipient" invisible="1"/>
                         <field name="already_read_by_my_department" invisible="1"/>
                         <button name="action_send" string="Enviar" type="object" states="signed" class="oe_highlight"/>
-                        <button name="action_read" string="Marcar como Leído" type="object" states="sent" class="btn-secondary" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('already_read_by_my_department', '=', True)]}"/>
-                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('state', '!=', 'sent')]}"/>
+                        <button name="action_read" string="Marcar como Leído" type="object" states="sent" class="btn-secondary" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('already_read_by_my_department', '=', True)]}"/>                        
+                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('state', 'not in', ['sent', 'replied'])]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,signed,sent,replied"/>
                     </header>
                     <sheet>
@@ -46,7 +47,7 @@
                             </page>
                             <page string="Adjuntos" name="attachments">
                                 <group>
-                                    <field string="Documento Firmado" name="document_file" filename="file_name" attrs="{'readonly': [('state', 'not in', ['draft', 'signed'])]}"/>
+                                    <field string="Documento Firmado" name="document_file" filename="file_name" readonly="1"/>
                                     <field name="file_name" invisible="1"/>
                                 </group>
                             </page>
@@ -69,7 +70,83 @@
                 </form>
             </field>
         </record>
+        <!-- Vista Kanban -->
+        <record id="correspondence_document_view_kanban" model="ir.ui.view">
+            <field name="name">correspondence.document.kanban</field>
+            <field name="model">correspondence_document</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="correspondence_type" class="o_kanban_mobile" group_create="false" default_order="correlative desc">
+                    <field name="correlative"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="send_department_id"/>
+                    <field name="recipient_department_ids"/>
+                    <field name="state"/>
+                    <field name="user_facing_state"/>
+                    <field name="correspondence_type"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb-2">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <span><t t-esc="record.name.value"/></span>
+                                        </strong>
+                                        <small class="o_kanban_record_subtitle text-muted">
+                                            <t t-esc="record.correlative.value"/>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="mb-2">
+                                        <i class="fa fa-calendar-o" aria-label="Fecha" title="Fecha"/> <t t-esc="record.date.value"/>
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="fa fa-paper-plane-o" aria-label="Remitente" title="Remitente"/> <t t-esc="record.send_department_id.value"/>
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="fa fa-users" aria-label="Destinatarios" title="Destinatarios"/> <t t-esc="record.recipient_department_ids.value"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span class="oe_kanban_list_many2many"><t t-esc="record.correspondence_type.value"/></span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right"><span t-attf-class="badge #{['draft', 'signed'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : 'badge-success' }"><t t-esc="record.user_facing_state.value"/></span></div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
+        <!-- Vista Kanban HEREDADA para el Archivo. Modifica la vista base para cambiar la acción de clic. -->
+        <record id="correspondence_document_view_kanban_archive" model="ir.ui.view">
+            <field name="name">correspondence.document.kanban.archive</field>
+            <field name="model">correspondence_document</field>
+            <field name="inherit_id" ref="correspondence_document_view_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//t[@t-name='kanban-box']" position="replace">
+                    <t t-name="kanban-box">
+                        <!-- Contenedor principal con posicionamiento relativo y sin desbordamiento -->
+                        <div class="oe_kanban_card" style="position: relative; overflow: hidden;">
+                            <!-- Contenido visual de la tarjeta -->
+                            <div class="o_kanban_record_top mb-2">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
+                                    <small class="o_kanban_record_subtitle text-muted"><t t-esc="record.correlative.value"/></small>
+                                </div>
+                            </div>
+                            <!-- Botón invisible con posicionamiento absoluto que cubre toda la tarjeta -->
+                            <button name="action_open_signed_document" type="object" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; border: none; background: transparent; cursor: pointer;"/>
+                        </div>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+        <!-- Vista Árbol -->
         <record id="correspondence_document_view_tree" model="ir.ui.view">
             <field name="name">correspondence_document.tree</field>
             <field name="model">correspondence_document</field>
@@ -84,7 +161,7 @@
                 </tree>
             </field>
         </record>
-
+        <!-- Vista Búsqueda -->
         <record id="correspondence_document_view_search" model="ir.ui.view">
             <field name="name">correspondence_document.search</field>
             <field name="model">correspondence_document</field>
@@ -97,6 +174,7 @@
                         <field name="state" icon="fa-tasks" select="multi" enable_counters="1"/>
                         <field name="correspondence_type" icon="fa-folder" select="multi" enable_counters="1"/>
                         <field name="send_department_id" icon="fa-building-o" select="multi" enable_counters="1"/>
+                        <field name="recipient_department_ids" string="Departamento Destinatario" icon="fa-users" select="multi" enable_counters="1"/>
                     </searchpanel>
                 </search>
             </field>

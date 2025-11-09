@@ -5,7 +5,7 @@
         <record id="correspondence_document_user_rule" model="ir.rule">
             <field name="name">Documentos de correspondencia por usuario</field>
             <field name="model_id" ref="model_correspondence_document"/>
-            <field name="groups" eval="[(4, ref('correspondence.correspondence_group_user'))]"/>
+            <field name="groups" eval="[(6, 0, [ref('correspondence.correspondence_group_user')])]"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
