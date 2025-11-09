@@ -198,8 +198,6 @@ class correspondence_document(models.Model):
     document_file = fields.Binary(string='Archivo', attachment=True, copy=False, help="El documento firmado y sellado.")
     file_name = fields.Char(string="Nombre de Archivo")
 
-    qr_code_image = fields.Binary("Código QR", compute='_compute_qr_code_image', store=False)
-
     def action_open_signed_document(self):
         """
         Genera una acción para descargar el documento firmado.

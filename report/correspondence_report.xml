@@ -13,11 +13,7 @@
                     <div style="width: 50%;">
                     </div>
                     <div>
-                        <!-- Si existe un código QR, lo mostramos. Si no, mostramos el logo por defecto. -->
-                        <img t-if="doc and doc.qr_code_image" t-att-src="'data:image/png;base64,%s' % doc.qr_code_image.decode('utf-8')" style="max-height: 80px;" alt="QR Code"/>
-                        <t t-else="">
                             <img src="/correspondence/static/src/img/logo-derecha.png" style="max-height: 80px;" alt="Secondary Logo"/>
-                        </t>
                     </div>
                 </div>
             </div>
@@ -45,13 +41,13 @@
                     <div class="page">
                         <!-- Cuerpo del Documento -->
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
-                        <h2 class="text-center" style="font-weight: bold;">MEMORANDO</h2>                        
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
+                        <h2 class="text-center" style="font-weight: bold;">MEMORANDO</h2>
+                        <p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
                         <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
-                        <div id="description_content"><p t-out="doc.descripcion"/></div>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
                         <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
                         <div class="oe_structure"/>
 
@@ -64,7 +60,7 @@
                                     <span t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
                                 <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                    <span t-raw="doc.send_department_id.current_director_id.director_description"/>
                                 </p>
                             </div>
                         </div>
@@ -87,12 +83,12 @@
                         <!-- Cuerpo del Documento -->
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center" style="text-transform: uppercase; letter-spacing: 4px; border: 2px solid black; padding: 10px;">CIRCULAR</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
+                        <p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
                         <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
-                        <div id="description_content"><p t-out="doc.descripcion"/></div>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
                         <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
                         <div class="oe_structure"/>
 
@@ -104,7 +100,7 @@
                                 <p style="margin-bottom: 0;">
                                     <span t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
-                                <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                <span t-raw="doc.send_department_id.current_director_id.director_description"/>
                             </div>
                         </div>
                     </div>
@@ -126,12 +122,12 @@
                         <!-- Cuerpo del Documento -->
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center" style="font-style: italic; border-bottom: 1px solid #ccc; padding-bottom: 5px;">OFICIO</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
+                        <p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
                         <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
-                        <div id="description_content"><p t-out="doc.descripcion"/></div>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
                         <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
                         <div class="oe_structure"/>
 
@@ -143,7 +139,7 @@
                                 <p style="margin-bottom: 0;">
                                     <span t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
-                                <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                <span t-raw="doc.send_department_id.current_director_id.director_description"/>
                             </div>
                         </div>
                     </div>
@@ -165,12 +161,12 @@
                         <!-- Cuerpo del Documento -->
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center">DOCUMENTO DE CORRESPONDENCIA</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
+                        <p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
                         <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
-                        <div id="description_content"><p t-out="doc.descripcion"/></div>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
                         <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
                         <div class="oe_structure"/>
 
@@ -182,7 +178,7 @@
                                 <p style="margin-bottom: 0;">
                                     <span t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
-                                <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                <span t-raw="doc.send_department_id.current_director_id.director_description"/>
                             </div>
                         </div>
                     </div>
