@@ -10,7 +10,8 @@
     'author': "Carlos Fuentes (CFuentes.Dev)",
     'website': "",
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '0.2',
+    'license': 'LGPL-3',
     'depends': ['base','mail'],
     'data': [
         'security/correspondence_security.xml',
