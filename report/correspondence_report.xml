@@ -41,27 +41,39 @@
                     <div class="page">
                         <!-- Cuerpo del Documento -->
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
-                        <h2 class="text-center" style="font-weight: bold;">MEMORANDO</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
+                        <h2 class="text-center mt-0" style="font-weight: bold;">MEMORANDO</h2>
+                        <p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
                         <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
-                        <div id="description_content"><p t-out="doc.descripcion"/></div>
-                        <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
+                        <div class="row mt-0" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
                         <div class="row mt64">
-                            <div class="col-xs-12 text-center">
-                                <p style="margin-bottom: 50px;">Atentamente:</p>
-                                <p style="margin-bottom: 0;">_________________________</p>
+            <div class="col-xs-12" style="text-align: center;">
+                
+                <div style="max-width: 450px; margin: 0 auto;"> 
+                    <p style="margin-bottom: 75px;">Atentamente:</p>
+                    
+                    <p style="margin-bottom: 0; display: inline-block; min-width: 300px;">
+                        _________________________
+                    </p>
+                    
                                 <p style="margin-bottom: 0;">
-                                    <span t-field="doc.send_department_id.current_director_id.name"/>
+                        <strong t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
                                 <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                        <span t-raw="doc.send_department_id.current_director_id.director_description"/>
                                 </p>
+                    <p style="font-size: small; margin-bottom: 0; padding: 0 10px;">
+                        (Resolución DM/Nº 038-18 de fecha 05 de noviembre de
+                        2018 Publicado en Gaceta Oficial de la República Bolivariana de
+                        Venezuela Nº 41.517).
+                    </p>
+                </div>
                             </div>
                         </div>
                     </div>
@@ -83,24 +95,26 @@
                         <!-- Cuerpo del Documento -->
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center" style="text-transform: uppercase; letter-spacing: 4px; border: 2px solid black; padding: 10px;">CIRCULAR</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
+                        <p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
                         <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
-                        <div id="description_content"><p t-out="doc.descripcion"/></div>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
                         <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
                         <div class="row mt64">
-                            <div class="col-xs-12 text-center">
-                                <p style="margin-bottom: 50px;">Atentamente:</p>
+                            <div class="col-xs-6 col-xs-offset-3 text-center">
+                                <p style="margin-bottom: 75px;">Atentamente:</p>
                                 <p style="margin-bottom: 0;">_________________________</p>
                                 <p style="margin-bottom: 0;">
-                                    <span t-field="doc.send_department_id.current_director_id.name"/>
+                                    <strong t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
-                                <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                <p style="margin-bottom: 0;">
+                                    <span t-raw="doc.send_department_id.current_director_id.director_description"/>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -122,24 +136,26 @@
                         <!-- Cuerpo del Documento -->
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center" style="font-style: italic; border-bottom: 1px solid #ccc; padding-bottom: 5px;">OFICIO</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
+                        <p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
                         <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
-                        <div id="description_content"><p t-out="doc.descripcion"/></div>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
                         <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
                         <div class="row mt64">
-                            <div class="col-xs-12 text-center">
-                                <p style="margin-bottom: 50px;">Atentamente:</p>
+                            <div class="col-xs-6 col-xs-offset-3 text-center">
+                                <p style="margin-bottom: 75px;">Atentamente:</p>
                                 <p style="margin-bottom: 0;">_________________________</p>
                                 <p style="margin-bottom: 0;">
-                                    <span t-field="doc.send_department_id.current_director_id.name"/>
+                                    <strong t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
-                                <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                <p style="margin-bottom: 0;">
+                                    <span t-raw="doc.send_department_id.current_director_id.director_description"/>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -161,24 +177,26 @@
                         <!-- Cuerpo del Documento -->
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center">DOCUMENTO DE CORRESPONDENCIA</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
+                        <p><strong>Para:</strong> <span t-esc="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
                         <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
-                        <div id="description_content"><p t-out="doc.descripcion"/></div>
+                        <div id="description_content"><p t-raw="doc.descripcion"/></div>
                         <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
                         <div class="row mt64">
-                            <div class="col-xs-12 text-center">
-                                <p style="margin-bottom: 50px;">Atentamente:</p>
+                            <div class="col-xs-6 col-xs-offset-3 text-center">
+                                <p style="margin-bottom: 75px;">Atentamente:</p>
                                 <p style="margin-bottom: 0;">_________________________</p>
                                 <p style="margin-bottom: 0;">
-                                    <span t-field="doc.send_department_id.current_director_id.name"/>
+                                    <strong t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
-                                <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                <p style="margin-bottom: 0;">
+                                    <span t-raw="doc.send_department_id.current_director_id.director_description"/>
+                                </p>
                             </div>
                         </div>
                     </div>
