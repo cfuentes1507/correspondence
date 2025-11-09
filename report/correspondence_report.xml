@@ -16,7 +16,7 @@
                         <!-- Si existe un código QR, lo mostramos. Si no, mostramos el logo por defecto. -->
                         <img t-if="doc and doc.qr_code_image" t-att-src="'data:image/png;base64,%s' % doc.qr_code_image.decode('utf-8')" style="max-height: 80px;" alt="QR Code"/>
                         <t t-else="">
-                            <img src="/correspondence/static/src/img/logo-derecha.png" style="max-height: 80px;" alt="Secondary Logo"/>
+                            <img t-att-src="image_data_uri('/correspondence/static/src/img/logo-derecha.png')" style="max-height: 80px;" alt="Secondary Logo"/>
                         </t>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
         </xpath>
         <xpath expr="/t/div[3]/div" position="before">
             <div class="text-center" style="">
-                <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 100px;" alt="Footer Image"/>
+                <img t-att-src="image_data_uri('/correspondence/static/src/img/footer.png')" style="width: 100%; max-height: 100px;" alt="Footer Image"/>
             </div>
         </xpath>
     </template>
