@@ -1,10 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from . import correspondence_document_read_status
-from . import correspondence_department_director
+# Modelos base heredados
 from . import res_partner
 from . import res_users
-from . import correspondence_department_correlative
+
+# Modelos de catálogo
 from . import correspondence_department
 from . import correspondence_type
+
+# Modelos de relación y auxiliares
+from . import correspondence_department_director
+from . import correspondence_department_correlative
+
+# Modelo principal
 from . import correspondence_document
+
+# Modelos secundarios que dependen del principal
+from . import correspondence_document_read_status
