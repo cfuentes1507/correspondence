@@ -90,29 +90,29 @@
                                 <div class="o_kanban_record_top mb-2">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
-                                            <span><t t-esc="record.name.value"/></span>
+                                            <span><t t-out="record.name.value"/></span>
                                         </strong>
                                         <small class="o_kanban_record_subtitle text-muted">
-                                            <t t-esc="record.correlative.value"/>
+                                            <t t-out="record.correlative.value"/>
                                         </small>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <div class="mb-2">
-                                        <i class="fa fa-calendar-o" aria-label="Fecha" title="Fecha"/> <t t-esc="record.date.value"/>
+                                        <i class="fa fa-calendar-o" aria-label="Fecha" title="Fecha"/> <t t-out="record.date.value"/>
                                     </div>
                                     <div class="mb-2">
-                                        <i class="fa fa-paper-plane-o" aria-label="Remitente" title="Remitente"/> <t t-esc="record.send_department_id.value"/>
+                                        <i class="fa fa-paper-plane-o" aria-label="Remitente" title="Remitente"/> <t t-out="record.send_department_id.value"/>
                                     </div>
                                     <div class="mb-2">
-                                        <i class="fa fa-users" aria-label="Destinatarios" title="Destinatarios"/> <t t-esc="record.recipient_department_ids.value"/>
+                                        <i class="fa fa-users" aria-label="Destinatarios" title="Destinatarios"/> <t t-out="record.recipient_department_ids.value"/>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <span class="oe_kanban_list_many2many"><t t-esc="record.correspondence_type.value"/></span>
+                                        <span class="oe_kanban_list_many2many"><t t-out="record.correspondence_type.value"/></span>
                                     </div>
-                                    <div class="oe_kanban_bottom_right"><span t-attf-class="badge #{['draft', 'signed'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : 'badge-success' }"><t t-esc="record.user_facing_state.value"/></span></div>
+                                    <div class="oe_kanban_bottom_right"><span t-attf-class="badge #{['draft', 'signed'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : 'badge-success' }"><t t-out="record.user_facing_state.value"/></span></div>
                                 </div>
                             </div>
                         </t>
@@ -135,8 +135,8 @@
                             <!-- Contenido visual de la tarjeta -->
                             <div class="o_kanban_record_top mb-2">
                                 <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
-                                    <small class="o_kanban_record_subtitle text-muted"><t t-esc="record.correlative.value"/></small>
+                                    <strong class="o_kanban_record_title"><span><t t-out="record.name.value"/></span></strong>
+                                    <small class="o_kanban_record_subtitle text-muted"><t t-out="record.correlative.value"/></small>
                                 </div>
                             </div>
                             <!-- Botón invisible con posicionamiento absoluto que cubre toda la tarjeta -->

@@ -4,10 +4,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
-import qrcode
-import base64
-from io import BytesIO
-
 def _get_recipient_department_domain(self):
     """Devuelve un dominio para excluir el departamento del usuario actual."""
     # Esta restricción solo debe aplicarse al crear un nuevo documento,
@@ -50,6 +46,7 @@ class correspondence_document(models.Model):
     user_facing_state = fields.Char(
         string="Estado (Usuario)", compute='_compute_user_facing_state')
 
+    @api.depends('recipient_department_ids', 'read_status_ids.department_id')
     def _compute_is_current_user_recipient(self):
         for doc in self:
             user_department = self.env.user.department_id
@@ -212,27 +209,6 @@ class correspondence_document(models.Model):
             }
         # Si no hay archivo, informamos al usuario en lugar de abrir el formulario.
         raise UserError(_("Este documento no tiene un archivo firmado adjunto para descargar."))
-
-    def _compute_qr_code_image(self):
-        """ Genera un código QR que apunta a la URL de descarga del documento firmado. """
-        for doc in self:
-            if doc.document_file:
-                # Construir la URL de descarga del adjunto
-                base_url = self.get_base_url()
-                public_url = f"{base_url}/correspondence/public/{doc.id}"
-
-                # Generar el código QR
-                qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
-                qr.add_data(public_url)
-                qr.make(fit=True)
-                img = qr.make_image(fill_color="black", back_color="white")
-                
-                # Convertir la imagen a base64
-                buffered = BytesIO()
-                img.save(buffered, format="PNG")
-                doc.qr_code_image = base64.b64encode(buffered.getvalue())
-            else:
-                doc.qr_code_image = False
 
     def name_get(self):
         result = []
