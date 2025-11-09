@@ -17,7 +17,7 @@ class correspondence_document(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     company_id = fields.Many2one('res.company', string='Compañía', required=True, default=lambda self: self.env.company)
-    correlative = fields.Char(string='Correlativo', required=True, copy=False, default='Nuevo')
+    correlative = fields.Char(string='Correlativo', required=True, copy=False, default='Nuevo', readonly=True)
     name = fields.Char(string='Asunto', required=True)
     date = fields.Date(string='Fecha', default=fields.Date.context_today, required=True)
     author_id = fields.Many2one('res.users', string='Autor', default=lambda self: self.env.user, required=True, readonly=True)
@@ -137,8 +137,37 @@ class correspondence_document(models.Model):
 
     @api.model
     def create(self, vals):
-        # Primero, creamos el nuevo documento de correspondencia
+        # Paso 1: Crear el documento con un correlativo temporal.
         new_document = super(correspondence_document, self).create(vals)
+
+        # Paso 2: Generar y escribir el correlativo final ahora que tenemos el registro completo.
+        if new_document.correlative == 'Nuevo':
+            # Forzamos una relectura del registro para asegurarnos de que todos los campos
+            # relacionales (Many2one, related) estén cargados y no haya problemas de caché.
+            doc = self.browse(new_document.id)
+
+            department = doc.send_department_id
+            corr_type = doc.correspondence_type
+
+            if department and corr_type:
+                corr_type_id = corr_type.id
+                correlative_obj = self.env['correspondence.department.correlative'].search([
+                    ('department_id', '=', department.id),
+                    ('correspondence_type_id', '=', corr_type_id)
+                ], limit=1)
+
+                if not correlative_obj:
+                    correlative_obj = self.env['correspondence.department.correlative'].create({
+                        'department_id': department.id,
+                        'correspondence_type_id': corr_type_id,
+                        'last_sequence': 0
+                    })
+
+                new_sequence = correlative_obj.last_sequence + 1
+                correlative_obj.last_sequence = new_sequence
+
+                new_correlative = f"{department.correlative_prefix}-{corr_type.prefix or ''}-{fields.Date.today().strftime('%y')}-{new_sequence}"
+                new_document.write({'correlative': new_correlative})
 
         # Si este nuevo documento es una respuesta a otro (tiene un padre)
         if new_document.parent_document_id:

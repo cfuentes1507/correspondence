@@ -12,6 +12,7 @@ class correspondence_department(models.Model):
     user_ids = fields.One2many('res.users', 'department_id', string='Usuarios')
     director_history_ids = fields.One2many('correspondence.department.director', 'department_id', string='Historial de Directores')
     current_director_id = fields.Many2one('res.partner', string='Director Actual', compute='_compute_current_director', store=True)
+    correlative_ids = fields.One2many('correspondence.department.correlative', 'department_id', string='Correlativos')
 
     @api.depends('director_history_ids.director_id', 'director_history_ids.date_start', 'director_history_ids.date_end')
     def _compute_current_director(self):
