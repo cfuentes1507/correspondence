@@ -11,3 +11,7 @@ controllers/__pycache__/
 *.pyc
 *.pyc
 *.pyc
+__pycache__/__init__.cpython-39.pyc
+controllers/__pycache__/__init__.cpython-39.pyc
+models/__pycache__/__init__.cpython-39.pyc
+wizard/__pycache__/upload_signed_document_wizard.cpython-39.pyc
