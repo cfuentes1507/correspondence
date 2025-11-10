@@ -27,20 +27,16 @@
             </field>
         </record>
 
-        <!-- Acción para la Bandeja de Salida (vista de árbol) -->
-    <record model="ir.actions.act_window" id="correspondence_action_sent">
-        <field name="name">Bandeja de Salida</field>
-        <field name="res_model">correspondence_document</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('author_id', '=', uid)]</field>
-    </record>
-
-        <!-- Acción para el Archivo (vista Kanban) -->
-        <record id="action_correspondence_document_archive" model="ir.actions.act_window">
+        <!-- Acción base para el Archivo (usada por la acción de servidor) -->
+        <record id="action_correspondence_document_archive_base" model="ir.actions.act_window">
             <field name="name">Archivo de Correspondencia</field>
             <field name="res_model">correspondence_document</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">['|', ('author_id', '=', uid), '&amp;', ('recipient_department_ids.user_ids', '=', uid), ('state', 'in', ['sent', 'replied'])]</field>
+            <field name="domain">[]</field> <!-- El dominio se establecerá dinámicamente -->
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('correspondence.correspondence_document_view_kanban_archive')}),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('correspondence.correspondence_document_view_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('correspondence.correspondence_document_view_form')})]"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Aquí se mostrarán todos los documentos de correspondencia.
@@ -64,16 +60,33 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <!-- Acción de servidor para la Bandeja de Salida -->
+        <record id="action_server_open_outbox" model="ir.actions.server">
+            <field name="name">Bandeja de Salida</field>
+            <field name="model_id" ref="model_correspondence_document"/>
+            <field name="state">code</field>
+            <field name="code">action = model.action_open_outbox()</field>
+        </record>
+
+        <!-- Acción de servidor para el Archivo -->
+        <record id="action_server_open_archive" model="ir.actions.server">
+            <field name="name">Archivo de Correspondencia</field>
+            <field name="model_id" ref="model_correspondence_document"/>
+            <field name="state">code</field>
+            <field name="code">action = model.action_open_archive()</field>
+        </record>
+
         <!-- Menú principal de Correspondencia -->
         <menuitem id="menu_correspondence_root" name="Correspondencia" sequence="10" web_icon="correspondence,static/description/icon.png"/>
 
         <!-- Menú para Bandeja de Entrada (solo para usuarios no-admin) -->
-        <menuitem id="menu_correspondence_inbox_user" name="Bandeja de Entrada" parent="menu_correspondence_root" sequence="10" action="action_correspondence_document_tree" groups="correspondence.correspondence_group_user"/>
+        <menuitem id="menu_correspondence_inbox_user" name="Bandeja de Entrada" parent="menu_correspondence_root" sequence="10" action="action_correspondence_document_tree" groups="correspondence.correspondence_group_user,correspondence.correspondence_group_director"/>
         <!-- Menú para Bandeja de Entrada (solo para administradores) -->
         <menuitem id="menu_correspondence_inbox_admin" name="Bandeja de Entrada (Admin)" parent="menu_correspondence_root" sequence="15" action="action_correspondence_document_tree_admin" groups="correspondence.correspondence_group_admin"/>
-        <menuitem name="Bandeja de Salida" id="menu_correspondence_outbox" parent="menu_correspondence_root" sequence="20" action="correspondence_action_sent"/>
+        
+        <menuitem name="Bandeja de Salida" id="menu_correspondence_outbox" parent="menu_correspondence_root" sequence="20" action="action_server_open_outbox"/>
         <!-- Menú para el Archivo -->
-        <menuitem id="menu_correspondence_archive" name="Archivo" parent="menu_correspondence_root" sequence="30" action="action_correspondence_document_archive"/>
+        <menuitem id="menu_correspondence_archive" name="Archivo" parent="menu_correspondence_root" sequence="30" action="action_server_open_archive"/>
 
         <!-- Menú de Configuración -->
         <menuitem id="menu_correspondence_config" name="Configuración" parent="menu_correspondence_root" sequence="100" groups="correspondence.correspondence_group_admin"/>

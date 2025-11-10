@@ -74,16 +74,31 @@ class correspondence_document(models.Model):
                 doc.user_facing_state = doc.get_state_display_name()
 
     def action_sign(self):
-        return {
-            'name': _('Subir Documento Firmado'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'correspondence.upload.signed.document.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_active_id': self.id,
-            }
-        }
+        self.ensure_one()
+
+        # 1. Obtener la acción de reporte
+        report_action = self.correspondence_type.report_action_id
+        if not report_action:
+            report_action = self.env.ref('correspondence.action_report_correspondence_document', raise_if_not_found=False)
+        
+        if not report_action:
+            raise UserError(_("No se ha definido una acción de reporte para este tipo de correspondencia ni una acción de fallback."))
+
+        # 2. Generar el PDF
+        pdf_content, _file_type = report_action._render_qweb_pdf(self.id)
+
+        # 3. Construir el nombre del archivo
+        file_name = f"{self.correlative} - {self.name}.pdf"
+
+        # 4. Adjuntar el PDF y cambiar el estado
+        self.write({
+            'document_file': pdf_content,
+            'file_name': file_name,
+            'state': 'signed'
+        })
+
+        # 5. Recargar la vista para reflejar los cambios
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     def action_send(self):
         self.write({'state': 'sent'})
@@ -233,3 +248,43 @@ class correspondence_document(models.Model):
         string="Respuesta a",
         related='parent_document_id.author_id',
         store=True)
+
+    @api.model
+    def action_open_outbox(self):
+        """
+        Esta función es llamada por el menú 'Bandeja de Salida'.
+        Construye y devuelve una acción de ventana con un dominio dinámico
+        que filtra los documentos por el departamento del usuario actual.
+        """
+        user_department_id = self.env.user.department_id.id
+        if not user_department_id:
+            raise UserError(_("Tu usuario no tiene un departamento asignado. Por favor, contacta a un administrador."))
+
+        action = self.env['ir.actions.act_window']._for_xml_id('correspondence.action_correspondence_document_tree')
+        action['display_name'] = _('Bandeja de Salida')
+        action['name'] = _('Bandeja de Salida')
+        action['domain'] = [('send_department_id', '=', user_department_id)]
+        action['context'] = {} # Limpiamos el contexto para evitar filtros no deseados
+        return action
+
+    @api.model
+    def action_open_archive(self):
+        """
+        Esta función es llamada por el menú 'Archivo'.
+        Construye y devuelve una acción de ventana con un dominio dinámico
+        que filtra los documentos enviados o recibidos por el departamento del usuario.
+        """
+        user_department_id = self.env.user.department_id.id
+        if not user_department_id:
+            raise UserError(_("Tu usuario no tiene un departamento asignado. Por favor, contacta a un administrador."))
+
+        action = self.env['ir.actions.act_window']._for_xml_id('correspondence.action_correspondence_document_archive_base')
+        
+        # Construimos el dominio para mostrar documentos enviados O recibidos por el departamento del usuario
+        domain = [
+            '|',
+                ('send_department_id', '=', user_department_id),
+                ('recipient_department_ids', 'in', [user_department_id])
+        ]
+        action['domain'] = domain
+        return action

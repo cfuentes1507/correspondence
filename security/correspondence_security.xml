@@ -11,6 +11,12 @@
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
+    <record id="correspondence_group_director" model="res.groups">
+        <field name="name">Director</field>
+        <field name="category_id" ref="category_model_correspondence"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
     <record id="correspondence_group_admin" model="res.groups">
         <field name="name">Administrador</field>
         <field name="category_id" ref="category_model_correspondence"/>
