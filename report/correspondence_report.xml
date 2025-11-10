@@ -52,23 +52,25 @@
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
-                        <div class="row mt64">
-            <div class="col-xs-12" style="text-align: center;">
-                
-                <div style="max-width: 450px; margin: 0 auto;"> 
-                    <p style="margin-bottom: 75px;">Atentamente:</p>
-                    
-                    <p style="margin-bottom: 0; display: inline-block; min-width: 300px;">
-                        _________________________
-                    </p>
-                    
+                        <div style="text-align: center; margin-top: 64px;">
+                            <p style="margin-bottom: 75px;">Atentamente:</p>
+                            <div style="display: inline-block; width: 400px; text-align: center;">
+                                <!-- Firma y Sello -->
+                                <div style="height: 110px; margin-bottom: 5px;">
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.current_director_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
+                                    </div>
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.current_director_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_signature)" style="max-height: 100px;"/>
+                                    </div>
+                                </div>
+                                <!-- Línea de firma -->
+                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
+                                    <strong t-field="doc.send_department_id.current_director_id.name"/>
+                                </p>
                                 <p style="margin-bottom: 0;">
-                        <strong t-field="doc.send_department_id.current_director_id.name"/>
+                                    <span t-out="doc.send_department_id.current_director_id.director_description"/>
                                 </p>
-                                <p style="font-size: small; margin-bottom: 0; padding: 0 10px;">
-                        <span t-out="doc.send_department_id.current_director_id.director_description"/>
-                                </p>
-                </div>
                             </div>
                         </div>
                     </div>
@@ -100,11 +102,20 @@
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
-                        <div class="row mt64">
-                            <div class="col-xs-6 col-xs-offset-3 text-center">
-                                <p style="margin-bottom: 75px;">Atentamente:</p>
-                                <p style="margin-bottom: 0;">_________________________</p>
-                                <p style="margin-bottom: 0;">
+                        <div style="text-align: center; margin-top: 64px;">
+                            <p style="margin-bottom: 75px;">Atentamente:</p>
+                            <div style="display: inline-block; width: 400px; text-align: center;">
+                                <!-- Firma y Sello -->
+                                <div style="height: 110px; margin-bottom: 5px;">
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.current_director_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
+                                    </div>
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.current_director_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_signature)" style="max-height: 100px;"/>
+                                    </div>
+                                </div>
+                                <!-- Línea de firma -->
+                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
                                     <strong t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
                                 <p style="margin-bottom: 0;">
@@ -141,11 +152,20 @@
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
-                        <div class="row mt64">
-                            <div class="col-xs-6 col-xs-offset-3 text-center">
-                                <p style="margin-bottom: 75px;">Atentamente:</p>
-                                <p style="margin-bottom: 0;">_________________________</p>
-                                <p style="margin-bottom: 0;">
+                        <div style="text-align: center; margin-top: 64px;">
+                            <p style="margin-bottom: 75px;">Atentamente:</p>
+                            <div style="display: inline-block; width: 400px; text-align: center;">
+                                <!-- Firma y Sello -->
+                                <div style="height: 110px; margin-bottom: 5px;">
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.current_director_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
+                                    </div>
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.current_director_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_signature)" style="max-height: 100px;"/>
+                                    </div>
+                                </div>
+                                <!-- Línea de firma -->
+                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
                                     <strong t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
                                 <p style="margin-bottom: 0;">
@@ -182,11 +202,20 @@
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
-                        <div class="row mt64">
-                            <div class="col-xs-6 col-xs-offset-3 text-center">
-                                <p style="margin-bottom: 75px;">Atentamente:</p>
-                                <p style="margin-bottom: 0;">_________________________</p>
-                                <p style="margin-bottom: 0;">
+                        <div style="text-align: center; margin-top: 64px;">
+                            <p style="margin-bottom: 75px;">Atentamente:</p>
+                            <div style="display: inline-block; width: 400px; text-align: center;">
+                                <!-- Firma y Sello -->
+                                <div style="height: 110px; margin-bottom: 5px;">
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.current_director_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
+                                    </div>
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.current_director_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_signature)" style="max-height: 100px;"/>
+                                    </div>
+                                </div>
+                                <!-- Línea de firma -->
+                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
                                     <strong t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
                                 <p style="margin-bottom: 0;">
