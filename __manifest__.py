@@ -14,18 +14,25 @@
     'license': 'LGPL-3',
     'depends': ['base','mail'],
     'data': [
+        #Reportes0
         'report/correspondence_report.xml',
+        #Vistas
         'views/correspondence_type_view.xml',
         'views/correspondence_department_view.xml',
         'views/correspondence_document_view_form.xml',
+        #Herencia
         'views/res_partner_view.xml',
+        #wizards
         'wizard/upload_signed_document_wizard_view.xml',
+        #Data
         'data/correspondence_department_data.xml',
         'data/correspondence_type_data.xml',
-        'views/menu_views.xml',
+        #Permissions
         'security/correspondence_security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        #Menus
+        'views/menu_views.xml',
     ],
     'demo': [
     ],
