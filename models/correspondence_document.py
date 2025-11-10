@@ -1,6 +1,7 @@
 
 # -*- coding: utf-8 -*-
 
+import base64
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
@@ -88,11 +89,11 @@ class correspondence_document(models.Model):
         pdf_content, _file_type = report_action._render_qweb_pdf(self.id)
 
         # 3. Construir el nombre del archivo
-        file_name = f"{self.correlative} - {self.name}.pdf"
+        file_name = f"{self.correlative}-{self.name}.pdf"
 
         # 4. Adjuntar el PDF y cambiar el estado
         self.write({
-            'document_file': pdf_content,
+            'document_file': base64.b64encode(pdf_content),
             'file_name': file_name,
             'state': 'signed'
         })
@@ -220,7 +221,7 @@ class correspondence_document(models.Model):
             return {
                 'type': 'ir.actions.act_url',
                 'url': f'/web/content/{self._name}/{self.id}/document_file/{self.file_name}?download=true',
-                'target': 'self',
+                'target': 'new',
             }
         # Si no hay archivo, informamos al usuario en lugar de abrir el formulario.
         raise UserError(_("Este documento no tiene un archivo firmado adjunto para descargar."))
