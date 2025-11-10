@@ -65,14 +65,9 @@
                                 <p style="margin-bottom: 0;">
                         <strong t-field="doc.send_department_id.current_director_id.name"/>
                                 </p>
-                                <p style="margin-bottom: 0;">
+                                <p style="font-size: small; margin-bottom: 0; padding: 0 10px;">
                         <span t-out="doc.send_department_id.current_director_id.director_description"/>
                                 </p>
-                    <p style="font-size: small; margin-bottom: 0; padding: 0 10px;">
-                        (Resolución DM/Nº 038-18 de fecha 05 de noviembre de
-                        2018 Publicado en Gaceta Oficial de la República Bolivariana de
-                        Venezuela Nº 41.517).
-                    </p>
                 </div>
                             </div>
                         </div>

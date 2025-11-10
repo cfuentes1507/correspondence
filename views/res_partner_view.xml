@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="view_partner_form_correspondence" model="ir.ui.view">
-            <field name="name">res.partner.form.correspondence</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//sheet/group[1]" position="before">
-                        <h4>Descripcion del Cargo</h4>
-                    <field string="Descripcion del Cargo" name="director_description" placeholder="Añada la descripción o cargo del director aquí..."/>
-                </xpath>
-            </field>
-        </record>
-    </data>
+    <record id="view_partner_form_correspondence" model="ir.ui.view">
+        <field name="name">res.partner.form.correspondence</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Correspondencia" name="correspondence" attrs="{'invisible': [('is_company', '=', True)]}">
+                    <group>
+                        <field name="director_description"/>
+                        <field name="director_signature" widget="image" class="oe_avatar"/>
+                        <field name="director_stamp" widget="image" class="oe_avatar"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 </odoo>
