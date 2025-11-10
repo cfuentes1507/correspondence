@@ -14,9 +14,6 @@
     'license': 'LGPL-3',
     'depends': ['base','mail'],
     'data': [
-        'security/correspondence_security.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
         'report/correspondence_report.xml',
         'views/correspondence_type_view.xml',
         'views/correspondence_department_view.xml',
@@ -26,6 +23,9 @@
         'data/correspondence_department_data.xml',
         'data/correspondence_type_data.xml',
         'views/menu_views.xml',
+        'security/correspondence_security.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
     ],
     'demo': [
     ],
