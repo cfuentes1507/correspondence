@@ -12,7 +12,7 @@
     'category': 'Uncategorized',
     'version': '0.2',
     'license': 'LGPL-3',
-    'depends': ['base','mail'],
+    'depends': ['base', 'mail', 'website'],
     'data': [
         #Reportes0
         'report/correspondence_report.xml',
@@ -20,6 +20,7 @@
         'views/correspondence_type_view.xml',
         'views/correspondence_department_view.xml',
         'views/correspondence_document_view_form.xml',
+        'views/public_correspondence_template.xml',
         #Herencia
         'views/res_partner_view.xml',
         #wizards

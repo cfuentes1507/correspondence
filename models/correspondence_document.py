@@ -47,6 +47,9 @@ class correspondence_document(models.Model):
     user_facing_state = fields.Char(
         string="Estado (Usuario)", compute='_compute_user_facing_state')
 
+    public_url = fields.Char(
+        string="URL Pública", compute='_compute_public_url', help="URL para la verificación pública del documento.")
+
     @api.depends('recipient_department_ids', 'read_status_ids.department_id')
     def _compute_is_current_user_recipient(self):
         for doc in self:
@@ -249,6 +252,15 @@ class correspondence_document(models.Model):
         string="Respuesta a",
         related='parent_document_id.author_id',
         store=True)
+
+    def _compute_public_url(self):
+        """Genera la URL pública para el documento."""
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for doc in self:
+            if doc.id:
+                doc.public_url = f"{base_url}/correspondence/public/{doc.id}"
+            else:
+                doc.public_url = False
 
     @api.model
     def action_open_outbox(self):

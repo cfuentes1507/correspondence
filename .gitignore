@@ -20,3 +20,4 @@ wizard/__pycache__/upload_signed_document_wizard.cpython-39.pyc
 /controllers/__pycache__
 /models/__pycache__
 /wizard/__pycache__
+*.pyc
