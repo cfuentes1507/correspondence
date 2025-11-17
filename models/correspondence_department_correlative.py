@@ -12,12 +12,12 @@ class DepartmentCorrelative(models.Model):
         'correspondence_department',
         string='Departamento',
         required=True,
-        ondelete='cascade')
+        ondelete='restrict')
     correspondence_type_id = fields.Many2one(
         'correspondence_type',
         string='Tipo de Correspondencia',
         required=True,
-        ondelete='cascade')
+        ondelete='restrict')
     last_sequence = fields.Integer(string='Última Secuencia', default=0, required=True)
 
     _sql_constraints = [

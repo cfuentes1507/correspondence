@@ -207,12 +207,10 @@ class correspondence_document(models.Model):
 
     def unlink(self):
         """
-        Sobrescribe el método de eliminación para permitirla solo en estado 'borrador'.
+        Sobrescribe el método de eliminación para impedirla en todos los casos.
+        Los documentos de correspondencia no se pueden eliminar para mantener la integridad de los correlativos y el historial.
         """
-        for doc in self:
-            if doc.state != 'draft':
-                raise UserError(_('No se puede eliminar un documento de correspondencia que no esté en estado "Borrador".'))
-        return super(correspondence_document, self).unlink()
+        raise UserError(_('Los documentos de correspondencia no pueden ser eliminados. Si es necesario, considere archivar o cancelar el documento en lugar de borrarlo.'))
 
     document_file = fields.Binary(string='Archivo', attachment=True, copy=False, help="El documento firmado y sellado.")
     file_name = fields.Char(string="Nombre de Archivo")
