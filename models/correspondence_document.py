@@ -159,81 +159,59 @@ class correspondence_document(models.Model):
             'context': ctx,
         }
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            # Al responder, el tipo viene en el contexto pero no en vals. Lo añadimos explícitamente.
-            if 'correspondence_type' not in vals and self.env.context.get('default_correspondence_type'):
-                vals['correspondence_type'] = self.env.context.get('default_correspondence_type')
+    @api.model
+    def create(self, vals):
+        # Solución Definitiva: Asegurar que 'correspondence_type' esté en 'vals'.
+        # Al responder, el tipo viene en el contexto pero no en vals. Lo añadimos explícitamente.
+        if 'correspondence_type' not in vals and self.env.context.get('default_correspondence_type'):
+            vals['correspondence_type'] = self.env.context.get('default_correspondence_type')
 
-        # Crear los documentos con el correlativo temporal 'Nuevo'
-        docs = super(correspondence_document, self).create(vals_list)
+        # Paso 1: Crear el documento con un correlativo temporal.
+        new_document = super(correspondence_document, self).create(vals)
 
-        for doc in docs:
-            # Generar y escribir el correlativo final
-            if doc.correlative == 'Nuevo':
-                department = doc.send_department_id
-                corr_type = doc.correspondence_type
+        # Paso 2: Generar y escribir el correlativo final ahora que tenemos el registro completo.
+        if new_document.correlative == 'Nuevo':
+            # Forzamos una relectura del registro para asegurarnos de que todos los campos
+            # relacionales (Many2one, related) estén cargados y no haya problemas de caché.
+            doc = self.browse(new_document.id)
 
-                if department and corr_type:
-                    # Usar with_for_update() para bloquear la fila del correlativo y evitar race conditions
-                    correlative_line = self.env['correspondence.department.correlative'].search([
-                        ('department_id', '=', department.id),
-                        ('correspondence_type_id', '=', corr_type.id)
-                    ], limit=1)
+            department = doc.send_department_id
+            corr_type = doc.correspondence_type
 
-                    if not correlative_line:
-                        correlative_line = self.env['correspondence.department.correlative'].create({
-                            'department_id': department.id,
-                            'correspondence_type_id': corr_type.id,
-                            'last_sequence': 0
-                        })
-                    
-                    # Bloqueamos el registro para la actualización
-                    correlative_obj = correlative_line.with_for_update()
-                    correlative_obj.last_sequence += 1
-                    new_sequence = correlative_obj.last_sequence
+            if department and corr_type:
+                corr_type_id = corr_type.id
+                correlative_obj = self.env['correspondence.department.correlative'].search([
+                    ('department_id', '=', department.id),
+                    ('correspondence_type_id', '=', corr_type_id)
+                ], limit=1)
 
-                    new_correlative = f"{department.correlative_prefix}-{corr_type.prefix or ''}-{fields.Date.today().strftime('%y')}-{new_sequence}"
-                    doc.write({'correlative': new_correlative})
+                if not correlative_obj:
+                    correlative_obj = self.env['correspondence.department.correlative'].create({
+                        'department_id': department.id,
+                        'correspondence_type_id': corr_type_id,
+                        'last_sequence': 0
+                    })
 
-            # Si este nuevo documento es una respuesta a otro (tiene un padre)
-            if doc.parent_document_id:
-                # Cambiamos el estado del documento padre a 'Respondido'
-                doc.parent_document_id.write({'state': 'replied'})
+                new_sequence = correlative_obj.last_sequence + 1
+                correlative_obj.last_sequence = new_sequence
 
-        return docs
+                new_correlative = f"{department.correlative_prefix}-{corr_type.prefix or ''}-{fields.Date.today().strftime('%y')}-{new_sequence}"
+                new_document.write({'correlative': new_correlative})
+
+        # Si este nuevo documento es una respuesta a otro (tiene un padre)
+        if new_document.parent_document_id:
+            # Cambiamos el estado del documento padre a 'Respondido'
+            new_document.parent_document_id.write({'state': 'replied'})
+
+        return new_document
 
     def unlink(self):
         """
-        Sobrescribe el método de eliminación.
-        - Solo permite eliminar documentos en estado 'borrador'.
-        - Si el documento está en borrador, decrementa la secuencia del correlativo
-          SOLAMENTE si es el último número de la secuencia. Esto evita crear "huecos"
-          y previene la reutilización de correlativos que ya están en uso por otros borradores.
+        Sobrescribe el método de eliminación para permitirla solo en estado 'borrador'.
         """
         for doc in self:
             if doc.state != 'draft':
                 raise UserError(_('No se puede eliminar un documento de correspondencia que no esté en estado "Borrador".'))
-            
-            # Si el documento tiene un correlativo asignado (no es 'Nuevo')
-            if doc.correlative and doc.correlative != _('Nuevo') and doc.send_department_id and doc.correspondence_type:
-                try:
-                    # Extraer el número de secuencia del correlativo del documento
-                    doc_sequence = int(doc.correlative.split('-')[-1])
-
-                    correlative_line = self.env['correspondence.department.correlative'].search([
-                        ('department_id', '=', doc.send_department_id.id),
-                        ('correspondence_type_id', '=', doc.correspondence_type.id)
-                    ], limit=1)
-
-                    # Solo decrementar si el número del documento es el último de la secuencia
-                    if correlative_line and correlative_line.last_sequence == doc_sequence:
-                        correlative_line.last_sequence -= 1
-                except (ValueError, IndexError):
-                    # Si el correlativo no tiene el formato esperado, no hacemos nada.
-                    pass
-
         return super(correspondence_document, self).unlink()
 
     document_file = fields.Binary(string='Archivo', attachment=True, copy=False, help="El documento firmado y sellado.")
