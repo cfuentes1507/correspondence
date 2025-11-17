@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="public_correspondence_template" name="Public Correspondence Document">
+        <t t-call="website.layout">
+            <div id="wrap" class="container">
+                <div class="oe_structure">
+                    <div class="page">
+                        <h1 class="mt-4">Verificación de Documento</h1>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
+                                <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
+                                <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
+                                <p><strong>Departamento Remitente:</strong> <span t-field="doc.send_department_id.name"/></p>
+                                <p><strong>Departamentos Destinatarios:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
+                                <p><strong>Tipo:</strong> <span t-field="doc.correspondence_type.name"/></p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div t-if="doc.state in ['signed', 'sent', 'replied']" class="alert alert-success" role="alert">
+                                    <i class="fa fa-check-circle"/> <strong>Documento Válido</strong>
+                                    <p>Este documento fue generado y firmado en nuestro sistema.</p>
+                                </div>
+                                <div t-if="doc.state == 'draft'" class="alert alert-warning" role="alert">
+                                    <i class="fa fa-exclamation-triangle"/> <strong>Documento en Borrador</strong>
+                                    <p>Este documento aún no ha sido finalizado.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <h3>Contenido del Documento</h3>
+                        <div id="description_content" t-out="doc.descripcion" class="mt-3 p-3 border rounded bg-light"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
