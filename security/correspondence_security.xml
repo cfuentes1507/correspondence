@@ -11,6 +11,15 @@
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
+    <record id="correspondence_group_external_management" model="res.groups">
+        <field name="name">Gestión Externa (Despacho)</field>
+        <field name="category_id" ref="category_model_correspondence"/>
+        <field name="implied_ids" eval="[(4, ref('correspondence_group_user'))]"/>
+        <field name="comment">
+            Este grupo permite visualizar toda la correspondencia externa (entrante y saliente) de la institución. Pensado para el Despacho del Ministerio.
+        </field>
+    </record>
+
     <record id="correspondence_group_director" model="res.groups">
         <field name="name">Director</field>
         <field name="category_id" ref="category_model_correspondence"/>

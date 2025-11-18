@@ -5,7 +5,7 @@
             <field name="name">Bandeja de Entrada</field>
             <field name="res_model">correspondence_document</field>
             <field name="view_mode">tree,form,kanban</field>
-            <field name="domain">[('recipient_department_ids.user_ids', '=', uid), ('state', 'in', ['sent', 'replied'])]</field>
+            <field name="domain">[('recipient_department_ids.user_ids', '=', uid), ('state', 'in', ['sent', 'assigned', 'replied'])]</field>
             <field name="context">{'search_default_my_department': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -19,11 +19,29 @@
             <field name="name">Bandeja de Entrada (Admin)</field>
             <field name="res_model">correspondence_document</field>
             <field name="view_mode">tree,form,kanban</field>
-            <field name="domain">[('state', 'in', ['sent', 'replied'])]</field>
+            <field name="domain">[('state', 'in', ['sent', 'assigned', 'replied'])]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Aún no hay correspondencia en el sistema.
                 </p>
+            </field>
+        </record>
+
+        <!-- 
+            Acción para la nueva vista de "Gestión Externa".
+            Muestra los documentos ENTRANTES dirigidos al departamento del usuario.
+            Desde aquí se podrán generar las respuestas SALIENTES.
+        -->
+        <record id="action_correspondence_external_management" model="ir.actions.act_window">
+            <field name="name">Gestión de Correspondencia Externa</field>
+            <field name="res_model">correspondence_document</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="domain">[('correspondence_flow', 'in', ['incoming', 'outgoing'])]</field>
+            <field name="context">{'default_correspondence_flow': 'incoming'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Aquí aparecerá la correspondencia externa asignada a tu departamento.
+                </p><p>Selecciona un documento y haz clic en "Responder" para generar un documento de salida.</p>
             </field>
         </record>
 
@@ -83,10 +101,15 @@
         <menuitem id="menu_correspondence_inbox_user" name="Bandeja de Entrada" parent="menu_correspondence_root" sequence="10" action="action_correspondence_document_tree" groups="correspondence.correspondence_group_user,correspondence.correspondence_group_director"/>
         <!-- Menú para Bandeja de Entrada (solo para administradores) -->
         <menuitem id="menu_correspondence_inbox_admin" name="Bandeja de Entrada (Admin)" parent="menu_correspondence_root" sequence="15" action="action_correspondence_document_tree_admin" groups="correspondence.correspondence_group_admin"/>
-        
+
         <menuitem name="Bandeja de Salida" id="menu_correspondence_outbox" parent="menu_correspondence_root" sequence="20" action="action_server_open_outbox"/>
+
+        <!-- Nuevo menú para la gestión de correspondencia externa -->
+        <menuitem id="menu_correspondence_external_management" name="Gestión Externa" parent="menu_correspondence_root" sequence="22" action="action_correspondence_external_management" groups="correspondence.correspondence_group_external_management"/>
+
         <!-- Menú para el Archivo -->
         <menuitem id="menu_correspondence_archive" name="Archivo" parent="menu_correspondence_root" sequence="30" action="action_server_open_archive"/>
+
 
         <!-- Menú de Configuración -->
         <menuitem id="menu_correspondence_config" name="Configuración" parent="menu_correspondence_root" sequence="100" groups="correspondence.correspondence_group_admin"/>

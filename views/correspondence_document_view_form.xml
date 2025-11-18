@@ -7,48 +7,68 @@
             <field name="arch" type="xml">
                 <form string="Documento de Correspondencia">
                     <header>
-                        <!--<button name="action_generate_report" string="Generar Documento" type="object" states="draft,signed" class="btn-secondary"/>-->
-                        <button name="action_sign" string="Firmar y Sellar" type="object" states="draft" class="oe_highlight" groups="correspondence.correspondence_group_director"/>
                         <field name="is_current_user_recipient" invisible="1"/>
                         <field name="already_read_by_my_department" invisible="1"/>
-                        <button name="action_send" string="Enviar" type="object" states="signed" class="oe_highlight"/>
-                        <button name="action_read" string="Marcar como Leído" type="object" states="sent" class="btn-secondary" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('already_read_by_my_department', '=', True)]}"/>                        
-                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('state', 'not in', ['sent', 'replied'])]}"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,signed,sent,replied"/>
+                        
+                        <!-- Flujo Interno & Saliente: Borrador -> Firmado -->
+                        <button name="action_sign" string="Firmar y Sellar" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('correspondence_flow', '=', 'incoming')]}" groups="correspondence.correspondence_group_director"/>
+                        
+                        <!-- Flujo Interno: Firmado -> Enviado -->
+                        <button name="action_send" string="Enviar (Interno)" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'signed'), ('correspondence_flow', '!=', 'internal')]}"/>
+                        <!-- Flujo Saliente: Firmado -> Despachado -->
+                        <button name="action_dispatch" string="Despachar (Externo)" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'signed'), ('correspondence_flow', '!=', 'outgoing')]}" groups="correspondence.correspondence_group_external_management"/>
+                        <!-- Flujo Entrante: Recibido -> Asignado -->
+                        <button name="action_assign" string="Asignar a Departamentos" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'received'), ('correspondence_flow', '!=', 'incoming')]}"/>
+                        
+                        <!-- Botones comunes -->
+                        <button name="action_read" string="Marcar como Leído" type="object" class="btn-secondary" attrs="{'invisible': ['|', ('state', 'not in', ['sent', 'assigned']), '|', ('is_current_user_recipient', '=', False), ('already_read_by_my_department', '=', True)]}"/>
+                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('state', 'not in', ['sent', 'assigned', 'replied'])]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,received,assigned,signed,sent,dispatched,replied"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" placeholder="Asunto del documento" attrs="{'readonly': [('state', '!=', 'draft')]}"/></h1>
+                            <h1><field name="name" placeholder="Asunto del documento" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}"/></h1>
                         </div>
                         <group attrs="{'invisible': [('parent_document_id', '=', False)]}">
-                            <field string="En respuesta a:" name="parent_document_id" readonly="1"/>
+                            <field name="parent_document_id" readonly="1"/>
                         </group>
+                        <field name="correspondence_flow" invisible="1"/>
                         <group>
                             <group>
                                 <field name="correlative" attrs="{'readonly': True}"/>
                                 <field name="author_id" invisible="1"/>
-                                <field name="send_department_id"/>
-                                <field name="recipient_department_ids" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('id', '!=', send_department_id)]"/>
+                                <!-- Remitente: Interno o Externo -->
+                                <field name="send_department_id" attrs="{'invisible': [('correspondence_flow', '=', 'incoming')], 'required': [('correspondence_flow', '=', 'internal')], 'readonly': [('correspondence_flow', '=', 'internal')]}"/>
+                                <field name="external_partner_id" attrs="{'invisible': [('correspondence_flow', '=', 'internal')], 'required': [('correspondence_flow', 'in', ['incoming', 'outgoing'])]}" string="Entidad Externa" context="{'default_is_company': True}"/>
+                                <field name="external_address" attrs="{'invisible': [('correspondence_flow', '=', 'internal')]}"/>
                             </group>
                             <group>
-                                <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="correspondence_type" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
+                                <field name="date" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}"/>
+                                <field name="correspondence_type" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}" force_save="1"/>
+                                <!-- Destinatario: Interno o Externo -->
+                                <field name="recipient_department_ids" string="Departamentos Destinatarios (Internos)"
+                                    widget="many2many_tags"
+                                    options="{'no_create': True, 'no_open': True}"
+                                    attrs="{'invisible': [('correspondence_flow', '=', 'outgoing')], 'required': [('correspondence_flow', 'in', ['internal', 'incoming'])], 'readonly': [('state', 'not in', ['draft', 'received'])]}" 
+                                    domain="[('id', '!=', send_department_id)]"/>
+                                <!-- Método de envío para correspondencia saliente -->
+                                <field name="shipping_method" attrs="{'invisible': [('correspondence_flow', '!=', 'outgoing')], 'required': [('correspondence_flow', '=', 'outgoing')]}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Descripción">
-                                <div style="border: 1px solid #ccc; border-radius: 5px; padding: 0px;">
-                                    <field name="descripcion" attrs="{'readonly': [('state', 'not in', ['draft', 'signed'])]}"/>
-                                </div>
+                                <field name="descripcion" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}"/>
                             </page>
                             <page string="Observaciones">
-                                <field name="observaciones" attrs="{'readonly': [('state', 'not in', ['draft', 'signed'])]}"/>
+                                <field name="observaciones" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}"/>
                             </page>
                             <page string="Adjuntos" name="attachments">
                                 <group>
                                     <field string="Documento Firmado" name="document_file" filename="file_name" readonly="1"/>
                                     <field name="file_name" invisible="1"/>
+                                    <separator string="Archivos Adicionales"/>
+                                    <field name="extra_attachment_ids" widget="many2many_binary" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}"/>
                                 </group>
                             </page>
                             <page string="Respuestas">
@@ -151,8 +171,9 @@
             <field name="name">correspondence_document.tree</field>
             <field name="model">correspondence_document</field>
             <field name="arch" type="xml">
-                <tree string="Correspondencia">
+                <tree string="Correspondencia" decoration-info="correspondence_flow == 'internal'" decoration-success="correspondence_flow == 'incoming'" decoration-warning="correspondence_flow == 'outgoing'">
                     <field name="correlative"/>
+                    <field name="correspondence_flow" invisible="1"/> <!-- Añadido para que las decoraciones funcionen -->
                     <field name="name"/>
                     <field name="date"/>
                     <field name="send_department_id"/>

@@ -28,6 +28,7 @@
         #Data
         'data/correspondence_department_data.xml',
         'data/correspondence_type_data.xml',
+        'data/ir_sequence_data.xml',
         #Permissions
         'security/correspondence_security.xml',
         'security/ir.model.access.csv',

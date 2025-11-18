@@ -26,7 +26,7 @@ class correspondence_document(models.Model):
     name = fields.Char(string='Asunto', required=True)
     date = fields.Date(string='Fecha', default=fields.Date.context_today, required=True)
     author_id = fields.Many2one('res.users', string='Autor', default=lambda self: self.env.user, required=True, readonly=True)
-    send_department_id = fields.Many2one(related='author_id.department_id', string="Departamento Remitente", store=True, readonly=True)
+    send_department_id = fields.Many2one('correspondence_department', string="Departamento Remitente", compute='_compute_send_department_id', store=True, readonly=False)
     correspondence_type = fields.Many2one('correspondence_type', string='Tipo de Correspondencia', required=True, readonly=True, states={'draft': [('readonly', False)]})
     recipient_department_ids = fields.Many2many('correspondence_department', string='Departamentos Destinatarios', required=True, domain=_get_recipient_department_domain)
     descripcion = fields.Html(string='Descripción', required=True)
@@ -35,10 +35,33 @@ class correspondence_document(models.Model):
     state = fields.Selection([
         ('draft', 'Borrador'),
         ('signed', 'Firmado'),
-        ('sent', 'Enviado'),
-        ('replied', 'Respondido')
+        ('received', 'Recibido'),
+        ('assigned', 'Asignado'),
+        ('sent', 'Enviado (Interno)'),
+        ('dispatched', 'Despachado (Externo)'),
+        ('replied', 'Respondido'),
     ], string='Estado', default='draft', tracking=True)
     
+    correspondence_flow = fields.Selection([
+        ('internal', 'Interna'),
+        ('incoming', 'Entrante (Externa recibida)'),
+        ('outgoing', 'Saliente (Externa enviada)'),
+    ], string="Flujo de Correspondencia", default='internal', required=True, index=True, tracking=True, readonly=True, states={'draft': [('readonly', False)], 'received': [('readonly', False)]})
+    
+    # Campo para vincular con la entidad externa (res.partner)
+    external_partner_id = fields.Many2one('res.partner', string="Entidad Externa")
+    # Campo relacionado para mostrar la dirección del partner, útil en los reportes.
+    external_address = fields.Char(string="Dirección Externa", related='external_partner_id.contact_address', readonly=True)
+
+
+    # Campo para correspondencia saliente
+    shipping_method = fields.Selection([
+        ('email', 'Correo Electrónico'),
+        ('courier', 'Courier / Mensajería'),
+        ('certified_mail', 'Correo Certificado'),
+        ('in_person', 'Entrega en Persona'),
+    ], string="Método de Envío")
+
     read_status_ids = fields.One2many('correspondence.document.read_status', 'document_id', string='Estados de Lectura')
     
     is_current_user_recipient = fields.Boolean(
@@ -52,6 +75,15 @@ class correspondence_document(models.Model):
 
     public_url = fields.Char(
         string="URL Pública", compute='_compute_public_url', help="URL para la verificación pública del documento.")
+
+    @api.depends('author_id', 'author_id.department_id')
+    def _compute_send_department_id(self):
+        """
+        Establece el departamento del autor como valor por defecto,
+        pero permite que sea modificado.
+        """
+        for doc in self:
+            doc.send_department_id = doc.author_id.department_id
 
     @api.depends('recipient_department_ids', 'read_status_ids.department_id')
     def _compute_is_current_user_recipient(self):
@@ -76,7 +108,7 @@ class correspondence_document(models.Model):
                 elif is_recipient:
                     doc.user_facing_state = _('Recibido')
                 else:
-                    doc.user_facing_state = _('Enviado') # Fallback para otros usuarios (ej. admin)
+                    doc.user_facing_state = _('En Gestión') # Fallback para otros usuarios (ej. admin)
             else:
                 doc.user_facing_state = doc.get_state_display_name()
 
@@ -109,6 +141,18 @@ class correspondence_document(models.Model):
 
     def action_send(self):
         self.write({'state': 'sent'})
+
+    def action_assign(self):
+        """Acción para correspondencia entrante. Cambia el estado a 'Asignado'."""
+        self.ensure_one()
+        if self.correspondence_flow != 'incoming':
+            raise UserError(_("Esta acción solo es válida para correspondencia entrante."))
+        self.write({'state': 'assigned'})
+
+    def action_dispatch(self):
+        """Acción para correspondencia saliente. Cambia el estado a 'Despachado'."""
+        self.ensure_one()
+        self.write({'state': 'dispatched'})
 
     def action_read(self):
         self.ensure_one()
@@ -143,13 +187,22 @@ class correspondence_document(models.Model):
 
     def action_reply(self):
         self.ensure_one()
-        # Prepara el contexto con valores por defecto para la respuesta
+        # Prepara el contexto base con valores por defecto para la respuesta
         ctx = {
             'default_parent_document_id': self.id,
-            'default_recipient_department_ids': [(6, 0, self.send_department_id.ids)],
             'default_name': f"Re: {self.correlative} - {self.name}",
             'default_correspondence_type': self.correspondence_type.id,
         }
+
+        # Si estamos respondiendo a un documento ENTRANTE, la respuesta debe ser SALIENTE
+        if self.correspondence_flow == 'incoming':
+            ctx['default_correspondence_flow'] = 'outgoing'
+            ctx['default_external_partner_id'] = self.external_partner_id.id
+        # Si estamos respondiendo a un documento INTERNO, la respuesta sigue siendo INTERNA
+        else:
+            ctx['default_correspondence_flow'] = 'internal'
+            ctx['default_recipient_department_ids'] = [(6, 0, self.send_department_id.ids)]
+
         return {
             'name': 'Responder Correspondencia',
             'type': 'ir.actions.act_window',
@@ -161,41 +214,51 @@ class correspondence_document(models.Model):
 
     @api.model
     def create(self, vals):
-        # Solución Definitiva: Asegurar que 'correspondence_type' esté en 'vals'.
-        # Al responder, el tipo viene en el contexto pero no en vals. Lo añadimos explícitamente.
-        if 'correspondence_type' not in vals and self.env.context.get('default_correspondence_type'):
-            vals['correspondence_type'] = self.env.context.get('default_correspondence_type')
+        # Determinar el estado inicial basado en el flujo
+        if vals.get('correspondence_flow') == 'incoming':
+            vals['state'] = 'received'
+        else:
+            vals.setdefault('state', 'draft')
 
-        # Paso 1: Crear el documento con un correlativo temporal.
+        # Asignar correlativo temporal
+        if 'correlative' not in vals:
+            vals['correlative'] = _('Nuevo')
+
         new_document = super(correspondence_document, self).create(vals)
 
-        # Paso 2: Generar y escribir el correlativo final ahora que tenemos el registro completo.
-        if new_document.correlative == 'Nuevo':
-            # Forzamos una relectura del registro para asegurarnos de que todos los campos
-            # relacionales (Many2one, related) estén cargados y no haya problemas de caché.
-            doc = self.browse(new_document.id)
+        # Generar correlativo final
+        if new_document.correlative == _('Nuevo'):
+            new_correlative = ''
+            if new_document.correspondence_flow == 'incoming':
+                # Usar una secuencia global para correspondencia entrante
+                sequence = self.env['ir.sequence'].next_by_code('correspondence.incoming')
+                new_correlative = f"ENT-{sequence}" if sequence else _('Error de Secuencia')
 
-            department = doc.send_department_id
-            corr_type = doc.correspondence_type
+            elif new_document.correspondence_flow in ['internal', 'outgoing']:
+                # Usar la lógica existente para interna y saliente
+                department = new_document.send_department_id
+                corr_type = new_document.correspondence_type
 
-            if department and corr_type:
-                corr_type_id = corr_type.id
-                correlative_obj = self.env['correspondence.department.correlative'].search([
-                    ('department_id', '=', department.id),
-                    ('correspondence_type_id', '=', corr_type_id)
-                ], limit=1)
+                if department and corr_type:
+                    correlative_obj = self.env['correspondence.department.correlative'].search([
+                        ('department_id', '=', department.id),
+                        ('correspondence_type_id', '=', corr_type.id)
+                    ], limit=1)
 
-                if not correlative_obj:
-                    correlative_obj = self.env['correspondence.department.correlative'].create({
-                        'department_id': department.id,
-                        'correspondence_type_id': corr_type_id,
-                        'last_sequence': 0
-                    })
+                    if not correlative_obj:
+                        correlative_obj = self.env['correspondence.department.correlative'].create({
+                            'department_id': department.id,
+                            'correspondence_type_id': corr_type.id,
+                            'last_sequence': 0
+                        })
 
-                new_sequence = correlative_obj.last_sequence + 1
-                correlative_obj.last_sequence = new_sequence
+                    new_sequence = correlative_obj.last_sequence + 1
+                    correlative_obj.last_sequence = new_sequence
 
-                new_correlative = f"{department.correlative_prefix}-{corr_type.prefix or ''}-{fields.Date.today().strftime('%y')}-{new_sequence}"
+                    year = fields.Date.today().strftime('%y')
+                    new_correlative = f"{department.correlative_prefix}-{corr_type.prefix or ''}-{year}-{new_sequence}"
+
+            if new_correlative:
                 new_document.write({'correlative': new_correlative})
 
         # Si este nuevo documento es una respuesta a otro (tiene un padre)
@@ -214,6 +277,14 @@ class correspondence_document(models.Model):
 
     document_file = fields.Binary(string='Archivo', attachment=True, copy=False, help="El documento firmado y sellado.")
     file_name = fields.Char(string="Nombre de Archivo")
+
+    extra_attachment_ids = fields.Many2many(
+        comodel_name='ir.attachment',
+        relation='correspondence_document_extra_attachment_rel',
+        column1='document_id',
+        column2='attachment_id',
+        string="Archivos Adjuntos Adicionales"
+    )
 
     def action_open_signed_document(self):
         """
