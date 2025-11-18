@@ -15,6 +15,8 @@ Este módulo tiene como objetivo digitalizar y centralizar el proceso de envío,
 *   **Integración con Odoo:** Utiliza el sistema de chatter de Odoo para notificaciones y seguimiento de actividades.
 *   **Reportes Dinámicos:** Asocia plantillas de reportes personalizadas a cada tipo de correspondencia.
 *   **Gestión de Directores:** Mantiene un historial de los directores de cada departamento, calculando automáticamente el director actual.
+*   **Auditoria Rapida a los Documentos:** Cada documento de Correspondencia se genera con un codigo QR unico que permite trazar en cualquiero lugar la validez del documento.
+*   **Envio de Adjuntos Mediante Vistas Publicas:** Mediante el uso de la vista publica se pueden enviar archivos, los cuales solo pueden ser descargados si se cuenta con un usuario autorizado.
 
 ## Estructura del Módulo
 
