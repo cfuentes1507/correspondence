@@ -8,10 +8,12 @@ from odoo.exceptions import UserError
 def _get_recipient_department_domain(self):
     """Devuelve un dominio para excluir el departamento del usuario actual."""
     # Esta restricción solo debe aplicarse al crear un nuevo documento,
-    # no al visualizar registros existentes, para evitar conflictos con las reglas de seguridad.
-    if self.env.context.get('form_view_ref') and self.env.user.department_id:
-        return [('id', '!=', self.env.user.department_id.id)]
-    return [] # Sin restricción al ver listas o registros existentes
+    # no al visualizar registros existentes, para evitar conflictos con las reglas de seguridad.    
+    domain = [('can_receive_correspondence', '=', True)]
+    if self.env.context.get('form_view_ref') and self.env.user.employee_id.department_id:
+        domain.append(('id', '!=', self.env.user.employee_id.department_id.id))
+    
+    return domain
 
 class correspondence_document(models.Model):
     _name = 'correspondence_document'
@@ -26,9 +28,9 @@ class correspondence_document(models.Model):
     name = fields.Char(string='Asunto', required=True)
     date = fields.Date(string='Fecha', default=fields.Date.context_today, required=True)
     author_id = fields.Many2one('res.users', string='Autor', default=lambda self: self.env.user, required=True, readonly=True)
-    send_department_id = fields.Many2one('correspondence_department', string="Departamento Remitente", compute='_compute_send_department_id', store=True, readonly=False)
+    send_department_id = fields.Many2one('hr.department', string="Departamento Remitente", compute='_compute_send_department_id', store=True, readonly=False)
     correspondence_type = fields.Many2one('correspondence_type', string='Tipo de Correspondencia', required=True, readonly=True, states={'draft': [('readonly', False)]})
-    recipient_department_ids = fields.Many2many('correspondence_department', string='Departamentos Destinatarios', required=True, domain=_get_recipient_department_domain)
+    recipient_department_ids = fields.Many2many('hr.department', string='Departamentos Destinatarios', required=True, domain=_get_recipient_department_domain)
     descripcion = fields.Html(string='Descripción', required=True)
     observaciones = fields.Text(string='Observaciones')
 
@@ -76,19 +78,19 @@ class correspondence_document(models.Model):
     public_url = fields.Char(
         string="URL Pública", compute='_compute_public_url', help="URL para la verificación pública del documento.")
 
-    @api.depends('author_id', 'author_id.department_id')
+    @api.depends('author_id', 'author_id.employee_id.department_id')
     def _compute_send_department_id(self):
         """
         Establece el departamento del autor como valor por defecto,
         pero permite que sea modificado.
         """
         for doc in self:
-            doc.send_department_id = doc.author_id.department_id
+            doc.send_department_id = doc.author_id.employee_id.department_id
 
     @api.depends('recipient_department_ids', 'read_status_ids.department_id')
     def _compute_is_current_user_recipient(self):
         for doc in self:
-            user_department = self.env.user.department_id
+            user_department = self.env.user.employee_id.department_id
             doc.is_current_user_recipient = user_department in doc.recipient_department_ids
             doc.already_read_by_my_department = user_department in doc.read_status_ids.mapped('department_id')
 
@@ -100,7 +102,7 @@ class correspondence_document(models.Model):
         """
         for doc in self:
             is_author = doc.author_id == self.env.user
-            is_recipient = self.env.user.department_id in doc.recipient_department_ids
+            is_recipient = self.env.user.employee_id.department_id in doc.recipient_department_ids
 
             if doc.state == 'sent':
                 if is_author:
@@ -156,7 +158,7 @@ class correspondence_document(models.Model):
 
     def action_read(self):
         self.ensure_one()
-        user_department = self.env.user.department_id
+        user_department = self.env.user.employee_id.department_id
 
         # Validación de seguridad: Solo los usuarios de un departamento destinatario pueden marcar como leído.
         if not user_department or user_department not in self.recipient_department_ids:
@@ -254,9 +256,8 @@ class correspondence_document(models.Model):
 
                     new_sequence = correlative_obj.last_sequence + 1
                     correlative_obj.last_sequence = new_sequence
-
                     year = fields.Date.today().strftime('%y')
-                    new_correlative = f"{department.correlative_prefix}-{corr_type.prefix or ''}-{year}-{new_sequence}"
+                    new_correlative = f"{department.correlative_prefix or 'S-PRE'}-{corr_type.prefix or ''}-{year}-{str(new_sequence).zfill(4)}"
 
             if new_correlative:
                 new_document.write({'correlative': new_correlative})
@@ -341,7 +342,7 @@ class correspondence_document(models.Model):
         Construye y devuelve una acción de ventana con un dominio dinámico
         que filtra los documentos por el departamento del usuario actual.
         """
-        user_department_id = self.env.user.department_id.id
+        user_department_id = self.env.user.employee_id.department_id.id
         if not user_department_id:
             raise UserError(_("Tu usuario no tiene un departamento asignado. Por favor, contacta a un administrador."))
 
@@ -359,7 +360,7 @@ class correspondence_document(models.Model):
         Construye y devuelve una acción de ventana con un dominio dinámico
         que filtra los documentos enviados o recibidos por el departamento del usuario.
         """
-        user_department_id = self.env.user.department_id.id
+        user_department_id = self.env.user.employee_id.department_id.id
         if not user_department_id:
             raise UserError(_("Tu usuario no tiene un departamento asignado. Por favor, contacta a un administrador."))
 

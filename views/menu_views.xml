@@ -5,7 +5,7 @@
             <field name="name">Bandeja de Entrada</field>
             <field name="res_model">correspondence_document</field>
             <field name="view_mode">tree,form,kanban</field>
-            <field name="domain">[('recipient_department_ids.user_ids', '=', uid), ('state', 'in', ['sent', 'assigned', 'replied'])]</field>
+            <field name="domain">[('recipient_department_ids.member_ids.user_id', '=', uid), ('state', 'in', ['sent', 'assigned', 'replied'])]</field>
             <field name="context">{'search_default_my_department': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -71,11 +71,14 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- Acción para Departamentos -->
-        <record id="action_correspondence_department" model="ir.actions.act_window">
-            <field name="name">Departamentos</field>
-            <field name="res_model">correspondence_department</field>
+        <!-- Acción para la vista personalizada de Departamentos -->
+        <record id="action_correspondence_hr_department" model="ir.actions.act_window">
+            <field name="name">Departamentos (Correspondencia)</field>
+            <field name="res_model">hr.department</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('correspondence_department_view_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('correspondence_department_view_form')})]"/>
         </record>
 
         <!-- Acción de servidor para la Bandeja de Salida -->
@@ -116,6 +119,6 @@
         
         <!-- Submenús de Configuración -->
         <menuitem id="menu_correspondence_type" name="Tipos de Correspondencia" parent="menu_correspondence_config" sequence="10" action="action_correspondence_type"/>
-        <menuitem id="menu_correspondence_department" name="Departamentos" parent="menu_correspondence_config" sequence="20" action="action_correspondence_department"/>
+        <menuitem id="menu_correspondence_department" name="Departamentos" parent="menu_correspondence_config" sequence="20" action="action_correspondence_hr_department"/>
     </data>
 </odoo>

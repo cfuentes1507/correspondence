@@ -50,7 +50,7 @@
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center mt-0" style="font-weight: bold;">MEMORANDO</h2>
                         <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
-                        <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
+                        <p><strong>De:</strong> <span t-field="doc.send_department_id.manager_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
@@ -65,18 +65,18 @@
                                 <!-- Firma y Sello -->
                                 <div style="height: 110px; margin-bottom: 5px;">
                                     <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.current_director_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
+                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
                                     </div>
                                     <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.current_director_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_signature)" style="max-height: 100px;"/>
+                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
                                     </div>
                                 </div>
                                 <!-- Línea de firma -->
                                 <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
-                                    <strong t-field="doc.send_department_id.current_director_id.name"/>
+                                    <strong t-field="doc.send_department_id.manager_id.name"/>
                                 </p>
                                 <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
                                 </p>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center" style="text-transform: uppercase; letter-spacing: 4px; border: 2px solid black; padding: 10px;">CIRCULAR</h2>
                         <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
-                        <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
+                        <p><strong>De:</strong> <span t-field="doc.send_department_id.manager_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
@@ -118,18 +118,18 @@
                                 <!-- Firma y Sello -->
                                 <div style="height: 110px; margin-bottom: 5px;">
                                     <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.current_director_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
+                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
                                     </div>
                                     <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.current_director_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_signature)" style="max-height: 100px;"/>
+                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
                                     </div>
                                 </div>
                                 <!-- Línea de firma -->
                                 <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
-                                    <strong t-field="doc.send_department_id.current_director_id.name"/>
+                                    <strong t-field="doc.send_department_id.manager_id.name"/>
                                 </p>
                                 <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
                                 </p>
                             </div>
                         </div>
@@ -156,7 +156,7 @@
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center" style="font-style: italic; border-bottom: 1px solid #ccc; padding-bottom: 5px;">OFICIO</h2>
                         <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
-                        <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
+                        <p><strong>De:</strong> <span t-field="doc.send_department_id.manager_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
@@ -171,18 +171,18 @@
                                 <!-- Firma y Sello -->
                                 <div style="height: 110px; margin-bottom: 5px;">
                                     <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.current_director_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
+                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
                                     </div>
                                     <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.current_director_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_signature)" style="max-height: 100px;"/>
+                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
                                     </div>
                                 </div>
                                 <!-- Línea de firma -->
                                 <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
-                                    <strong t-field="doc.send_department_id.current_director_id.name"/>
+                                    <strong t-field="doc.send_department_id.manager_id.name"/>
                                 </p>
                                 <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
                                 </p>
                             </div>
                         </div>
@@ -209,7 +209,7 @@
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
                         <h2 class="text-center">DOCUMENTO DE CORRESPONDENCIA</h2>
                         <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
-                        <p><strong>De:</strong> <span t-field="doc.send_department_id.current_director_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
+                        <p><strong>De:</strong> <span t-field="doc.send_department_id.manager_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
                         <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
                         <hr/>
@@ -224,18 +224,18 @@
                                 <!-- Firma y Sello -->
                                 <div style="height: 110px; margin-bottom: 5px;">
                                     <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.current_director_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
+                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
                                     </div>
                                     <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.current_director_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.current_director_id.director_signature)" style="max-height: 100px;"/>
+                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
                                     </div>
                                 </div>
                                 <!-- Línea de firma -->
                                 <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
-                                    <strong t-field="doc.send_department_id.current_director_id.name"/>
+                                    <strong t-field="doc.send_department_id.manager_id.name"/>
                                 </p>
                                 <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.current_director_id.director_description"/>
+                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
                                 </p>
                             </div>
                         </div>

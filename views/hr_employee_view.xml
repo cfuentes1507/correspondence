@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_correspondence" model="ir.ui.view">
+        <field name="name">hr.employee.form.correspondence</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <field name="is_correspondence_manager" invisible="1"/>
+                <page string="Correspondencia" name="correspondence" attrs="{'invisible': [('is_correspondence_manager', '=', False)]}">
+                    <group>
+                        <field name="director_description"/>
+                    <field name="director_signature" widget="image" class="oe_avatar"/>
+                    <field name="director_stamp" widget="image" class="oe_avatar"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

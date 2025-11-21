@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 # Modelos base heredados
-from . import res_partner
-from . import res_users
+from . import hr_employee
+from . import hr_department
 
 # Modelos de catálogo
-from . import correspondence_department
 from . import correspondence_type
 
 # Modelos de relación y auxiliares

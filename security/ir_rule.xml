@@ -10,7 +10,9 @@
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
-            <field name="domain_force">['|', ('author_id', '=', user.id), ('recipient_department_ids.user_ids', 'in', [user.id])]</field>
+            <field name="domain_force">
+                ['|', ('send_department_id.member_ids.user_id', '=', user.id), ('recipient_department_ids.member_ids.user_id', '=', user.id)]
+            </field>
         </record>
 
         <record id="correspondence_document_admin_rule" model="ir.rule">

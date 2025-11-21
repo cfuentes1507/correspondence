@@ -8,7 +8,7 @@ class CorrespondenceDocumentReadStatus(models.Model):
     _rec_name = 'department_id'
 
     document_id = fields.Many2one('correspondence_document', string='Documento', required=True, ondelete='cascade')
-    department_id = fields.Many2one('correspondence_department', string='Departamento', required=True)
+    department_id = fields.Many2one('hr.department', string='Departamento', required=True)
     read_by_user_id = fields.Many2one('res.users', string='Leído por', required=True)
     read_date = fields.Datetime(string='Fecha de Lectura', default=fields.Datetime.now, required=True)
 

@@ -1,30 +1,47 @@
 <odoo>
     <data>
+        <!-- Vista de Árbol Personalizada para Departamentos de Correspondencia -->
+        <record model="ir.ui.view" id="correspondence_department_view_tree">
+            <field name="name">hr.department.tree.correspondence</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <tree string="Departamentos">
+                    <field name="name"/>
+                    <field name="manager_id"/>
+                    <field name="can_receive_correspondence"/>
+                </tree>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="correspondence_department_view_form">
-            <field name="name">correspondence_department.form</field>
-            <field name="model">correspondence_department</field>
+            <field name="name">hr.department.form.correspondence</field>
+            <field name="model">hr.department</field>
             <field name="arch" type="xml">
                 <form string="Departamento">
                     <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
                         <group>
                             <group>
-                                <field name="name"/>
+                                <field name="manager_id"/>
+                                <field name="parent_id"/>
                             </group>
                             <group>
-                                <field name="current_director_id"/>
-                            </group>
-                        </group>
-                        <group>
-                            <group>
-                                <field name="correlative_prefix"/>
-                            </group>
-                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Historial de Directores">
+                            <page string="Configuración de Correspondencia">
+                                <group>
+                                    <field name="correlative_prefix"/>
+                                    <field name="can_receive_correspondence"/>
+                                </group>
+                            </page>
+                            <page string="Historial de Gerentes">
                                 <field name="director_history_ids">
-                                    <tree editable="bottom"><field name="director_id"/><field name="date_start"/><field name="date_end"/></tree>
+                                    <tree editable="bottom"><field name="director_id" string="Gerente"/><field name="date_start"/><field name="date_end"/></tree>
                                 </field>
                             </page>
                             <page string="Correlativos por Tipo de Documento">
@@ -35,8 +52,8 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Usuarios">
-                                <field name="user_ids"/>
+                            <page string="Miembros del Departamento">
+                                <field name="member_ids" readonly="1"/>
                             </page>
                         </notebook>
                     </sheet>

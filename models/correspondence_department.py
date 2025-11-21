@@ -7,6 +7,7 @@ class correspondence_department(models.Model):
     _name = 'correspondence_department'
     _description = 'Departamento de Correspondencia'
 
+    company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
     name = fields.Char(string='Nombre del Departamento', required=True)
     correlative_prefix = fields.Char(string='Prefijo de Correlativo', help="Prefijo usado para generar el correlativo de los documentos de este departamento (ej. 'FIN' para Finanzas).", required=True)
     user_ids = fields.One2many('res.users', 'department_id', string='Usuarios')
