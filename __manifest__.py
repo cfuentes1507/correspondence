@@ -12,7 +12,7 @@
     'category': 'Uncategorized',
     'version': '0.2',
     'license': 'LGPL-3',
-    'depends': ['base', 'mail', 'web', 'website', 'hr'],
+    'depends': ['base', 'mail', 'website', 'hr'],
     'data': [
         #Reportes
         'report/correspondence_report.xml',
