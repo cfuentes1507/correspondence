@@ -14,6 +14,9 @@ def _get_recipient_department_domain(self):
         domain.append(('id', '!=', self.env.user.employee_id.department_id.id))
     
     return domain
+def _get_default_send_department(self):
+    """Obtiene el departamento del usuario actual como valor por defecto."""
+    return self.env.user.department_id
 
 class correspondence_document(models.Model):
     _name = 'correspondence_document'
@@ -28,7 +31,7 @@ class correspondence_document(models.Model):
     name = fields.Char(string='Asunto', required=True)
     date = fields.Date(string='Fecha', default=fields.Date.context_today, required=True)
     author_id = fields.Many2one('res.users', string='Autor', default=lambda self: self.env.user, required=True, readonly=True)
-    send_department_id = fields.Many2one('hr.department', string="Departamento Remitente", compute='_compute_send_department_id', store=True, readonly=False)
+    send_department_id = fields.Many2one('hr.department', string="Departamento Remitente", default=_get_default_send_department)
     correspondence_type = fields.Many2one('correspondence_type', string='Tipo de Correspondencia', required=True, readonly=True, states={'draft': [('readonly', False)]})
     recipient_department_ids = fields.Many2many('hr.department', string='Departamentos Destinatarios', required=True, domain=_get_recipient_department_domain)
     descripcion = fields.Html(string='Descripción', required=True)

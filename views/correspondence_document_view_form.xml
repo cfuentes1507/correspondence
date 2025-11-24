@@ -39,8 +39,8 @@
                                 <field name="correlative" attrs="{'readonly': True}"/>
                                 <field name="author_id" invisible="1"/>
                                 <!-- Remitente: Interno o Externo -->
-                                <field name="send_department_id" attrs="{'invisible': [('correspondence_flow', '=', 'incoming')], 'required': [('correspondence_flow', '=', 'internal')], 'readonly': [('correspondence_flow', '=', 'internal')]}"/>
-                                <field name="external_partner_id" attrs="{'invisible': [('correspondence_flow', '=', 'internal')], 'required': [('correspondence_flow', 'in', ['incoming', 'outgoing'])]}" string="Entidad Externa" context="{'default_is_company': True}"/>
+                                <field name="send_department_id" readonly="1" attrs="{'invisible': [('correspondence_flow', '=', 'incoming')], 'required': [('correspondence_flow', 'in', ['internal', 'outgoing'])]}"/>
+                                <field name="external_partner_id" attrs="{'invisible': [('correspondence_flow', '=', 'internal')], 'required': [('correspondence_flow', 'in', ['incoming', 'outgoing'])], 'readonly': [('state', 'not in', ['draft', 'received'])]}" string="Entidad Externa" context="{'default_is_company': True}"/>
                                 <field name="external_address" attrs="{'invisible': [('correspondence_flow', '=', 'internal')]}"/>
                             </group>
                             <group>
