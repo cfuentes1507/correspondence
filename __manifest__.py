@@ -18,13 +18,13 @@
         'security/correspondence_security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        ## Reports
+        'report/correspondence_report.xml',
         ## Data
         'data/correspondence_type_data.xml',
         'data/ir_sequence_data.xml',
         ## Wizards
         'wizard/upload_signed_document_wizard_view.xml',
-        ## Reports
-        'report/correspondence_report.xml',
         ## Views
         'views/correspondence_type_view.xml',
         'views/correspondence_department_view.xml',
