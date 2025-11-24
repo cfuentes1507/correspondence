@@ -23,14 +23,14 @@
         'data/ir_sequence_data.xml',
         ## Wizards
         'wizard/upload_signed_document_wizard_view.xml',
+        ## Reports
+        'report/correspondence_report.xml',
         ## Views
         'views/correspondence_type_view.xml',
         'views/correspondence_department_view.xml',
         'views/correspondence_document_view_form.xml',
         'views/hr_employee_view.xml',
         'views/public_correspondence_template.xml',
-        ## Reports
-        'report/correspondence_report.xml',
         # Menus
         'views/menu_views.xml',
     ],
