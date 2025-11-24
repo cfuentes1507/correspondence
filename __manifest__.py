@@ -30,9 +30,9 @@
         'views/hr_employee_view.xml',
         'views/public_correspondence_template.xml',
         ## Reports
-        #'report/correspondence_report.xml',
+        'report/correspondence_report.xml',
         # Menus
-        #'views/menu_views.xml',
+        'views/menu_views.xml',
     ],
     'demo': [
     ],
