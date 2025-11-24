@@ -4,17 +4,15 @@
     <!--         LAYOUT PERSONALIZADO PARA TODOS LOS REPORTES                -->
     <!-- =================================================================== -->
     <template id="external_layout_correspondence" inherit_id="web.external_layout_standard">
-        <xpath expr="/t/div[1]" position="replace">
-            <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
-                <div class="d-flex justify-content-between align-items-center" style="border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 0px; width: 100%;">
-                    <div> 
-                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 80px;" alt="Company Logo"/>
-                    </div>
-                    <div style="width: 50%;">
-                    </div>
-                    <div>
-                        <img src="/correspondence/static/src/img/logo-derecha.png" style="max-height: 80px;" alt="Secondary Logo"/>
-                    </div>
+        <xpath expr="//div[hasclass('header')]/t[@t-call='web.external_layout_header']" position="replace">
+            <!-- Reemplazamos el contenido del header por nuestro diseño personalizado -->
+            <div class="d-flex justify-content-between align-items-center" style="border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 0px; width: 100%;">
+                <div>
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 80px;" alt="Company Logo"/>
+                </div>
+                <div style="width: 50%;"/>
+                <div>
+                    <img src="/correspondence/static/src/img/logo-derecha.png" style="max-height: 80px;" alt="Secondary Logo"/>
                 </div>
             </div>
         </xpath>
