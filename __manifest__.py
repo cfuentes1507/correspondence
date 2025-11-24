@@ -14,38 +14,27 @@
     'license': 'LGPL-3',
     'depends': ['base', 'mail', 'website', 'hr'],
     'data': [
-        #Reportes
-        'report/correspondence_report.xml',
-        # Vistas
-        # Security
+        ## Security
         'security/correspondence_security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
-        # Data
+        ## Data
         'data/correspondence_type_data.xml',
         'data/ir_sequence_data.xml',
-        # Wizards
-        'wizard/upload_signed_document_wizard_view.xml',
-        # Views
-        'views/correspondence_type_view.xml',
-        'views/correspondence_department_view.xml',
-        'views/correspondence_document_view_form.xml',
-        'views/hr_employee_view.xml',
-        'views/public_correspondence_template.xml',
-        #wizards
-        'wizard/upload_signed_document_wizard_view.xml',
-        #Data
-        'data/correspondence_type_data.xml',
-        'data/ir_sequence_data.xml',
-        #Permissions
-        'security/correspondence_security.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
-        #Menus
-        # Reports
-        'report/correspondence_report.xml',
+        ## Wizards
+        #'wizard/upload_signed_document_wizard_view.xml',
+        ## Views
+        #'views/correspondence_type_view.xml',
+        #'views/correspondence_department_view.xml',
+        #'views/correspondence_document_view_form.xml',
+        #'views/hr_employee_view.xml',
+        #'views/public_correspondence_template.xml',
+        ##wizards
+        #'wizard/upload_signed_document_wizard_view.xml',
+        ## Reports
+        #'report/correspondence_report.xml',
         # Menus
-        'views/menu_views.xml',
+        #'views/menu_views.xml',
     ],
     'demo': [
     ],
