@@ -11,7 +11,7 @@
                         <field name="already_read_by_my_department" invisible="1"/>
                         
                         <!-- Flujo Interno & Saliente: Borrador -> Firmado -->
-                        <button name="action_sign" string="Firmar y Sellar" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('correspondence_flow', '=', 'incoming')]}" groups="correspondence.correspondence_group_director"/>
+                        <button name="action_sign" string="Firmar y Sellar" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('id', '=', False), '|', ('state', '!=', 'draft'), ('correspondence_flow', '=', 'incoming')]}" groups="correspondence.correspondence_group_director"/>
                         
                         <!-- Flujo Interno: Firmado -> Enviado -->
                         <button name="action_send" string="Enviar (Interno)" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'signed'), ('correspondence_flow', '!=', 'internal')]}"/>
