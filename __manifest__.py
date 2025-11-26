@@ -18,6 +18,7 @@
         'security/correspondence_security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
+        'security/hr_employee_security.xml',
         ## Reports
         'report/correspondence_report.xml',
         ## Data
