@@ -58,14 +58,6 @@ Un documento en estado `Enviado` o `Asignado` puede ser marcado como **Leído** 
 
 ## Instalación
 
-### Dependencias:
-# Instala dependencias del sistema y librerías de Python necesarias.
-
-RUN apt-get update && apt-get install -y --no-install-recommends wkhtmltopdf && \
-    && pip install qrcode \
-    apt-get clean && \
-    && rm -rf /var/lib/apt/lists/*
-
 1.  Clona o descarga este repositorio.
 2.  Añade la carpeta `correspondence` a tu directorio de `addons` de Odoo.
 3.  Reinicia el servicio de Odoo.
