@@ -65,5 +65,5 @@ Un documento en estado `Enviado` o `Asignado` puede ser marcado como **Leído** 
 5.  Ve a `Aplicaciones`, busca "Correspondencia Institucional" e instálalo.
 
 ## Diagrama de Flujos
-
+   Este diagrama de flujo se encuentra **Deprecate**
 <img width="1024" alt="Diagrama de Flujo de Correspondencia" src="https://github.com/user-attachments/assets/f7cec1d8-ccfe-4a1a-ad0e-9b6a49e90c7a" />
