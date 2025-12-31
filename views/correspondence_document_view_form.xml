@@ -72,7 +72,7 @@
                                 </group>
                             </page>
                             <page string="Respuestas">
-                                <field name="child_document_ids" force_save="1" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('is_current_user_recipient', '=', False)]}">
+                                <field name="child_document_ids" force_save="1">
                                 </field>
                             </page>
                             <page string="Estado de Lectura" name="read_status">
@@ -182,6 +182,8 @@
                 </tree>
             </field>
         </record>
+
+
         <!-- Vista Búsqueda -->
         <record id="correspondence_document_view_search" model="ir.ui.view">
             <field name="name">correspondence_document.search</field>

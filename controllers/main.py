@@ -30,5 +30,15 @@ class CorrespondencePublicController(http.Controller):
         attachment = request.env['ir.attachment'].browse(attachment_id).exists()
         if not attachment:
             return request.not_found()
+
+        # Security Check: Ensure the attachment belongs to a correspondence_document
+        # and checking access rights to the related document.
+        if attachment.res_model == 'correspondence_document':
+            try:
+                # Check if user has access to the document
+                request.env['correspondence_document'].browse(attachment.res_id).check_access_rights('read')
+                request.env['correspondence_document'].browse(attachment.res_id).check_access_rule('read')
+            except Exception:
+                 return request.render('correspondence.public_access_denied_template')
         
         return request.redirect(f'/web/content/{attachment.id}?download=true')

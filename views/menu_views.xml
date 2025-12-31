@@ -32,16 +32,31 @@
             Muestra los documentos ENTRANTES dirigidos al departamento del usuario.
             Desde aquí se podrán generar las respuestas SALIENTES.
         -->
-        <record id="action_correspondence_external_management" model="ir.actions.act_window">
-            <field name="name">Gestión de Correspondencia Externa</field>
+        <!-- Acción para Gestión Externa: ENTRANTES -->
+        <record id="action_correspondence_external_incoming" model="ir.actions.act_window">
+            <field name="name">Correspondencia Entrante</field>
             <field name="res_model">correspondence_document</field>
             <field name="view_mode">tree,form,kanban</field>
-            <field name="domain">[('correspondence_flow', 'in', ['incoming', 'outgoing'])]</field>
+            <field name="domain">[('correspondence_flow', '=', 'incoming')]</field>
             <field name="context">{'default_correspondence_flow': 'incoming'}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Aquí aparecerá la correspondencia externa asignada a tu departamento.
-                </p><p>Selecciona un documento y haz clic en "Responder" para generar un documento de salida.</p>
+                    Registra la primera correspondencia entrante.
+                </p><p>Aquí se gestionan los documentos recibidos de entidades externas.</p>
+            </field>
+        </record>
+
+        <!-- Acción para Gestión Externa: SALIENTES -->
+        <record id="action_correspondence_external_outgoing" model="ir.actions.act_window">
+            <field name="name">Correspondencia Saliente</field>
+            <field name="res_model">correspondence_document</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="domain">[('correspondence_flow', '=', 'outgoing')]</field>
+            <field name="context">{'default_correspondence_flow': 'outgoing'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crea la primera correspondencia saliente.
+                </p><p>Aquí se gestionan los documentos enviados a entidades externas.</p>
             </field>
         </record>
 
@@ -108,7 +123,14 @@
         <menuitem name="Bandeja de Salida" id="menu_correspondence_outbox" parent="menu_correspondence_root" sequence="20" action="action_server_open_outbox"/>
 
         <!-- Nuevo menú para la gestión de correspondencia externa -->
-        <menuitem id="menu_correspondence_external_management" name="Gestión Externa" parent="menu_correspondence_root" sequence="22" action="action_correspondence_external_management" groups="correspondence.correspondence_group_external_management"/>
+        <!-- Menú principal de Gestión Externa -->
+        <menuitem id="menu_correspondence_external_management_root" name="Gestión Externa" parent="menu_correspondence_root" sequence="22" groups="correspondence.correspondence_group_external_management"/>
+
+        <!-- Sub-menú: Entrantes -->
+        <menuitem id="menu_correspondence_external_incoming" name="Entrantes" parent="menu_correspondence_external_management_root" sequence="10" action="action_correspondence_external_incoming"/>
+
+        <!-- Sub-menú: Salientes -->
+        <menuitem id="menu_correspondence_external_outgoing" name="Salientes" parent="menu_correspondence_external_management_root" sequence="20" action="action_correspondence_external_outgoing"/>
 
         <!-- Menú para el Archivo -->
         <menuitem id="menu_correspondence_archive" name="Archivo" parent="menu_correspondence_root" sequence="30" action="action_server_open_archive"/>
