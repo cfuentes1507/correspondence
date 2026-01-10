@@ -1,6 +1,6 @@
 # Correspondencia
 
-Módulo de gestión de correspondencia institucional para Odoo 15.
+Módulo de gestión de correspondencia institucional para Odoo 15 y 18.
 
 ## Resumen
 
