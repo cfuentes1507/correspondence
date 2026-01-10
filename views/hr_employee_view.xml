@@ -7,11 +7,16 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <field name="is_correspondence_manager" invisible="1"/>
-                <page string="Correspondencia" name="correspondence" attrs="{'invisible': [('is_correspondence_manager', '=', False)]}">
+                
+                <page string="Correspondencia" name="correspondence" invisible="not is_correspondence_manager">
                     <group>
-                        <field name="director_description"/>
-                    <field name="director_signature" widget="image" class="oe_avatar"/>
-                    <field name="director_stamp" widget="image" class="oe_avatar"/>
+                        <group string="Información del Director">
+                            <field name="director_description"/>
+                        </group>
+                        <group string="Sellos y Firmas">
+                            <field name="director_signature" widget="image" class="oe_avatar" options="{'size': [128, 128]}"/>
+                            <field name="director_stamp" widget="image" class="oe_avatar" options="{'size': [128, 128]}"/>
+                        </group>
                     </group>
                 </page>
             </xpath>

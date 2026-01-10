@@ -9,16 +9,17 @@
     """,
     'author': "Carlos Fuentes (CFuentes.Dev)",
     'website': "",
-    'category': 'Uncategorized',
-    'version': '0.2',
+    'category': 'Correspondencia',
+    'version': '18.0.1.0.0',
+    'application': True,
     'license': 'LGPL-3',
     'depends': ['base', 'mail', 'website', 'hr'],
     'data': [
         ## Security
-        'security/correspondence_security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'security/hr_employee_security.xml',
+        'security/correspondence_security.xml',
         ## Reports
         'report/correspondence_report.xml',
         ## Data
