@@ -71,9 +71,8 @@ class HrDepartment(models.Model):
 
                 # Solo procedemos si el manager_id realmente cambió para este departamento o si se desasignó
                 if old_manager_by_department_id.get(department.id) != new_manager_id:
-                    # Invalidamos la caché del historial para asegurar que leemos el estado más reciente
-                    department.invalidate_cache(['director_history_ids'])
-
+                    # En Odoo 18 se usa invalidate_recordset indicando los nombres de los campos
+                    department.invalidate_recordset(fnames=['director_history_ids'])
                     # Encontramos todos los historiales activos (sin fecha de fin)
                     all_active_histories = department.director_history_ids.filtered(lambda h: not h.date_end)
 

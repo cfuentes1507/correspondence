@@ -9,28 +9,28 @@
                         <field name="is_current_user_recipient" invisible="1"/>
                         <field name="already_read_by_my_department" invisible="1"/>
                         
-                        <button name="action_sign" string="Firmar y Sellar" type="object" class="oe_highlight" 
-                                invisible="not id or state != 'draft' or correspondence_flow == 'incoming'" 
-                                groups="correspondence.correspondence_group_director"/>
-                        
-                        <button name="action_send" string="Enviar (Interno)" type="object" class="oe_highlight" 
-                                invisible="state != 'signed' or correspondence_flow != 'internal'"/>
+                <button name="action_sign" string="Firmar y Sellar" type="object" class="oe_highlight" 
+                        invisible="not id or state != 'draft' or correspondence_flow == 'incoming'" 
+                        groups="correspondence.correspondence_group_director"/>
+                
+                <button name="action_send" string="Enviar (Interno)" type="object" class="oe_highlight" 
+                        invisible="state != 'signed' or correspondence_flow != 'internal'"/>
 
-                        <button name="action_dispatch" string="Despachar (Externo)" type="object" class="oe_highlight" 
-                                invisible="state != 'signed' or correspondence_flow != 'outgoing'" 
-                                groups="correspondence.correspondence_group_external_management"/>
+                <button name="action_dispatch" string="Despachar (Externo)" type="object" class="oe_highlight" 
+                        invisible="state != 'signed' or correspondence_flow != 'outgoing'" 
+                        groups="correspondence.correspondence_group_external_management"/>
 
-                        <button name="action_assign" string="Asignar a Departamentos" type="object" class="oe_highlight" 
-                                invisible="state != 'received' or correspondence_flow != 'incoming'"/>
-                        
-                        <button name="action_read" string="Marcar como Leído" type="object" class="btn-secondary" 
-                                invisible="state not in ['sent', 'assigned'] or not is_current_user_recipient or already_read_by_my_department"/>
+                <button name="action_assign" string="Asignar a Departamentos" type="object" class="oe_highlight" 
+                        invisible="state not in ['draft', 'received'] or correspondence_flow != 'incoming'"/>
+                
+                <button name="action_read" string="Marcar como Leído" type="object" class="btn-secondary" 
+                        invisible="state not in ['sent', 'assigned'] or not is_current_user_recipient or already_read_by_my_department"/>
 
-                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" 
-                                invisible="not is_current_user_recipient or state not in ['sent', 'assigned', 'replied']"/>
+                <button name="action_reply" string="Responder" type="object" class="oe_highlight" 
+                        invisible="not is_current_user_recipient or state not in ['sent', 'assigned', 'replied']"/>
 
-                        <field name="state" widget="statusbar" statusbar_visible="draft,received,assigned,signed,sent,dispatched,replied"/>
-                    </header>
+                <field name="state" widget="statusbar" statusbar_visible="draft,received,assigned,signed,sent,dispatched,replied"/>
+            </header>
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -99,11 +99,7 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
