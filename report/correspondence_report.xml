@@ -35,7 +35,7 @@
     <template id="report_qr_footer">
         <div class="footer" style="position: relative; width: 100%; height: 150px; margin-top: 50px;">
             <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 100px; position: absolute; bottom: 40px; left: 0; right: 0;" alt="Footer Image"/>
-            <img t-if="doc.public_url" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', doc.public_url, 80, 80)" style="width: 80px; height: 80px; position: absolute; bottom: 40px; left: 40px;"/>
+            <img t-if="doc.public_url" t-att-src="'/report/barcode/QR/' + doc.public_url" style="width: 80px; height: 80px; position: absolute; bottom: 40px; left: 40px;"/>
         </div>
     </template>
 

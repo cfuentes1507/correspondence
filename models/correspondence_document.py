@@ -121,28 +121,34 @@ class correspondence_document(models.Model):
         self.ensure_one()
 
         # 1. Obtener la acción de reporte
-        report_action = self.correspondence_type.report_action_id
-        if not report_action:
-            report_action = self.env.ref('correspondence.action_report_correspondence_document', raise_if_not_found=False)
+        report_action = self.correspondence_type.report_action_id or self.env.ref('correspondence.action_report_correspondence_document')
         
-        if not report_action:
-            raise UserError(_("No se ha definido una acción de reporte para este tipo de correspondencia ni una acción de fallback."))
-
         # 2. Generar el PDF
-        pdf_content, _file_type = report_action._render_qweb_pdf(self.id)
+        # ¡IMPORTANTE!: No uses "_" aquí. Usa "report_type" o similar.
+        pdf_content, report_type = report_action._render_qweb_pdf(report_action.id, res_ids=self.ids)
 
-        # 3. Construir el nombre del archivo
-        file_name = f"{self.correlative}-{self.name}.pdf"
+        # 3. Nombre del archivo
+        file_name = f"{self.correlative or 'Documento'}.pdf"
 
-        # 4. Adjuntar el PDF y cambiar el estado
+        # 4. Guardar y actualizar
         self.write({
             'document_file': base64.b64encode(pdf_content),
             'file_name': file_name,
             'state': 'signed'
         })
 
-        # 5. Recargar la vista para reflejar los cambios
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
+        # 5. Ahora "_" seguirá siendo la función de traducción importada arriba
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Correcto'),
+                'message': _('Documento firmado con éxito'),
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.client', 'tag': 'reload'},
+            }
+        }
 
     def action_send(self):
         self.write({'state': 'sent'})
