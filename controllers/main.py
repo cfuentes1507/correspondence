@@ -5,13 +5,19 @@ from odoo.http import request
 class CorrespondencePublicController(http.Controller):
 
     @http.route('/correspondence/public/<int:doc_id>', type='http', auth='public', website=True, sitemap=False)
-    def public_correspondence_view(self, doc_id, **kwargs):
+    def public_correspondence_view(self, doc_id, access_token=None, **kwargs):
         """
         Renders a public web page for a correspondence document.
+        Requires a valid access_token to prevent IDOR attacks.
         """
         document = request.env['correspondence_document'].sudo().browse(doc_id)
+        
         if not document.exists():
             return request.not_found()
+
+        # Security Check: Validate access token
+        if not document.access_token or access_token != document.access_token:
+             return request.render('correspondence.public_access_denied_template')
 
         return request.render('correspondence.public_correspondence_template', {'doc': document})
 
