@@ -89,7 +89,7 @@
                                 </group>
                             </page>
                             <page string="Respuestas" name="replies">
-                                <field name="child_document_ids" force_save="1"/>
+                                <field name="child_document_ids" force_save="1" readonly="1"/>
                             </page>
                             <page string="Estado de Lectura" name="read_status">
                                 <field name="read_status_ids" readonly="1">
