@@ -27,7 +27,7 @@
                         invisible="state not in ['sent', 'assigned'] or not is_current_user_recipient or already_read_by_my_department"/>
 
                 <button name="action_reply" string="Responder" type="object" class="oe_highlight" 
-                        invisible="not is_current_user_recipient or state not in ['sent', 'assigned', 'replied']"/>
+                        invisible="(correspondence_flow != 'incoming' and not is_current_user_recipient) or state not in ['sent', 'assigned', 'replied']"/>
 
                 <field name="state" widget="statusbar" statusbar_visible="draft,received,assigned,signed,sent,dispatched,replied"/>
             </header>
