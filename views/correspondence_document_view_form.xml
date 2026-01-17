@@ -43,6 +43,8 @@
                         <group>
                             <group>
                                 <field name="correlative" readonly="1"/>
+                                <field name="external_correlative" 
+                                       invisible="correspondence_flow != 'incoming'"/>
                                 <field name="author_id" invisible="1"/>
                                 <field name="send_department_id" readonly="1" 
                                        invisible="correspondence_flow == 'incoming'" 
@@ -58,13 +60,14 @@
                                 <field name="date" readonly="state not in ['draft', 'received']"/>
                                 <field name="correspondence_type" options="{'no_create': True, 'no_open': True}" 
                                        readonly="state not in ['draft', 'received']" force_save="1"/>
-                                <field name="recipient_department_ids" string="Departamentos Destinatarios (Internos)"
+                                <field name="recipient_department_ids" string="Departamentos Destinatarios"
                                     widget="many2many_tags"
                                     options="{'no_create': True, 'no_open': True}"
                                     invisible="correspondence_flow == 'outgoing'" 
                                     required="correspondence_flow in ['internal', 'incoming']" 
                                     readonly="state not in ['draft', 'received']" 
-                                    domain="[('id', '!=', send_department_id)]"/>
+                                    domain="[('id', '!=', excluded_department_id)]"/>
+                                <field name="excluded_department_id" invisible="1"/>
                                 <field name="shipping_method" 
                                        invisible="correspondence_flow != 'outgoing'" 
                                        required="correspondence_flow == 'outgoing'"/>

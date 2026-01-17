@@ -7,13 +7,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 def _get_recipient_department_domain(self):
-    """Devuelve un dominio para excluir el departamento del usuario actual."""
-    # Esta restricción solo debe aplicarse al crear un nuevo documento,
-    # no al visualizar registros existentes, para evitar conflictos con las reglas de seguridad.    
+    """Devuelve un dominiO."""
     domain = [('can_receive_correspondence', '=', True)]
-    if self.env.context.get('form_view_ref') and self.env.user.employee_id.department_id:
-        domain.append(('id', '!=', self.env.user.employee_id.department_id.id))
-    
     return domain
 def _get_default_send_department(self):
     """Obtiene el departamento del usuario actual como valor por defecto."""
@@ -29,6 +24,7 @@ class correspondence_document(models.Model):
 
     company_id = fields.Many2one('res.company', string='Compañía', required=True, default=lambda self: self.env.company)
     correlative = fields.Char(string='Correlativo', required=True, copy=False, default='Nuevo', readonly=True)
+    external_correlative = fields.Char(string='Correlativo Externo', copy=False)
     name = fields.Char(string='Asunto', required=True)
     date = fields.Date(string='Fecha', default=fields.Date.context_today, required=True)
     author_id = fields.Many2one('res.users', string='Autor', default=lambda self: self.env.user, required=True, readonly=True)
@@ -107,6 +103,19 @@ class correspondence_document(models.Model):
             user_department = self.env.user.employee_id.department_id
             doc.is_current_user_recipient = user_department in doc.recipient_department_ids
             doc.already_read_by_my_department = user_department in doc.read_status_ids.mapped('department_id')
+
+    # Campo auxiliar para manejar el dominio desde la vista XML
+    excluded_department_id = fields.Many2one('hr.department', compute='_compute_excluded_department_id')
+
+    @api.depends('correspondence_flow', 'send_department_id')
+    def _compute_excluded_department_id(self):
+        for doc in self:
+            if doc.correspondence_flow == 'incoming':
+                # Si es entrante, no excluimos nada (False permite todo en '!=')
+                doc.excluded_department_id = False
+            else:
+                # Si es interna/saliente, excluimos el departamento remitente
+                doc.excluded_department_id = doc.send_department_id
 
     @api.depends('state', 'author_id', 'recipient_department_ids')
     def _compute_user_facing_state(self):
