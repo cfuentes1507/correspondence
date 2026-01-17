@@ -1,8 +1,8 @@
 
 # -*- coding: utf-8 -*-
-
 import base64
-import uuid
+import secrets
+import werkzeug.urls
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
@@ -82,7 +82,15 @@ class correspondence_document(models.Model):
     public_url = fields.Char(
         string="URL Pública", compute='_compute_public_url', help="URL para la verificación pública del documento.")
     
-    access_token = fields.Char(string='Token de Acceso', required=True, copy=False, default=lambda self: str(uuid.uuid4()), readonly=True)
+    access_token = fields.Char(
+        string='Token de Acceso', compute='_compute_access_token', store=True, precompute=True, copy=False, readonly=True
+    )
+
+    @api.depends('create_date')
+    def _compute_access_token(self):
+        for doc in self:
+            if not doc.access_token:
+                doc.access_token = ''.join(secrets.token_urlsafe(32))
 
     @api.depends('author_id', 'author_id.employee_id.department_id')
     def _compute_send_department_id(self):
@@ -338,18 +346,22 @@ class correspondence_document(models.Model):
         related='parent_document_id.author_id',
         store=True)
 
+    @api.depends('access_token')
     def _compute_public_url(self):
         """Genera la URL pública para el documento."""
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for doc in self:
             if doc.id and doc.access_token:
                 doc.public_url = f"{base_url}/correspondence/public/{doc.id}?access_token={doc.access_token}"
-            elif doc.id:
-                 # Fallback para documentos antiguos sin token generado, aunque el default debería cubrirlo si se dispara el write.
-                 # En este punto, si no tiene token, la URL no funcionará correctamente en el nuevo controller.
-                 doc.public_url = f"{base_url}/correspondence/public/{doc.id}"
             else:
                 doc.public_url = False
+
+    def get_qr_code_url(self):
+        """Devuelve la URL formateada para el controlador de código de barras."""
+        self.ensure_one()
+        if self.public_url:
+            return '/report/barcode/QR/' + werkzeug.urls.url_quote(self.public_url)
+        return False
 
     @api.model
     def action_open_outbox(self):

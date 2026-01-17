@@ -16,10 +16,10 @@
     'depends': ['base', 'mail', 'website', 'hr'],
     'data': [
         ## Security
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
         'security/hr_employee_security.xml',
         'security/correspondence_security.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         ## Reports
         'report/correspondence_report.xml',
         ## Data
