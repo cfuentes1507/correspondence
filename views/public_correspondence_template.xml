@@ -78,11 +78,11 @@
             <div id="wrap" class="container">
                 <div class="oe_structure">
                     <div class="page text-center">
-                        <h1 class="mt-5">Acceso Restringido</h1>
+                        <h1 class="mt-5">Acceso Denegado</h1>
                         <div class="alert alert-danger mt-4" role="alert">
                             <i class="fa fa-lock fa-2x" aria-hidden="true"></i>
-                            <h4 class="alert-heading mt-2">Usted no tiene acceso a este archivo.</h4>
-                            <p>Por motivos de seguridad, la descarga de archivos adjuntos está reservada para usuarios autenticados en el sistema.</p>
+                            <h4 class="alert-heading mt-2">Usted no tiene acceso a este documento.</h4>
+                            <p>Por motivos de seguridad, la visualización de documentos está reservada para usuarios autenticados en el sistema.</p>
                         </div>
                     </div>
                 </div>
