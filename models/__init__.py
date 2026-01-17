@@ -16,3 +16,4 @@ from . import correspondence_document
 
 # Modelos secundarios que dependen del principal
 from . import correspondence_document_read_status
+from . import correspondence_physical_location

@@ -30,6 +30,7 @@
         ## Views
         'views/correspondence_type_view.xml',
         'views/correspondence_department_view.xml',
+        'views/correspondence_physical_location_views.xml',
         'views/correspondence_document_view_form.xml',
         'views/hr_employee_view.xml',
         'views/public_correspondence_template.xml',

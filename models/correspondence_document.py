@@ -63,6 +63,8 @@ class correspondence_document(models.Model):
         ('certified_mail', 'Correo Certificado'),
         ('in_person', 'Entrega en Persona'),
     ], string="Método de Envío")
+    
+    physical_location_id = fields.Many2one('correspondence.physical.location', string='Ubicación Física', tracking=True, copy=False)
 
     read_status_ids = fields.One2many('correspondence.document.read_status', 'document_id', string='Estados de Lectura')
     

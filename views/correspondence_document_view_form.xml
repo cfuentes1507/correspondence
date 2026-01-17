@@ -71,6 +71,7 @@
                                 <field name="shipping_method" 
                                        invisible="correspondence_flow != 'outgoing'" 
                                        required="correspondence_flow == 'outgoing'"/>
+                                <field name="physical_location_id" options="{'no_create': True}"/>
                             </group>
                         </group>
                         <notebook>
