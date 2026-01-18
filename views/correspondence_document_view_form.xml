@@ -22,7 +22,7 @@
                         
                         <!-- Botones comunes -->
                         <button name="action_read" string="Marcar como Leído" type="object" class="btn-secondary" attrs="{'invisible': ['|', ('state', 'not in', ['sent', 'assigned']), '|', ('is_current_user_recipient', '=', False), ('already_read_by_my_department', '=', True)]}"/>
-                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_current_user_recipient', '=', False), ('state', 'not in', ['sent', 'assigned', 'replied'])]}"/>
+                        <button name="action_reply" string="Responder" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', 'not in', ['sent', 'assigned', 'replied']), '&amp;', ('is_current_user_recipient', '=', False), ('correspondence_flow', '!=', 'incoming')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,received,assigned,signed,sent,dispatched,replied"/>
                     </header>
                     <sheet>
@@ -37,6 +37,7 @@
                         <group>
                             <group>
                                 <field name="correlative" attrs="{'readonly': True}"/>
+                                <field name="external_correlative" string="Correlativo Externo" attrs="{'invisible': [('correspondence_flow', '!=', 'incoming')], 'readonly': [('state', 'not in', ['draft', 'received'])]}"/>
                                 <field name="author_id" invisible="1"/>
                                 <!-- Remitente: Interno o Externo -->
                                 <field name="send_department_id" readonly="1" attrs="{'invisible': [('correspondence_flow', '=', 'incoming')], 'required': [('correspondence_flow', 'in', ['internal', 'outgoing'])]}"/>
@@ -47,13 +48,15 @@
                                 <field name="date" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}"/>
                                 <field name="correspondence_type" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}" force_save="1"/>
                                 <!-- Destinatario: Interno o Externo -->
-                                <field name="recipient_department_ids" string="Departamentos Destinatarios (Internos)"
+                                <field name="recipient_department_ids" string="Departamentos Destinatarios"
                                     widget="many2many_tags"
                                     options="{'no_create': True, 'no_open': True}"
                                     attrs="{'invisible': [('correspondence_flow', '=', 'outgoing')], 'required': [('correspondence_flow', 'in', ['internal', 'incoming'])], 'readonly': [('state', 'not in', ['draft', 'received'])]}" 
-                                    domain="[('id', '!=', send_department_id)]"/>
+                                    domain="[('id', '!=', excluded_department_id)]"/>
+                                <field name="excluded_department_id" invisible="1"/>
                                 <!-- Método de envío para correspondencia saliente -->
                                 <field name="shipping_method" attrs="{'invisible': [('correspondence_flow', '!=', 'outgoing')], 'required': [('correspondence_flow', '=', 'outgoing')]}"/>
+                                <field name="physical_location_id" options="{'no_create': True}"/>
                             </group>
                         </group>
                         <notebook>
@@ -72,7 +75,7 @@
                                 </group>
                             </page>
                             <page string="Respuestas">
-                                <field name="child_document_ids" force_save="1">
+                                <field name="child_document_ids" force_save="1" readonly="1">
                                 </field>
                             </page>
                             <page string="Estado de Lectura" name="read_status">

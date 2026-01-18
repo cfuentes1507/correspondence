@@ -15,10 +15,10 @@
     'depends': ['base', 'mail', 'website', 'hr'],
     'data': [
         ## Security
+        'security/hr_employee_security.xml',
         'security/correspondence_security.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
-        'security/hr_employee_security.xml',
         ## Reports
         'report/correspondence_report.xml',
         ## Data
@@ -29,6 +29,7 @@
         ## Views
         'views/correspondence_type_view.xml',
         'views/correspondence_department_view.xml',
+        'views/correspondence_physical_location_views.xml',
         'views/correspondence_document_view_form.xml',
         'views/hr_employee_view.xml',
         'views/public_correspondence_template.xml',

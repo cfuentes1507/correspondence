@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="correspondence_physical_location_view_form" model="ir.ui.view">
+        <field name="name">correspondence.physical.location.form</field>
+        <field name="model">correspondence.physical.location</field>
+        <field name="arch" type="xml">
+            <form string="Ubicación Física">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Ej: Estante A, Caja 3"/></h1>
+                        <label for="parent_id" class="oe_edit_only"/>
+                        <h3>
+                            <field name="parent_id" placeholder="Ubicación Padre (Opcional)" options="{'no_create': True}"/>
+                        </h3>
+                        <label for="code" class="oe_edit_only"/>
+                        <h3><field name="code"/></h3>
+                    </div>
+                    <group>
+                        <field name="active"/>
+                    </group>
+                    <separator string="Descripción"/>
+                    <field name="description"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="correspondence_physical_location_view_tree" model="ir.ui.view">
+        <field name="name">correspondence.physical.location.tree</field>
+        <field name="model">correspondence.physical.location</field>
+        <field name="arch" type="xml">
+            <tree string="Ubicaciones Físicas">
+                <field name="display_name" string="Ubicación Completa"/>
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="code"/>
+                <field name="description"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="correspondence_physical_location_view_search" model="ir.ui.view">
+        <field name="name">correspondence.physical.location.search</field>
+        <field name="model">correspondence.physical.location</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Ubicación">
+                <field name="name"/>
+                <field name="code"/>
+                <filter string="Archivados" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Ubicación Padre" name="group_by_parent" context="{'group_by': 'parent_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

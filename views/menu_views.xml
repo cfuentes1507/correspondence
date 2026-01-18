@@ -60,6 +60,37 @@
             </field>
         </record>
 
+        <!-- Acción para la vista personalizada de Ubicaciones Físicas Usuarios-->
+        <record id="action_correspondence_physical_location" model="ir.actions.act_window">
+            <field name="name">Ubicaciones Físicas</field>
+            <field name="res_model">correspondence.physical.location</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('department_id.member_ids.user_id', '=', uid)]</field>
+            <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu primera ubicación física de archivo
+            </p><p>
+                Define estantes, cajas o armarios para organizar tus documentos archivados.
+            </p>
+            </field>
+        </record>
+
+
+        <!-- Acción para la vista personalizada de Ubicaciones Físicas Administradores-->
+        <record id="action_correspondence_physical_location_admin" model="ir.actions.act_window">
+            <field name="name">Ubicaciones Físicas</field>
+            <field name="res_model">correspondence.physical.location</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu primera ubicación física de archivo
+            </p><p>
+                Define estantes, cajas o armarios para organizar tus documentos archivados.
+            </p>
+            </field>
+        </record>
+
         <!-- Acción base para el Archivo (usada por la acción de servidor) -->
         <record id="action_correspondence_document_archive_base" model="ir.actions.act_window">
             <field name="name">Archivo de Correspondencia</field>
@@ -142,5 +173,8 @@
         <!-- Submenús de Configuración -->
         <menuitem id="menu_correspondence_type" name="Tipos de Correspondencia" parent="menu_correspondence_config" sequence="10" action="action_correspondence_type"/>
         <menuitem id="menu_correspondence_department" name="Departamentos" parent="menu_correspondence_config" sequence="20" action="action_correspondence_hr_department"/>
+
+        <menuitem id="menu_correspondence_physical_location" name="Ubicaciones Físicas" parent="correspondence.menu_correspondence_config" sequence="30" action="action_correspondence_physical_location" groups="correspondence.correspondence_group_user,correspondence.correspondence_group_director"/>
+        <menuitem id="menu_correspondence_physical_location_admin" name="Ubicaciones Físicas (Admin)" parent="correspondence.menu_correspondence_config" sequence="35" action="action_correspondence_physical_location_admin" groups="correspondence.correspondence_group_admin"/>
     </data>
 </odoo>

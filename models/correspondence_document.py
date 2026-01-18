@@ -2,17 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import secrets
+import werkzeug.urls
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 def _get_recipient_department_domain(self):
-    """Devuelve un dominio para excluir el departamento del usuario actual."""
-    # Esta restricción solo debe aplicarse al crear un nuevo documento,
-    # no al visualizar registros existentes, para evitar conflictos con las reglas de seguridad.    
+    """Devuelve un dominiO."""
     domain = [('can_receive_correspondence', '=', True)]
-    if self.env.context.get('form_view_ref') and self.env.user.employee_id.department_id:
-        domain.append(('id', '!=', self.env.user.employee_id.department_id.id))
-    
     return domain
 def _get_default_send_department(self):
     """Obtiene el departamento del usuario actual como valor por defecto."""
@@ -28,6 +25,7 @@ class correspondence_document(models.Model):
 
     company_id = fields.Many2one('res.company', string='Compañía', required=True, default=lambda self: self.env.company)
     correlative = fields.Char(string='Correlativo', required=True, copy=False, default='Nuevo', readonly=True)
+    external_correlative = fields.Char(string='Correlativo Externo', copy=False)
     name = fields.Char(string='Asunto', required=True)
     date = fields.Date(string='Fecha', default=fields.Date.context_today, required=True)
     author_id = fields.Many2one('res.users', string='Autor', default=lambda self: self.env.user, required=True, readonly=True)
@@ -67,6 +65,8 @@ class correspondence_document(models.Model):
         ('in_person', 'Entrega en Persona'),
     ], string="Método de Envío")
 
+    physical_location_id = fields.Many2one('correspondence.physical.location', string='Ubicación Física', tracking=True, copy=False)
+
     read_status_ids = fields.One2many('correspondence.document.read_status', 'document_id', string='Estados de Lectura')
     
     is_current_user_recipient = fields.Boolean(
@@ -81,6 +81,16 @@ class correspondence_document(models.Model):
     public_url = fields.Char(
         string="URL Pública", compute='_compute_public_url', help="URL para la verificación pública del documento.")
 
+    access_token = fields.Char(
+        string='Token de Acceso', compute='_compute_access_token', store=True, precompute=True, copy=False, readonly=True
+    )
+
+    @api.depends('create_date')
+    def _compute_access_token(self):
+        for doc in self:
+            if not doc.access_token:
+                doc.access_token = ''.join(secrets.token_urlsafe(32))
+    
     @api.depends('author_id', 'author_id.employee_id.department_id')
     def _compute_send_department_id(self):
         """
@@ -96,6 +106,20 @@ class correspondence_document(models.Model):
             user_department = self.env.user.employee_id.department_id
             doc.is_current_user_recipient = user_department in doc.recipient_department_ids
             doc.already_read_by_my_department = user_department in doc.read_status_ids.mapped('department_id')
+
+    # Campo auxiliar para manejar el dominio desde la vista XML
+    excluded_department_id = fields.Many2one('hr.department', compute='_compute_excluded_department_id')
+
+    @api.depends('correspondence_flow', 'send_department_id')
+    def _compute_excluded_department_id(self):
+        for doc in self:
+            if doc.correspondence_flow == 'incoming':
+                # Si es entrante, no excluimos nada (False permite todo en '!=')
+                doc.excluded_department_id = False
+            else:
+                # Si es interna/saliente, excluimos el departamento remitente
+                doc.excluded_department_id = doc.send_department_id
+
 
     @api.depends('state', 'author_id', 'recipient_department_ids')
     def _compute_user_facing_state(self):
@@ -328,15 +352,24 @@ class correspondence_document(models.Model):
         string="Respuesta a",
         related='parent_document_id.author_id',
         store=True)
-
+    
+    @api.depends('access_token')
     def _compute_public_url(self):
         """Genera la URL pública para el documento."""
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for doc in self:
-            if doc.id:
-                doc.public_url = f"{base_url}/correspondence/public/{doc.id}"
+            if doc.id and doc.access_token:
+                doc.public_url = f"{base_url}/correspondence/public/{doc.id}?access_token={doc.access_token}"
             else:
                 doc.public_url = False
+
+    def get_qr_code_url(self):
+        """Devuelve la URL formateada para el controlador de código de barras."""
+        self.ensure_one()
+        if self.public_url:
+            return '/report/barcode/QR/' + werkzeug.urls.url_quote(self.public_url)
+        return False
+
 
     @api.model
     def action_open_outbox(self):
