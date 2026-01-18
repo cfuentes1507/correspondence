@@ -6,11 +6,15 @@ class CorrespondencePhysicalLocation(models.Model):
     _description = 'Ubicación Física de Archivo'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    def _get_default_send_department(self):
+        """Obtiene el departamento del usuario actual como valor por defecto."""
+        return self.env.user.department_id
+
     name = fields.Char(string='Nombre', required=True, tracking=True, help="Ejemplo: Estante A, Caja 3")
     code = fields.Char(string='Código', tracking=True, help="Código corto para referencia o etiquetado")
     description = fields.Text(string='Descripción', help="Detalles adicionales sobre la ubicación")
     active = fields.Boolean(string='Activo', default=True, tracking=True)
-
+    department_id = fields.Many2one('hr.department', string='Departamento', tracking=True, help="Departamento al que pertenece la ubicación", default=_get_default_send_department)
     parent_id = fields.Many2one('correspondence.physical.location', string='Ubicación Padre', index=True, ondelete='cascade')
     
     _sql_constraints = [
