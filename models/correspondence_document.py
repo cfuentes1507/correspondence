@@ -82,7 +82,7 @@ class correspondence_document(models.Model):
         string="URL Pública", compute='_compute_public_url', help="URL para la verificación pública del documento.")
 
     access_token = fields.Char(
-        string='Token de Acceso', compute='_compute_access_token', store=True, precompute=True, copy=False, readonly=True
+        string='Token de Acceso', compute='_compute_access_token', store=True, copy=False, readonly=True
     )
 
     @api.depends('create_date')
