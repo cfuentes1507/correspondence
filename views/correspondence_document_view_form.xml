@@ -47,8 +47,10 @@
                                        invisible="correspondence_flow != 'incoming'"/>
                                 <field name="author_id" invisible="1"/>
                                 <field name="send_department_id" readonly="1" 
-                                       invisible="correspondence_flow == 'incoming'" 
+                                       invisible="correspondence_flow == 'incoming' or send_department_static" 
                                        required="correspondence_flow in ['internal', 'outgoing']"/>
+                                <field name="send_department_static" string="Departamento Remitente"
+                                       invisible="not send_department_static"/>
                                 <field name="external_partner_id" 
                                        invisible="correspondence_flow == 'internal'" 
                                        required="correspondence_flow in ['incoming', 'outgoing']" 
@@ -63,10 +65,12 @@
                                 <field name="recipient_department_ids" string="Departamentos Destinatarios"
                                     widget="many2many_tags"
                                     options="{'no_create': True, 'no_open': True}"
-                                    invisible="correspondence_flow == 'outgoing'" 
+                                    invisible="correspondence_flow == 'outgoing' or recipient_departments_static" 
                                     required="correspondence_flow in ['internal', 'incoming']" 
                                     readonly="state not in ['draft', 'received']" 
                                     domain="[('id', '!=', excluded_department_id)]"/>
+                                <field name="recipient_departments_static" string="Departamentos Destinatarios"
+                                       invisible="not recipient_departments_static"/>
                                 <field name="excluded_department_id" invisible="1"/>
                                 <field name="shipping_method" 
                                        invisible="correspondence_flow != 'outgoing'" 

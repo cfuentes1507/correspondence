@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 class HrDepartment(models.Model):
     _inherit = 'hr.department'
@@ -92,3 +92,23 @@ class HrDepartment(models.Model):
                             'date_start': today,
                         })
         return res
+
+    def unlink(self):
+        """
+        Sobrescribe el método unlink para validación.
+        Evita eliminar departamentos si tienen correspondencia asociada.
+        """
+        for department in self:
+            # Verificar si el departamento ha enviado correspondencia
+            sent_docs = self.env['correspondence_document'].search_count([('send_department_id', '=', department.id)])
+            
+            # Verificar si el departamento ha recibido correspondencia
+            received_docs = self.env['correspondence_document'].search_count([('recipient_department_ids', 'in', [department.id])])
+            
+            if sent_docs > 0 or received_docs > 0:
+                raise models.UserError(
+                    _("No puedes eliminar el departamento '%s' porque tiene documentos de correspondencia asociados (Enviados: %s, Recibidos: %s).\n\n"
+                      "En su lugar, por favor ARCHIVA el departamento.") % (department.name, sent_docs, received_docs)
+                )
+        
+        return super(HrDepartment, self).unlink()
