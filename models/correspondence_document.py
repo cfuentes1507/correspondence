@@ -141,6 +141,10 @@ class correspondence_document(models.Model):
             else:
                 doc.user_facing_state = doc.get_state_display_name()
 
+    # Campos Snapshot para persistencia histórica de nombres
+    send_department_static = fields.Char(string="Departamento Remitente (Histórico)", readonly=True)
+    recipient_departments_static = fields.Char(string="Departamentos Destinatarios (Histórico)", readonly=True)
+
     def action_sign(self):
         self.ensure_one()
 
@@ -157,12 +161,19 @@ class correspondence_document(models.Model):
 
         # 3. Construir el nombre del archivo
         file_name = f"{self.correlative}-{self.name}.pdf"
+        
+        # 3.5. SNAPSHOT: Guardamos los nombres de los departamentos en este momento exacto
+        # Esto asegura que si se renombra el departamento después, este documento mantenga el nombre original.
+        static_send = self.send_department_id.name
+        static_recipients = ", ".join(self.recipient_department_ids.mapped('name'))
 
         # 4. Adjuntar el PDF y cambiar el estado
         self.write({
             'document_file': base64.b64encode(pdf_content),
-            'file_name': file_name,
-            'state': 'signed'
+            'state': 'signed',
+            'send_department_static': static_send,
+            'recipient_departments_static': static_recipients,
+            'file_name': file_name,       
         })
 
         # 5. Recargar la vista para reflejar los cambios

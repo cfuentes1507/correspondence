@@ -40,19 +40,20 @@
                                 <field name="external_correlative" string="Correlativo Externo" attrs="{'invisible': [('correspondence_flow', '!=', 'incoming')], 'readonly': [('state', 'not in', ['draft', 'received'])]}"/>
                                 <field name="author_id" invisible="1"/>
                                 <!-- Remitente: Interno o Externo -->
-                                <field name="send_department_id" readonly="1" attrs="{'invisible': [('correspondence_flow', '=', 'incoming')], 'required': [('correspondence_flow', 'in', ['internal', 'outgoing'])]}"/>
+                                <field name="send_department_id" readonly="1" attrs="{'invisible': ['|', ('correspondence_flow', '=', 'incoming'), ('send_department_static', '!=', False)], 'required': [('correspondence_flow', 'in', ['internal', 'outgoing'])]}"/>
+                                <field name="send_department_static" string="Departamento Remitente" attrs="{'invisible': [('send_department_static', '=', False)]}"/>
                                 <field name="external_partner_id" attrs="{'invisible': [('correspondence_flow', '=', 'internal')], 'required': [('correspondence_flow', 'in', ['incoming', 'outgoing'])], 'readonly': [('state', 'not in', ['draft', 'received'])]}" string="Entidad Externa" context="{'default_is_company': True}"/>
                                 <field name="external_address" attrs="{'invisible': [('correspondence_flow', '=', 'internal')]}"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}"/>
                                 <field name="correspondence_type" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state', 'not in', ['draft', 'received'])]}" force_save="1"/>
-                                <!-- Destinatario: Interno o Externo -->
                                 <field name="recipient_department_ids" string="Departamentos Destinatarios"
                                     widget="many2many_tags"
                                     options="{'no_create': True, 'no_open': True}"
-                                    attrs="{'invisible': [('correspondence_flow', '=', 'outgoing')], 'required': [('correspondence_flow', 'in', ['internal', 'incoming'])], 'readonly': [('state', 'not in', ['draft', 'received'])]}" 
+                                    attrs="{'invisible': ['|', ('correspondence_flow', '=', 'outgoing'), ('recipient_departments_static', '!=', False)], 'required': [('correspondence_flow', 'in', ['internal', 'incoming'])], 'readonly': [('state', 'not in', ['draft', 'received'])]}" 
                                     domain="[('id', '!=', excluded_department_id)]"/>
+                                <field name="recipient_departments_static" string="Departamentos Destinatarios" attrs="{'invisible': [('recipient_departments_static', '=', False)]}"/>
                                 <field name="excluded_department_id" invisible="1"/>
                                 <!-- Método de envío para correspondencia saliente -->
                                 <field name="shipping_method" attrs="{'invisible': [('correspondence_flow', '!=', 'outgoing')], 'required': [('correspondence_flow', '=', 'outgoing')]}"/>
