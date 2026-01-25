@@ -37,6 +37,39 @@
     </template>
 
     <!-- =================================================================== -->
+    <!--         PLANTILLA REUTILIZABLE PARA LA FIRMA Y SELLO                -->
+    <!-- =================================================================== -->
+
+    <template id="report_signature_stamp">
+                        <!-- Bloque de Firma -->
+                        <div style="text-align: center; margin-top: 64px;">
+                            <p style="margin-bottom: 75px;">Atentamente:</p>
+                            <div style="display: inline-block; width: 400px; text-align: center;">
+                                <!-- Firma y Sello -->
+                                <div style="height: 110px; margin-bottom: 5px;">
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
+                                    </div>
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
+                                    </div>
+                                </div>
+                                <!-- Línea de firma -->
+                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
+                                    <strong t-field="doc.send_department_id.manager_id.name"/>
+                                </p>
+                                <!-- Estilo forzado para descripción -->
+                                <style>
+                                    .director-desc-forced, .director-desc-forced * { font-size: 10px !important; line-height: 1.2 !important; margin: 0 !important; }
+                                </style>
+                                <div class="director-desc-forced">
+                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
+                                </div>
+                            </div>
+                        </div>
+    </template>
+
+    <!-- =================================================================== -->
     <!--                  PLANTILLA PARA MEMORANDOS                          -->
     <!-- =================================================================== -->
     <template id="report_correspondence_memorando_template">
@@ -58,28 +91,8 @@
                         <div class="row mt-0" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
                         <div class="oe_structure"/>
 
-                        <!-- Bloque de Firma -->
-                        <div style="text-align: center; margin-top: 64px;">
-                            <p style="margin-bottom: 75px;">Atentamente:</p>
-                            <div style="display: inline-block; width: 400px; text-align: center;">
-                                <!-- Firma y Sello -->
-                                <div style="height: 110px; margin-bottom: 5px;">
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
-                                    </div>
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
-                                    </div>
-                                </div>
-                                <!-- Línea de firma -->
-                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
-                                    <strong t-field="doc.send_department_id.manager_id.name"/>
-                                </p>
-                                <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
-                                </p>
-                            </div>
-                        </div>
+                        <!-- Llamamos a la plantilla de la firma y sello -->
+                        <t t-call="correspondence.report_signature_stamp"/>
 
                         <!-- Llamamos a la plantilla del pie de página personalizado -->
                         <t t-call="correspondence.report_qr_footer"/>
@@ -112,27 +125,8 @@
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
-                        <div style="text-align: center; margin-top: 64px;">
-                            <p style="margin-bottom: 75px;">Atentamente:</p>
-                            <div style="display: inline-block; width: 400px; text-align: center;">
-                                <!-- Firma y Sello -->
-                                <div style="height: 110px; margin-bottom: 5px;">
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
-                                    </div>
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
-                                    </div>
-                                </div>
-                                <!-- Línea de firma -->
-                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
-                                    <strong t-field="doc.send_department_id.manager_id.name"/>
-                                </p>
-                                <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
-                                </p>
-                            </div>
-                        </div>
+                        <!-- Bloque de Firma -->
+                        <t t-call="correspondence.report_signature_stamp"/>
 
                         <!-- Llamamos a la plantilla del pie de página personalizado -->
                         <t t-call="correspondence.report_qr_footer"/>
@@ -165,27 +159,8 @@
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
-                        <div style="text-align: center; margin-top: 64px;">
-                            <p style="margin-bottom: 75px;">Atentamente:</p>
-                            <div style="display: inline-block; width: 400px; text-align: center;">
-                                <!-- Firma y Sello -->
-                                <div style="height: 110px; margin-bottom: 5px;">
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
-                                    </div>
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
-                                    </div>
-                                </div>
-                                <!-- Línea de firma -->
-                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
-                                    <strong t-field="doc.send_department_id.manager_id.name"/>
-                                </p>
-                                <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
-                                </p>
-                            </div>
-                        </div>
+                        <!-- Bloque de Firma -->
+                        <t t-call="correspondence.report_signature_stamp"/>
 
                         <!-- Llamamos a la plantilla del pie de página personalizado -->
                         <t t-call="correspondence.report_qr_footer"/>
@@ -218,27 +193,8 @@
                         <div class="oe_structure"/>
 
                         <!-- Bloque de Firma -->
-                        <div style="text-align: center; margin-top: 64px;">
-                            <p style="margin-bottom: 75px;">Atentamente:</p>
-                            <div style="display: inline-block; width: 400px; text-align: center;">
-                                <!-- Firma y Sello -->
-                                <div style="height: 110px; margin-bottom: 5px;">
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
-                                    </div>
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
-                                    </div>
-                                </div>
-                                <!-- Línea de firma -->
-                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
-                                    <strong t-field="doc.send_department_id.manager_id.name"/>
-                                </p>
-                                <p style="margin-bottom: 0;">
-                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
-                                </p>
-                            </div>
-                        </div>
+                        <!-- Bloque de Firma -->
+                        <t t-call="correspondence.report_signature_stamp"/>
 
                         <!-- Llamamos a la plantilla del pie de página personalizado -->
                         <t t-call="correspondence.report_qr_footer"/>
