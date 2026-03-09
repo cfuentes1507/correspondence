@@ -28,6 +28,8 @@ Este módulo tiene como objetivo digitalizar y centralizar el proceso de envío,
 *   `hr.department.director.history`: Almacena el historial de directores por departamento, evitando solapamientos de fechas.
 *   `correspondence.document.read.status`: Registra qué departamento ha leído un documento, quién y cuándo, proporcionando un acuse de recibo.
 
+> **Nota (Deprecated):** El archivo `models/correspondence_department.py` contiene un modelo independiente `correspondence_department` que fue el diseño original para gestionar departamentos. Toda su funcionalidad fue migrada al modelo estándar `hr.department` (en `models/hr_department.py`). Este archivo **no está importado** en `__init__.py`, por lo que Odoo no lo carga. Se conserva como referencia histórica y puede eliminarse de forma segura.
+
 ### Flujo de Trabajo del Documento
 
 El módulo gestiona tres flujos principales, cada uno con sus propios estados y transiciones:

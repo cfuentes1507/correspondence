@@ -41,9 +41,16 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <page name="Correspondencia" string="Correspondencia">
-                    <group string="Correspondencia">
+                    <group string="Vínculo con Empleado">
                         <group>
-                            <field name="department_id"/>
+                            <field name="employee_id"
+                                   readonly="0"
+                                   options="{'no_create': True}"
+                                   help="Seleccione el empleado asociado a este usuario. Es necesario para el funcionamiento del módulo de correspondencia."/>
+                        </group>
+                        <group>
+                            <field name="department_id" readonly="1"
+                                   help="El departamento se obtiene automáticamente del empleado asociado."/>
                         </group>
                     </group>
                 </page>

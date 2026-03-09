@@ -1,11 +1,26 @@
 # -*- coding: utf-8 -*-
+#
+# ============================================================================
+# DEPRECATED / CÓDIGO OBSOLETO
+# ============================================================================
+# Este modelo fue el diseño original para gestionar departamentos dentro del
+# módulo de correspondencia. Toda su funcionalidad fue migrada al modelo
+# estándar de Odoo 'hr.department' (ver: models/hr_department.py), que se
+# extiende con los campos necesarios (correlative_prefix, director_history_ids,
+# can_receive_correspondence, etc.).
+#
+# Este archivo NO está importado en __init__.py, por lo que Odoo no lo carga
+# ni registra el modelo. Se conserva únicamente como referencia histórica.
+#
+# Se puede eliminar de forma segura sin ningún impacto en el módulo.
+# ============================================================================
 
 from odoo import models, fields, api
 
 
 class correspondence_department(models.Model):
     _name = 'correspondence_department'
-    _description = 'Departamento de Correspondencia'
+    _description = 'Departamento de Correspondencia [DEPRECATED - usar hr.department]'
 
     company_id = fields.Many2one('res.company', string='Compañía', default=lambda self: self.env.company)
     name = fields.Char(string='Nombre del Departamento', required=True)
