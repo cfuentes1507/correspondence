@@ -74,6 +74,9 @@ class correspondence_document(models.Model):
     already_read_by_my_department = fields.Boolean(
         string="¿Ya leído por mi departamento?", compute='_compute_is_current_user_recipient')
 
+    director_has_digital_signature = fields.Boolean(
+        string="¿Director tiene firma digital?", compute='_compute_director_has_digital_signature')
+
     user_facing_state = fields.Char(
         string="Estado (Usuario)", compute='_compute_user_facing_state')
 
@@ -105,6 +108,12 @@ class correspondence_document(models.Model):
             user_department = self.env.user.employee_id.department_id
             doc.is_current_user_recipient = user_department in doc.recipient_department_ids
             doc.already_read_by_my_department = user_department in doc.read_status_ids.mapped('department_id')
+
+    @api.depends('send_department_id', 'send_department_id.manager_id.director_signature', 'send_department_id.manager_id.director_stamp')
+    def _compute_director_has_digital_signature(self):
+        for doc in self:
+            manager = doc.send_department_id.manager_id
+            doc.director_has_digital_signature = bool(manager and manager.director_signature and manager.director_stamp)
 
     # Campo auxiliar para manejar el dominio desde la vista XML
     excluded_department_id = fields.Many2one('hr.department', compute='_compute_excluded_department_id')

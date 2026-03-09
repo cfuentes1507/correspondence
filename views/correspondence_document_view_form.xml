@@ -8,9 +8,20 @@
                     <header>
                         <field name="is_current_user_recipient" invisible="1"/>
                         <field name="already_read_by_my_department" invisible="1"/>
+                        <field name="director_has_digital_signature" invisible="1"/>
                         
+                <!-- Firma Digital: visible solo si el director tiene firma y sello -->
                 <button name="action_sign" string="Firmar y Sellar" type="object" class="oe_highlight" 
-                        invisible="not id or state != 'draft' or correspondence_flow == 'incoming'" 
+                        invisible="not id or state != 'draft' or correspondence_flow == 'incoming' or not director_has_digital_signature" 
+                        groups="correspondence.correspondence_group_director"/>
+
+                <!-- Firma Manual: visible solo si el director NO tiene firma y sello -->
+                <button name="action_generate_report" string="Descargar Documento" type="object" class="btn-secondary" 
+                        invisible="not id or state != 'draft' or correspondence_flow == 'incoming' or director_has_digital_signature" 
+                        groups="correspondence.correspondence_group_director"/>
+
+                <button name="%(correspondence.action_upload_signed_document_wizard)d" string="Subir Documento Firmado" type="action" class="oe_highlight" 
+                        invisible="not id or state != 'draft' or correspondence_flow == 'incoming' or director_has_digital_signature" 
                         groups="correspondence.correspondence_group_director"/>
                 
                 <button name="action_send" string="Enviar (Interno)" type="object" class="oe_highlight" 
@@ -22,6 +33,11 @@
 
                 <button name="action_assign" string="Asignar a Departamentos" type="object" class="oe_highlight" 
                         invisible="state not in ['draft', 'received'] or correspondence_flow != 'incoming'"/>
+
+                <!-- Cargar documento escaneado: solo para correspondencia entrante -->
+                <button name="%(correspondence.action_upload_scanned_document_wizard)d" string="Cargar Documento Escaneado" type="action" class="btn-secondary" 
+                        invisible="state not in ['draft', 'received'] or correspondence_flow != 'incoming'"
+                        groups="correspondence.correspondence_group_external_management"/>
                 
                 <button name="action_read" string="Marcar como Leído" type="object" class="btn-secondary" 
                         invisible="state not in ['sent', 'assigned'] or not is_current_user_recipient or already_read_by_my_department"/>

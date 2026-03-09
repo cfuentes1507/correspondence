@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_upload_scanned_document_wizard_form" model="ir.ui.view">
+            <field name="name">correspondence.upload.scanned.document.wizard.form</field>
+            <field name="model">correspondence.upload.scanned.document.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Subir Documento Escaneado">
+                    <group>
+                        <field name="scanned_file" filename="file_name"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="upload_scanned" string="Cargar Documento" type="object" class="oe_highlight"/>
+                        <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_upload_scanned_document_wizard" model="ir.actions.act_window">
+            <field name="name">Subir Documento Escaneado</field>
+            <field name="res_model">correspondence.upload.scanned.document.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

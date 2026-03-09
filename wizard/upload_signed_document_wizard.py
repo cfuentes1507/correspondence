@@ -26,9 +26,16 @@ class UploadSignedDocumentWizard(models.TransientModel):
             # Construir el nuevo nombre de archivo usando el correlativo y el asunto.
             new_file_name = f"{document.correlative} - {sanitized_subject}{extension}"
 
+            # SNAPSHOT: Guardamos los nombres de los departamentos para persistencia histórica,
+            # igual que en el flujo de firma digital (action_sign).
+            static_send = document.send_department_id.name
+            static_recipients = ", ".join(document.recipient_department_ids.mapped('name'))
+
             document.write({
                 'document_file': self.signed_file,
                 'file_name': new_file_name,
-                'state': 'signed'
+                'state': 'signed',
+                'send_department_static': static_send,
+                'recipient_departments_static': static_recipients,
             })
         return {'type': 'ir.actions.act_window_close'}

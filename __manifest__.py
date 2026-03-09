@@ -27,6 +27,7 @@
         'data/ir_sequence_data.xml',
         ## Wizards
         'wizard/upload_signed_document_wizard_view.xml',
+        'wizard/upload_scanned_document_wizard_view.xml',
         ## Views
         'views/correspondence_type_view.xml',
         'views/correspondence_department_view.xml',

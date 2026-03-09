@@ -17,5 +17,12 @@
                 </form>
             </field>
         </record>
+
+        <record id="action_upload_signed_document_wizard" model="ir.actions.act_window">
+            <field name="name">Subir Documento Firmado</field>
+            <field name="res_model">correspondence.upload.signed.document.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
     </data>
 </odoo>

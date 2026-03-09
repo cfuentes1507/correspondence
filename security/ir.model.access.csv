@@ -18,6 +18,7 @@ access_read_status_director,Acceso de Director a Estado de Lectura,model_corresp
 access_read_status_admin,Acceso de Admin a Estado de Lectura,model_correspondence_document_read_status,correspondence.correspondence_group_admin,1,1,1,1
 
 access_upload_wizard,Acceso a Asistente de Subida,model_correspondence_upload_signed_document_wizard,base.group_user,1,1,1,1
+access_upload_scanned_wizard,Acceso a Asistente de Subida de Escaneados,model_correspondence_upload_scanned_document_wizard,base.group_user,1,1,1,1
 
 access_physical_location_user,Acceso de Usuario a Ubicación Física,model_correspondence_physical_location,correspondence.correspondence_group_user,1,0,0,0
 access_physical_location_admin,Acceso de Admin a Ubicación Física,model_correspondence_physical_location,correspondence.correspondence_group_admin,1,1,1,1
