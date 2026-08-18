@@ -6,21 +6,27 @@
         <record id="tipo_memorando" model="correspondence_type">
             <field name="name">Memorando</field>
             <field name="prefix">MEMO</field>
-
             <field name="report_action_id" ref="correspondence.action_report_correspondence_memorando"/>
+            <field name="default_greeting"><![CDATA[<p>Tengo el agrado dirigirme a usted, en la oportunidad de hacerle llegar un cordial saludo, Bolivariano, Socialista, Revolucionario y profundamente Chavista, extensivo al personal que le acompaña en su gestión.</p>]]></field>
+            <field name="default_farewell"><![CDATA[<p>Sin más que agregar, agradeciendo de antemano la atención prestada, quedando de usted, se despide;</p><p><br/></p><p>Atentamente,</p>]]></field>
         </record>
 
         <record id="tipo_circular" model="correspondence_type">
             <field name="name">Circular</field>
             <field name="prefix">CIRC</field>
             <field name="report_action_id" ref="correspondence.action_report_correspondence_circular"/>
+            <field name="default_greeting"><![CDATA[<p>Tengo el agrado dirigirme a usted, en la oportunidad de hacerle llegar un cordial saludo, Bolivariano, Socialista, Revolucionario y profundamente Chavista, extensivo al personal que le acompaña en su gestión.</p>]]></field>
+            <field name="default_farewell"><![CDATA[<p>Sin más que agregar, agradeciendo de antemano la atención prestada, quedando de usted, se despide;</p><p><br/></p><p>Atentamente,</p>]]></field>
         </record>
 
         <record id="tipo_oficio" model="correspondence_type">
             <field name="name">Oficio</field>
             <field name="prefix">OFI</field>
             <field name="report_action_id" ref="correspondence.action_report_correspondence_oficio"/>
+            <field name="default_greeting"><![CDATA[<p>Tengo el agrado dirigirme a usted, en la oportunidad de hacerle llegar un cordial saludo, Bolivariano, Socialista, Revolucionario y profundamente Chavista, extensivo al personal que le acompaña en su gestión.</p><p>Siguiendo siempre los principios de hermandad, camaradería y fraternidad infundidos por nuestro Comandante Supremo Hugo Rafael Chávez Frías, y continuados por nuestro Presidente de la República Bolivariana de Venezuela Nicolás Maduro Moros, en esta oportunidad,</p>]]></field>
+            <field name="default_farewell"><![CDATA[<p>Sin más que agregar y reiterando nuestra disposición de trabajo conjunto, me despido;</p><p><br/></p><p>Atentamente,</p>]]></field>
         </record>
+
 
     </data>
 </odoo>

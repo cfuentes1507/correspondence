@@ -86,6 +86,51 @@ class correspondence_document(models.Model):
     access_token = fields.Char(
         string='Token de Acceso', compute='_compute_access_token', store=True, precompute=True, copy=False, readonly=True
     )
+    
+    date_formatted_spanish = fields.Char(
+        string="Fecha Formateada (Mayúsculas)", compute="_compute_formatted_dates")
+    date_formatted_spanish_long = fields.Char(
+        string="Fecha Larga Formateada", compute="_compute_formatted_dates")
+    author_initials = fields.Char(
+        string="Iniciales", compute="_compute_author_initials")
+
+    @api.onchange('correspondence_type')
+    def _onchange_correspondence_type_template(self):
+        if self.correspondence_type and not self.descripcion:
+            greeting = self.correspondence_type.default_greeting or ''
+            farewell = self.correspondence_type.default_farewell or ''
+            self.descripcion = f"{greeting}<p><br/></p>{farewell}"
+
+    @api.depends('date')
+    def _compute_formatted_dates(self):
+        months_upper = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
+                        'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
+        months_lower = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+        for doc in self:
+            if doc.date:
+                day = doc.date.strftime('%d')
+                month_idx = doc.date.month - 1
+                year = doc.date.strftime('%Y')
+                doc.date_formatted_spanish = f"{day} DE {months_upper[month_idx]} DE {year}"
+                doc.date_formatted_spanish_long = f"Caracas, {day} de {months_lower[month_idx]} de {year}"
+            else:
+                doc.date_formatted_spanish = ""
+                doc.date_formatted_spanish_long = ""
+
+    @api.depends('send_department_id', 'author_id')
+    def _compute_author_initials(self):
+        for doc in self:
+            manager_name = doc.send_department_id.manager_id.name or doc.author_id.name or ""
+            author_name = doc.author_id.name or ""
+            
+            def get_initials(text):
+                parts = [p[0] for p in text.strip().split() if p]
+                return "".join(parts)
+            
+            upper_init = get_initials(manager_name).upper() or "XX"
+            lower_init = get_initials(author_name).lower() or "xx"
+            doc.author_initials = f"{upper_init}/{lower_init}"
 
     @api.depends('create_date')
     def _compute_access_token(self):

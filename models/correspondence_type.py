@@ -17,6 +17,12 @@ class correspondence_type(models.Model):
         'ir.actions.report',
         string="Acción de Reporte",
         help="Seleccione la acción de reporte a utilizar para este tipo de correspondencia.")
+    default_greeting = fields.Html(
+        string="Saludo por Defecto",
+        help="Texto del saludo institucional que se cargará automáticamente al seleccionar este tipo.")
+    default_farewell = fields.Html(
+        string="Despedida por Defecto",
+        help="Texto de la despedida institucional que se cargará automáticamente al seleccionar este tipo.")
 
     def action_preview_report(self):
         self.ensure_one()

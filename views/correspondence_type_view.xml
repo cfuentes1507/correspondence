@@ -23,7 +23,16 @@
                                     invisible="not report_action_id"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Plantillas de Texto Configurables">
+                            <group>
+                                <field name="default_greeting" placeholder="Párrafo de saludo institucional por defecto..."/>
+                                <field name="default_farewell" placeholder="Párrafo de despedida institucional por defecto..."/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
+
             </form>
         </field>
     </record>

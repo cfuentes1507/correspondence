@@ -6,23 +6,23 @@
     <template id="external_layout_correspondence" inherit_id="web.external_layout_standard">
         <xpath expr="//div[contains(@class, 'header') or contains(@t-attf-class, 'header')]" position="replace">
             <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
-                <div class="d-flex justify-content-between align-items-center" style="border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 0px; width: 100%;">
-                    <div> 
-                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 80px;" alt="Company Logo"/>
+                <div class="d-flex justify-content-between align-items-center" style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 0px; width: 100%;">
+                    <div style="width: 45%;"> 
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 75px;" alt="Ministerio Logo"/>
+                        <img t-else="" src="/correspondence/static/src/img/logo-izquierda.png" style="max-height: 75px;" alt="Ministerio Logo"/>
                     </div>
-                    <div style="width: 50%;">
-                    </div>
-                    <div>
-                        <img src="/correspondence/static/src/img/logo-derecha.png" style="max-height: 80px;" alt="Secondary Logo"/>
+                    <div style="border-left: 1px solid #666; height: 60px; margin: 0 10px;"></div>
+                    <div style="width: 45%; text-align: right;">
+                        <img src="/correspondence/static/src/img/logo-derecha.png" style="max-height: 75px;" alt="CENIPA Logo"/>
                     </div>
                 </div>
             </div>
         </xpath>
-        <!-- Añadimos esta sección para eliminar el padding superior del cuerpo del reporte -->
+        <!-- Padding superior del cuerpo del reporte -->
         <xpath expr="//div[contains(@class, 'article') or contains(@t-attf-class, 'article')]" position="attributes">
             <attribute name="style">padding-top: 0px !important;</attribute>
         </xpath>
-        <!-- Eliminamos la modificación del footer que no funcionaba -->
+        <!-- Footer personalizado -->
         <xpath expr="//div[contains(@class, 'footer') or contains(@t-attf-class, 'footer')]" position="replace">
             <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
             </div>
@@ -33,43 +33,45 @@
     <!--         PLANTILLA REUTILIZABLE PARA EL PIE DE PÁGINA CON QR         -->
     <!-- =================================================================== -->
     <template id="report_qr_footer">
-        <div class="footer" style="position: relative; width: 100%; height: 150px; margin-top: 50px;">
-            <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 100px; position: absolute; bottom: 40px; left: 0; right: 0;" alt="Footer Image"/>
-            <img t-if="doc.public_url" t-att-src="doc.get_qr_code_url()" style="width: 80px; height: 80px; position: absolute; bottom: 40px; left: 40px;"/>
+        <div class="footer" style="position: relative; width: 100%; height: 140px; margin-top: 30px; page-break-inside: avoid;">
+            <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 95px; position: absolute; bottom: 10px; left: 0; right: 0;" alt="Footer Image"/>
+            <img t-if="doc.public_url" t-att-src="doc.get_qr_code_url()" style="width: 75px; height: 75px; position: absolute; bottom: 20px; left: 35px;"/>
         </div>
     </template>
 
     <!-- =================================================================== -->
     <!--         PLANTILLA REUTILIZABLE PARA LA FIRMA Y SELLO                -->
     <!-- =================================================================== -->
-
     <template id="report_signature_stamp">
-                        <!-- Bloque de Firma -->
-                        <div style="text-align: center; margin-top: 64px;">
-                            <p style="margin-bottom: 75px;">Atentamente:</p>
-                            <div style="display: inline-block; width: 400px; text-align: center;">
-                                <!-- Firma y Sello -->
-                                <div style="height: 110px; margin-bottom: 5px;">
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 90px; opacity: 0.8;"/>
-                                    </div>
-                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
-                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 100px;"/>
-                                    </div>
-                                </div>
-                                <!-- Línea de firma -->
-                                <p style="margin-bottom: 0; border-top: 1px solid black; padding-top: 5px;">
-                                    <strong t-field="doc.send_department_id.manager_id.name"/>
-                                </p>
-                                <!-- Estilo forzado para descripción -->
-                                <style>
-                                    .director-desc-forced, .director-desc-forced * { font-size: 10px !important; line-height: 1.2 !important; margin: 0 !important; }
-                                </style>
-                                <div class="director-desc-forced">
-                                    <span t-out="doc.send_department_id.manager_id.director_description"/>
-                                </div>
-                            </div>
-                        </div>
+        <div style="text-align: center; margin-top: 40px; page-break-inside: avoid;">
+            <div style="display: inline-block; width: 450px; text-align: center;">
+                <div style="height: 90px; margin-bottom: 5px;">
+                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 85px; opacity: 0.85;"/>
+                    </div>
+                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 95px;"/>
+                    </div>
+                </div>
+                <p style="margin-bottom: 2px; font-weight: bold; text-transform: uppercase; font-size: 13px;">
+                    <strong t-if="doc.send_department_id.manager_id" t-field="doc.send_department_id.manager_id.name"/>
+                    <strong t-else="" t-field="doc.author_id.name"/>
+                </p>
+                <p style="margin-bottom: 2px; font-weight: bold; text-transform: uppercase; font-size: 11px;">
+                    <span t-if="doc.send_department_id.manager_id and doc.send_department_id.manager_id.job_id" t-field="doc.send_department_id.manager_id.job_id.name"/>
+                    <span t-elif="doc.send_department_id" t-field="doc.send_department_id.name"/>
+                </p>
+                <p style="margin-bottom: 0; font-weight: bold; text-transform: uppercase; font-size: 11px;">
+                    CENTRO NACIONAL DE INVESTIGACIÓN DE PESCA Y ACUICULTURA
+                </p>
+                <style>
+                    .director-desc-forced, .director-desc-forced * { font-size: 9px !important; line-height: 1.1 !important; margin-top: 4px !important; }
+                </style>
+                <div class="director-desc-forced" t-if="doc.send_department_id.manager_id and doc.send_department_id.manager_id.director_description">
+                    <span t-out="doc.send_department_id.manager_id.director_description"/>
+                </div>
+            </div>
+        </div>
     </template>
 
     <!-- =================================================================== -->
@@ -81,23 +83,63 @@
                 <t t-set="company" t-value="doc.company_id"/>
                 <t t-call="correspondence.external_layout_correspondence">
                     <t t-set="doc" t-value="doc.with_context(lang=doc.author_id.lang)"/>
-                    <div class="page">
-                        <!-- Cuerpo del Documento -->
-                        <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
-                        <h2 class="text-center mt-0" style="font-weight: bold;">MEMORANDO</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
-                        <p><strong>De:</strong> <span t-field="doc.send_department_id.manager_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
-                        <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
-                        <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
-                        <hr/>
-                        <div id="description_content" t-out="doc.descripcion"/>
-                        <div class="row mt-0" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
-                        <div class="oe_structure"/>
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 12px; color: #000;">
+                        <!-- Correlativo -->
+                        <p style="font-weight: bold; font-size: 14px; margin-bottom: 15px;">
+                            <strong><span t-field="doc.correlative"/></strong>
+                        </p>
 
-                        <!-- Llamamos a la plantilla de la firma y sello -->
+                        <!-- Título -->
+                        <h3 class="text-center" style="font-weight: bold; text-decoration: underline; letter-spacing: 1px; margin-bottom: 20px;">
+                            MEMORANDO
+                        </h3>
+
+                        <!-- Tabla de Encabezado Box -->
+                        <table class="table table-bordered" style="width: 100%; border: 1px solid #000; margin-bottom: 25px; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 15%; font-weight: bold; background-color: #f4f4f4; border: 1px solid #000; padding: 6px 10px; vertical-align: top;">DE:</td>
+                                <td style="font-weight: bold; text-transform: uppercase; border: 1px solid #000; padding: 6px 10px;">
+                                    <span t-if="doc.send_department_id.manager_id" t-field="doc.send_department_id.manager_id.name"/><br/>
+                                    <span t-if="doc.send_department_id.manager_id and doc.send_department_id.manager_id.job_id" t-field="doc.send_department_id.manager_id.job_id.name"/>
+                                    <span t-else="" t-field="doc.send_department_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background-color: #f4f4f4; border: 1px solid #000; padding: 6px 10px; vertical-align: top;">PARA:</td>
+                                <td style="font-weight: bold; text-transform: uppercase; border: 1px solid #000; padding: 6px 10px;">
+                                    <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background-color: #f4f4f4; border: 1px solid #000; padding: 6px 10px; vertical-align: top;">ASUNTO:</td>
+                                <td style="font-weight: bold; text-transform: uppercase; border: 1px solid #000; padding: 6px 10px;">
+                                    <span t-field="doc.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background-color: #f4f4f4; border: 1px solid #000; padding: 6px 10px; vertical-align: top;">FECHA:</td>
+                                <td style="font-weight: bold; text-transform: uppercase; border: 1px solid #000; padding: 6px 10px;">
+                                    <span t-field="doc.date_formatted_spanish"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Cuerpo del Documento (Renderiza la Descripción Completa) -->
+                        <div id="description_content" style="font-size: 12px; line-height: 1.6; text-align: justify; margin-bottom: 25px;" t-out="doc.descripcion"/>
+
+                        <div class="row mt-0" t-if="doc.observaciones">
+                            <div class="col-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div>
+                        </div>
+
+                        <!-- Bloque de Firma -->
                         <t t-call="correspondence.report_signature_stamp"/>
 
-                        <!-- Llamamos a la plantilla del pie de página personalizado -->
+                        <!-- Iniciales al pie (Inferior Izquierda) -->
+                        <p style="font-size: 11px; font-weight: bold; margin-top: 15px; text-align: left;">
+                            <span t-field="doc.author_initials"/>
+                        </p>
+
+                        <!-- Pie de Página -->
                         <t t-call="correspondence.report_qr_footer"/>
                     </div>
                 </t>
@@ -114,23 +156,63 @@
                 <t t-set="company" t-value="doc.company_id"/>
                 <t t-call="correspondence.external_layout_correspondence">
                     <t t-set="doc" t-value="doc.with_context(lang=doc.author_id.lang)"/>
-                    <div class="page">
-                        <!-- Cuerpo del Documento -->
-                        <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
-                        <h2 class="text-center" style="text-transform: uppercase; letter-spacing: 4px; border: 2px solid black; padding: 10px;">CIRCULAR</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
-                        <p><strong>De:</strong> <span t-field="doc.send_department_id.manager_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
-                        <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
-                        <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
-                        <hr/>
-                        <div id="description_content" t-out="doc.descripcion"/>
-                        <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
-                        <div class="oe_structure"/>
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 12px; color: #000;">
+                        <!-- Correlativo -->
+                        <p style="font-weight: bold; font-size: 14px; margin-bottom: 15px;">
+                            <strong><span t-field="doc.correlative"/></strong>
+                        </p>
 
-                        <!-- Llamamos a la plantilla de la firma y sello -->
+                        <!-- Título -->
+                        <h3 class="text-center" style="font-weight: bold; text-decoration: underline; letter-spacing: 1px; margin-bottom: 20px;">
+                            CIRCULAR
+                        </h3>
+
+                        <!-- Tabla de Encabezado Box -->
+                        <table class="table table-bordered" style="width: 100%; border: 1px solid #000; margin-bottom: 25px; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 15%; font-weight: bold; background-color: #f4f4f4; border: 1px solid #000; padding: 6px 10px; vertical-align: top;">PARA:</td>
+                                <td style="font-weight: bold; text-transform: uppercase; border: 1px solid #000; padding: 6px 10px;">
+                                    <span t-out="', '.join(doc.recipient_department_ids.mapped('name')) if doc.recipient_department_ids else 'TODO EL PERSONAL'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background-color: #f4f4f4; border: 1px solid #000; padding: 6px 10px; vertical-align: top;">DE:</td>
+                                <td style="font-weight: bold; text-transform: uppercase; border: 1px solid #000; padding: 6px 10px;">
+                                    <span t-if="doc.send_department_id.manager_id" t-field="doc.send_department_id.manager_id.name"/><br/>
+                                    <span t-if="doc.send_department_id.manager_id and doc.send_department_id.manager_id.job_id" t-field="doc.send_department_id.manager_id.job_id.name"/>
+                                    <span t-else="" t-field="doc.send_department_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background-color: #f4f4f4; border: 1px solid #000; padding: 6px 10px; vertical-align: top;">ASUNTO:</td>
+                                <td style="font-weight: bold; text-transform: uppercase; border: 1px solid #000; padding: 6px 10px;">
+                                    <span t-field="doc.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background-color: #f4f4f4; border: 1px solid #000; padding: 6px 10px; vertical-align: top;">FECHA:</td>
+                                <td style="font-weight: bold; text-transform: uppercase; border: 1px solid #000; padding: 6px 10px;">
+                                    <span t-field="doc.date_formatted_spanish"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Cuerpo del Documento -->
+                        <div id="description_content" style="font-size: 12px; line-height: 1.6; text-align: justify; margin-bottom: 25px;" t-out="doc.descripcion"/>
+
+                        <div class="row mt-0" t-if="doc.observaciones">
+                            <div class="col-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div>
+                        </div>
+
+                        <!-- Bloque de Firma -->
                         <t t-call="correspondence.report_signature_stamp"/>
 
-                        <!-- Llamamos a la plantilla del pie de página personalizado -->
+                        <!-- Iniciales al pie -->
+                        <p style="font-size: 11px; font-weight: bold; margin-top: 15px; text-align: left;">
+                            <span t-field="doc.author_initials"/>
+                        </p>
+
+                        <!-- Pie de Página -->
                         <t t-call="correspondence.report_qr_footer"/>
                     </div>
                 </t>
@@ -147,23 +229,76 @@
                 <t t-set="company" t-value="doc.company_id"/>
                 <t t-call="correspondence.external_layout_correspondence">
                     <t t-set="doc" t-value="doc.with_context(lang=doc.author_id.lang)"/>
-                    <div class="page">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 12px; color: #000;">
+                        <!-- Correlativo (Izquierda) y Fecha (Derecha) -->
+                        <div style="width: 100%; margin-bottom: 25px; display: table;">
+                            <div style="display: table-cell; width: 50%; font-weight: bold; font-size: 14px; vertical-align: top;">
+                                <span><span t-field="doc.correlative"/></span>
+                            </div>
+                            <div style="display: table-cell; width: 50%; font-weight: bold; font-size: 12px; text-align: right; vertical-align: top;">
+                                <span t-field="doc.date_formatted_spanish_long"/>
+                            </div>
+                        </div>
+
+                        <!-- Bloque de Destinatario (Alineado a la Izquierda) -->
+                        <div style="margin-bottom: 25px; font-size: 12px; line-height: 1.4;">
+                            <p style="margin-bottom: 2px;"><strong>Ciudadano:</strong></p>
+                            <p style="margin-bottom: 2px; font-weight: bold; text-transform: uppercase;" t-if="doc.external_partner_id">
+                                <span t-field="doc.external_partner_id.name"/>
+                            </p>
+                            <p style="margin-bottom: 2px; font-weight: bold; text-transform: uppercase;" t-elif="doc.recipient_department_ids">
+                                <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/>
+                            </p>
+                            <p style="margin-bottom: 2px; font-weight: bold; text-transform: uppercase;" t-if="doc.external_partner_id and doc.external_partner_id.function">
+                                <span t-field="doc.external_partner_id.function"/>
+                            </p>
+                            <p style="margin-bottom: 2px;" t-if="doc.external_address">
+                                <span t-field="doc.external_address"/>
+                            </p>
+                            <p style="margin-top: 5px; font-weight: bold;">Su Despacho. -</p>
+                        </div>
+
                         <!-- Cuerpo del Documento -->
-                        <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
-                        <h2 class="text-center" style="font-style: italic; border-bottom: 1px solid #ccc; padding-bottom: 5px;">OFICIO</h2>
-                        <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
-                        <p><strong>De:</strong> <span t-field="doc.send_department_id.manager_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
-                        <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
-                        <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
-                        <hr/>
-                        <div id="description_content" t-out="doc.descripcion"/>
-                        <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
-                        <div class="oe_structure"/>
+                        <div id="description_content" style="font-size: 12px; line-height: 1.6; text-align: justify; margin-bottom: 25px;" t-out="doc.descripcion"/>
 
-                        <!-- Llamamos a la plantilla de la firma y sello -->
-                        <t t-call="correspondence.report_signature_stamp"/>
+                        <div class="row mt-0" t-if="doc.observaciones">
+                            <div class="col-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div>
+                        </div>
 
-                        <!-- Llamamos a la plantilla del pie de página personalizado -->
+                        <!-- Bloque de Firma Oficial de Oficio con Nota de Gaceta -->
+                        <div style="text-align: center; margin-top: 40px; page-break-inside: avoid;">
+                            <div style="display: inline-block; width: 520px; text-align: center;">
+                                <div style="height: 90px; margin-bottom: 5px;">
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.manager_id.director_stamp" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_stamp)" style="max-height: 85px; opacity: 0.85;"/>
+                                    </div>
+                                    <div style="display: inline-block; width: 49%; text-align: center; vertical-align: bottom;">
+                                        <img t-if="doc.send_department_id.manager_id.director_signature" t-att-src="image_data_uri(doc.send_department_id.manager_id.director_signature)" style="max-height: 95px;"/>
+                                    </div>
+                                </div>
+                                <p style="margin-bottom: 2px; font-weight: bold; text-transform: uppercase; font-size: 13px;">
+                                    <strong t-if="doc.send_department_id.manager_id" t-field="doc.send_department_id.manager_id.name"/>
+                                    <strong t-else="">ERIC RICARDO MARTÍNEZ GÓMEZ</strong>
+                                </p>
+                                <p style="margin-bottom: 2px; font-weight: bold; text-transform: uppercase; font-size: 11px;">
+                                    <span t-if="doc.send_department_id.manager_id and doc.send_department_id.manager_id.job_id" t-field="doc.send_department_id.manager_id.job_id.name"/>
+                                    <span t-else="">DIRECTOR EJECUTIVO</span>
+                                </p>
+                                <p style="margin-bottom: 2px; font-weight: bold; text-transform: uppercase; font-size: 11px;">
+                                    CENTRO NACIONAL DE INVESTIGACIÓN DE PESCA Y ACUICULTURA (CENIPA)
+                                </p>
+                                <p style="font-size: 8px; line-height: 1.15; margin-top: 6px; color: #333;">
+                                    Decreto N° 4.807, publicado en la Gaceta Oficial de la República Bolivariana de Venezuela N° 42.634 de fecha 23 de mayo de 2023. Delegación atribuida en el artículo 1, numeral 2 Resolución DM/N° 005-24 publicada en la Gaceta Oficial de la República Bolivariana de Venezuela N° 42.942 de fecha 15 de agosto de 2.024
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Iniciales al pie -->
+                        <p style="font-size: 11px; font-weight: bold; margin-top: 15px; text-align: left;">
+                            <span t-field="doc.author_initials"/>
+                        </p>
+
+                        <!-- Pie de Página -->
                         <t t-call="correspondence.report_qr_footer"/>
                     </div>
                 </t>
@@ -172,7 +307,7 @@
     </template>
 
     <!-- =================================================================== -->
-    <!--         PLANTILLA GENÉRICA (FALLBACK) - OPCIONAL PERO RECOMENDADO   -->
+    <!--         PLANTILLA GENÉRICA (FALLBACK)                               -->
     <!-- =================================================================== -->
     <template id="report_correspondence_base_template">
         <t t-call="web.html_container">
@@ -180,23 +315,22 @@
                 <t t-set="company" t-value="doc.company_id"/>
                 <t t-call="correspondence.external_layout_correspondence">
                     <t t-set="doc" t-value="doc.with_context(lang=doc.author_id.lang)"/>
-                    <div class="page">
-                        <!-- Cuerpo del Documento -->
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 12px; color: #000;">
                         <p><strong>Correlativo:</strong> <span t-field="doc.correlative"/></p>
-                        <h2 class="text-center">DOCUMENTO DE CORRESPONDENCIA</h2>
+                        <h3 class="text-center">DOCUMENTO DE CORRESPONDENCIA</h3>
                         <p><strong>Para:</strong> <span t-out="', '.join(doc.recipient_department_ids.mapped('name'))"/></p>
                         <p><strong>De:</strong> <span t-field="doc.send_department_id.manager_id.name"/> (<span t-field="doc.send_department_id.name"/>)</p>
                         <p><strong>Asunto:</strong> <span t-field="doc.name"/></p>
-                        <p><strong>Fecha:</strong> <span t-field="doc.date"/></p>
+                        <p><strong>Fecha:</strong> <span t-field="doc.date_formatted_spanish"/></p>
                         <hr/>
                         <div id="description_content" t-out="doc.descripcion"/>
-                        <div class="row mt32" t-if="doc.observaciones"><div class="col-xs-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div></div>
-                        <div class="oe_structure"/>
-
-                        <!-- Llamamos a la plantilla de la firma y sello -->
+                        <div class="row mt-0" t-if="doc.observaciones">
+                            <div class="col-12"><strong>Observaciones:</strong><p t-field="doc.observaciones"/></div>
+                        </div>
                         <t t-call="correspondence.report_signature_stamp"/>
-
-                        <!-- Llamamos a la plantilla del pie de página personalizado -->
+                        <p style="font-size: 11px; font-weight: bold; margin-top: 15px; text-align: left;">
+                            <span t-field="doc.author_initials"/>
+                        </p>
                         <t t-call="correspondence.report_qr_footer"/>
                     </div>
                 </t>
@@ -207,27 +341,24 @@
     <!-- =================================================================== -->
     <!--                  ACCIONES DE REPORTE                                -->
     <!-- =================================================================== -->
-    <!-- Acción de Reporte Genérica (puede servir como fallback) -->
     <record id="action_report_correspondence_document" model="ir.actions.report">
         <field name="name">Documento de Correspondencia (Genérico)</field>
         <field name="model">correspondence_document</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">correspondence.report_correspondence_base_template</field>
         <field name="report_file">correspondence.report_correspondence_base_template</field>
-        <field name="binding_model_id" eval="False"/> <!-- No lo enlazamos directamente al modelo -->
+        <field name="binding_model_id" eval="False"/>
     </record>
 
-    <!-- Acción de Reporte para Memorandos -->
     <record id="action_report_correspondence_memorando" model="ir.actions.report">
         <field name="name">Memorando de Correspondencia</field>
         <field name="model">correspondence_document</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">correspondence.report_correspondence_memorando_template</field> <!-- Usamos la nueva plantilla -->
-        <field name="report_file">correspondence.report_correspondence_memorando_template</field> <!-- Usamos la nueva plantilla -->
+        <field name="report_name">correspondence.report_correspondence_memorando_template</field>
+        <field name="report_file">correspondence.report_correspondence_memorando_template</field>
         <field name="binding_model_id" eval="False"/>
     </record>
 
-    <!-- Acción de Reporte para Circulares -->
     <record id="action_report_correspondence_circular" model="ir.actions.report">
         <field name="name">Circular de Correspondencia</field>
         <field name="model">correspondence_document</field>
@@ -237,7 +368,6 @@
         <field name="binding_model_id" eval="False"/>
     </record>
 
-    <!-- Acción de Reporte para Oficios -->
     <record id="action_report_correspondence_oficio" model="ir.actions.report">
         <field name="name">Oficio de Correspondencia</field>
         <field name="model">correspondence_document</field>
