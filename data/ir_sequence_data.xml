@@ -9,13 +9,5 @@
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
-
-        <!-- URL interna para wkhtmltopdf (generación de PDFs).
-             Esto evita el timeout cuando web.base.url apunta a una IP externa.
-             wkhtmltopdf usará esta URL para cargar CSS/imágenes. -->
-        <record id="config_report_url" model="ir.config_parameter">
-            <field name="key">report.url</field>
-            <field name="value">http://localhost:8003</field>
-        </record>
     </data>
 </odoo>
