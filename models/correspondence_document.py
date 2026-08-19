@@ -433,10 +433,26 @@ class correspondence_document(models.Model):
                 doc.public_url = False
 
     def get_qr_code_url(self):
-        """Devuelve la URL formateada para el controlador de código de barras."""
+        """Devuelve una Data URI Base64 del código QR para renderizado directo en PDF/QWeb sin peticiones HTTP externas."""
         self.ensure_one()
-        if self.public_url:
-            return '/report/barcode/QR/' + werkzeug.urls.url_quote(self.public_url)
+        if not self.access_token:
+            self.access_token = ''.join(secrets.token_urlsafe(32))
+        
+        url = self.public_url
+        if not url:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            if self.id and self.access_token:
+                url = f"{base_url}/correspondence/public/{self.id}?access_token={self.access_token}"
+                self.public_url = url
+            
+        if url:
+            try:
+                barcode_bytes = self.env['ir.actions.report'].barcode('QR', url, width=150, height=150)
+                if barcode_bytes:
+                    b64_str = base64.b64encode(barcode_bytes).decode('utf-8')
+                    return f"data:image/png;base64,{b64_str}"
+            except Exception:
+                pass
         return False
 
     @api.model
