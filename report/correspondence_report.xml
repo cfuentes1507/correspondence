@@ -3,53 +3,44 @@
     <!-- =================================================================== -->
     <!--         LAYOUT PERSONALIZADO PARA TODOS LOS REPORTES                -->
     <!-- =================================================================== -->
-    <template id="external_layout_correspondence">
-        <t t-if="not o" t-set="o" t-value="doc"/>
-        <t t-if="not company">
-            <t t-if="company_id">
-                <t t-set="company" t-value="company_id"/>
-            </t>
-            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
-                <t t-set="company" t-value="o.company_id.sudo()"/>
-            </t>
-            <t t-else="else">
-                <t t-set="company" t-value="res_company"/>
-            </t>
-        </t>
-
-        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style" style="padding-left: 10mm !important; padding-right: 10mm !important; width: 100% !important; box-sizing: border-box !important;">
-            <style>
-                @import url('https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap');
-                body, .page, table, div, p, span, td, th {
-                    font-family: 'Georama', Arial, sans-serif !important;
-                }
-                div.article, .article, div.page, .page {
-                    padding-left: 25.4mm !important;
-                    padding-right: 25.4mm !important;
-                    box-sizing: border-box !important;
-                }
-            </style>
-            <div class="d-flex justify-content-between align-items-center" style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 0px; width: 100%;">
-                <div style="width: 45%;"> 
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 75px;" alt="Ministerio Logo"/>
-                    <img t-else="" src="/correspondence/static/src/img/logo-izquierda.png" style="max-height: 75px;" alt="Ministerio Logo"/>
-                </div>
-                <div style="border-left: 1px solid #666; height: 60px; margin: 0 10px;"></div>
-                <div style="width: 45%; text-align: right;">
-                    <img src="/correspondence/static/src/img/logo-derecha.png" style="max-height: 75px;" alt="CENIPA Logo"/>
+    <template id="external_layout_correspondence" inherit_id="web.external_layout_standard" primary="True">
+        <xpath expr="//div[contains(@class, 'header') or contains(@t-attf-class, 'header')]" position="replace">
+            <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style" style="padding-left: 10mm !important; padding-right: 10mm !important; width: 100% !important; box-sizing: border-box !important;">
+                <style>
+                    @import url('https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap');
+                    body, .page, table, div, p, span, td, th {
+                        font-family: 'Georama', Arial, sans-serif !important;
+                    }
+                    div.article, .article, div.page, .page {
+                        padding-left: 25.4mm !important;
+                        padding-right: 25.4mm !important;
+                        box-sizing: border-box !important;
+                    }
+                </style>
+                <div class="d-flex justify-content-between align-items-center" style="border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 0px; width: 100%;">
+                    <div style="width: 45%;"> 
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 75px;" alt="Ministerio Logo"/>
+                        <img t-else="" src="/correspondence/static/src/img/logo-izquierda.png" style="max-height: 75px;" alt="Ministerio Logo"/>
+                    </div>
+                    <div style="border-left: 1px solid #666; height: 60px; margin: 0 10px;"></div>
+                    <div style="width: 45%; text-align: right;">
+                        <img src="/correspondence/static/src/img/logo-derecha.png" style="max-height: 75px;" alt="CENIPA Logo"/>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')" style="padding-top: 0px !important; padding-left: 25.4mm !important; padding-right: 25.4mm !important; box-sizing: border-box !important;">
-            <t t-out="0"/>
-        </div>
-
-        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" style="margin: 0 !important; padding: 0 !important; width: 100% !important; position: relative; height: 135px; page-break-inside: avoid;">
-            <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 120px; position: absolute; bottom: 0; left: 0; right: 0; margin: 0; padding: 0; display: block;" alt="Footer Image"/>
-            <t t-set="qr_img" t-value="doc.get_qr_code_url() if doc else (o.get_qr_code_url() if o and hasattr(o, 'get_qr_code_url') else False)"/>
-            <img t-if="qr_img" t-att-src="qr_img" style="width: 90px; height: 90px; position: absolute; bottom: 12px; left: 10mm; z-index: 10;" alt="Código QR de Verificación"/>
-        </div>
+        </xpath>
+        <!-- Padding lateral (25.4mm / 2.54cm) EXCLUSIVO para el cuerpo del reporte -->
+        <xpath expr="//div[contains(@class, 'article') or contains(@t-attf-class, 'article')]" position="attributes">
+            <attribute name="style">padding-top: 0px !important; padding-left: 25.4mm !important; padding-right: 25.4mm !important; box-sizing: border-box !important;</attribute>
+        </xpath>
+        <!-- Footer personalizado de ancho completo (100% sangrado) con QR más grande -->
+        <xpath expr="//div[contains(@class, 'footer') or contains(@t-attf-class, 'footer')]" position="replace">
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" style="margin: 0 !important; padding: 0 !important; width: 100% !important; position: relative; height: 135px; page-break-inside: avoid;">
+                <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 120px; position: absolute; bottom: 0; left: 0; right: 0; margin: 0; padding: 0; display: block;" alt="Footer Image"/>
+                <t t-set="qr_img" t-value="doc.get_qr_code_url() if doc else False"/>
+                <img t-if="qr_img" t-att-src="qr_img" style="width: 90px; height: 90px; position: absolute; bottom: 12px; left: 10mm; z-index: 10;" alt="Código QR de Verificación"/>
+            </div>
+        </xpath>
     </template>
 
     <!-- =================================================================== -->
