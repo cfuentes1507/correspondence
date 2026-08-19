@@ -133,6 +133,7 @@
             <field name="model">correspondence_document</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="correspondence_type" class="o_kanban_mobile" group_create="false" default_order="correlative desc">
+                    <field name="state"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -162,7 +163,7 @@
                                         <field name="correspondence_type"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <span t-attf-class="badge #{['draft', 'signed'].includes(record.state.raw_value) ? 'text-bg-secondary' : 'text-bg-success'}">
+                                        <span t-attf-class="badge #{(record.state &amp;&amp; ['draft', 'signed'].includes(record.state.raw_value)) ? 'text-bg-secondary' : 'text-bg-success'}">
                                             <field name="user_facing_state"/>
                                         </span>
                                     </div>
