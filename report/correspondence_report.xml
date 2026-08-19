@@ -351,12 +351,12 @@
         <field name="default" eval="False"/>
         <field name="format">Letter</field>
         <field name="orientation">Portrait</field>
-        <field name="margin_top">35</field>
+        <field name="margin_top">48</field>
         <field name="margin_bottom">36</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
         <field name="header_line" eval="False"/>
-        <field name="header_spacing">0</field>
+        <field name="header_spacing">5</field>
         <field name="dpi">90</field>
     </record>
 
@@ -365,12 +365,12 @@
         <field name="default" eval="False"/>
         <field name="format">Legal</field>
         <field name="orientation">Portrait</field>
-        <field name="margin_top">35</field>
+        <field name="margin_top">48</field>
         <field name="margin_bottom">36</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
         <field name="header_line" eval="False"/>
-        <field name="header_spacing">0</field>
+        <field name="header_spacing">5</field>
         <field name="dpi">90</field>
     </record>
 
