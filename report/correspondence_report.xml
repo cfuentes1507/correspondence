@@ -33,12 +33,12 @@
         <xpath expr="//div[contains(@class, 'article') or contains(@t-attf-class, 'article')]" position="attributes">
             <attribute name="style">padding-top: 0px !important; padding-left: 25.4mm !important; padding-right: 25.4mm !important; box-sizing: border-box !important;</attribute>
         </xpath>
-        <!-- Footer personalizado de ancho completo (100% sangrado) con QR -->
+        <!-- Footer personalizado de ancho completo (100% sangrado) con QR más grande -->
         <xpath expr="//div[contains(@class, 'footer') or contains(@t-attf-class, 'footer')]" position="replace">
-            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" style="margin: 0 !important; padding: 0 !important; width: 100% !important; position: relative; height: 110px; page-break-inside: avoid;">
-                <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 95px; position: absolute; bottom: 0; left: 0; right: 0; margin: 0; padding: 0; display: block;" alt="Footer Image"/>
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" style="margin: 0 !important; padding: 0 !important; width: 100% !important; position: relative; height: 135px; page-break-inside: avoid;">
+                <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 120px; position: absolute; bottom: 0; left: 0; right: 0; margin: 0; padding: 0; display: block;" alt="Footer Image"/>
                 <t t-set="qr_img" t-value="doc.get_qr_code_url() if doc else False"/>
-                <img t-if="qr_img" t-att-src="qr_img" style="width: 65px; height: 65px; position: absolute; bottom: 12px; left: 25.4mm; z-index: 10;" alt="Código QR de Verificación"/>
+                <img t-if="qr_img" t-att-src="qr_img" style="width: 90px; height: 90px; position: absolute; bottom: 12px; left: 10mm; z-index: 10;" alt="Código QR de Verificación"/>
             </div>
         </xpath>
     </template>
@@ -352,7 +352,7 @@
         <field name="format">Letter</field>
         <field name="orientation">Portrait</field>
         <field name="margin_top">35</field>
-        <field name="margin_bottom">28</field>
+        <field name="margin_bottom">36</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
         <field name="header_line" eval="False"/>
@@ -366,7 +366,7 @@
         <field name="format">Legal</field>
         <field name="orientation">Portrait</field>
         <field name="margin_top">35</field>
-        <field name="margin_bottom">28</field>
+        <field name="margin_bottom">36</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
         <field name="header_line" eval="False"/>

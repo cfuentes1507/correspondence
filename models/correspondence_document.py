@@ -447,7 +447,7 @@ class correspondence_document(models.Model):
             
         if url:
             try:
-                barcode_bytes = self.env['ir.actions.report'].barcode('QR', url, width=150, height=150)
+                barcode_bytes = self.env['ir.actions.report'].barcode('QR', url, width=250, height=250)
                 if barcode_bytes:
                     b64_str = base64.b64encode(barcode_bytes).decode('utf-8')
                     return f"data:image/png;base64,{b64_str}"
