@@ -29,9 +29,9 @@
                 </div>
             </div>
         </xpath>
-        <!-- Padding lateral (25.4mm / 2.54cm) EXCLUSIVO para el cuerpo del reporte -->
+        <!-- Padding superior (35mm) y lateral (25.4mm) para que el cuerpo inicie limpiamente bajo el encabezado -->
         <xpath expr="//div[contains(@class, 'article') or contains(@t-attf-class, 'article')]" position="attributes">
-            <attribute name="style">padding-top: 0px !important; padding-left: 25.4mm !important; padding-right: 25.4mm !important; box-sizing: border-box !important;</attribute>
+            <attribute name="style">padding-top: 35mm !important; padding-left: 25.4mm !important; padding-right: 25.4mm !important; box-sizing: border-box !important;</attribute>
         </xpath>
         <!-- Footer personalizado de ancho completo (100% sangrado) con QR redondeado, Contacto y Redes Sociales -->
         <xpath expr="//div[contains(@class, 'footer') or contains(@t-attf-class, 'footer')]" position="replace">
