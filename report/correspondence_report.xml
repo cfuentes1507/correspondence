@@ -33,12 +33,28 @@
         <xpath expr="//div[contains(@class, 'article') or contains(@t-attf-class, 'article')]" position="attributes">
             <attribute name="style">padding-top: 0px !important; padding-left: 25.4mm !important; padding-right: 25.4mm !important; box-sizing: border-box !important;</attribute>
         </xpath>
-        <!-- Footer personalizado de ancho completo (100% sangrado) con QR más grande -->
+        <!-- Footer personalizado de ancho completo (100% sangrado) con QR redondeado minimalista y Redes Sociales -->
         <xpath expr="//div[contains(@class, 'footer') or contains(@t-attf-class, 'footer')]" position="replace">
             <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" style="margin: 0 !important; padding: 0 !important; width: 100% !important; position: relative; height: 135px; page-break-inside: avoid;">
                 <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 120px; position: absolute; bottom: 0; left: 0; right: 0; margin: 0; padding: 0; display: block;" alt="Footer Image"/>
                 <t t-set="qr_img" t-value="doc.get_qr_code_url() if doc else False"/>
-                <img t-if="qr_img" t-att-src="qr_img" style="width: 90px; height: 90px; position: absolute; bottom: 12px; left: 10mm; z-index: 10;" alt="Código QR de Verificación"/>
+                
+                <!-- Tarjeta QR Minimalista con Bordes Redondeados (Esquina Izquierda) -->
+                <div t-if="qr_img" style="position: absolute; bottom: 10px; left: 12mm; z-index: 10; background-color: #ffffff; padding: 5px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.18);">
+                    <img t-att-src="qr_img" style="width: 72px; height: 72px; border-radius: 8px; display: block;" alt="Código QR de Verificación"/>
+                </div>
+
+                <!-- Redes Sociales Institucionales (Esquina Derecha) -->
+                <div style="position: absolute; bottom: 14px; right: 14mm; text-align: right; z-index: 10; color: #ffffff; font-family: 'Georama', Arial, sans-serif;">
+                    <div style="margin-bottom: 2px;">
+                        <span style="font-size: 8.5pt; font-weight: bold; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.4);">@cenipave</span>
+                        <span style="font-size: 8.5pt; opacity: 0.7; margin: 0 4px;">•</span>
+                        <span style="font-size: 8.5pt; font-weight: bold; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.4);">@minpescave</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 7.5pt; opacity: 0.92; letter-spacing: 0.4px; text-shadow: 0 1px 2px rgba(0,0,0,0.4);">www.cenipa.gob.ve</span>
+                    </div>
+                </div>
             </div>
         </xpath>
     </template>
@@ -49,8 +65,20 @@
     <template id="report_qr_footer">
         <div class="footer" style="position: relative; width: 100%; height: 120px; margin: 0 !important; padding: 0 !important; page-break-inside: avoid;">
             <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 100px; position: absolute; bottom: 0; left: 0; right: 0; margin: 0; padding: 0; display: block;" alt="Footer Image"/>
-            <t t-set="qr_img" t-value="doc.get_qr_code_url()"/>
-            <img t-if="qr_img" t-att-src="qr_img" style="width: 70px; height: 70px; position: absolute; bottom: 15px; left: 25mm; z-index: 10;" alt="Código QR de Verificación"/>
+            <t t-set="qr_img" t-value="doc.get_qr_code_url() if doc else False"/>
+            <div t-if="qr_img" style="position: absolute; bottom: 10px; left: 12mm; z-index: 10; background-color: #ffffff; padding: 5px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.18);">
+                <img t-att-src="qr_img" style="width: 72px; height: 72px; border-radius: 8px; display: block;" alt="Código QR de Verificación"/>
+            </div>
+            <div style="position: absolute; bottom: 14px; right: 14mm; text-align: right; z-index: 10; color: #ffffff; font-family: 'Georama', Arial, sans-serif;">
+                <div style="margin-bottom: 2px;">
+                    <span style="font-size: 8.5pt; font-weight: bold; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.4);">@cenipave</span>
+                    <span style="font-size: 8.5pt; opacity: 0.7; margin: 0 4px;">•</span>
+                    <span style="font-size: 8.5pt; font-weight: bold; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.4);">@minpescave</span>
+                </div>
+                <div>
+                    <span style="font-size: 7.5pt; opacity: 0.92; letter-spacing: 0.4px; text-shadow: 0 1px 2px rgba(0,0,0,0.4);">www.cenipa.gob.ve</span>
+                </div>
+            </div>
         </div>
     </template>
 
