@@ -5,7 +5,7 @@
     <!-- =================================================================== -->
     <template id="external_layout_correspondence" inherit_id="web.external_layout_standard">
         <xpath expr="//div[contains(@class, 'header') or contains(@t-attf-class, 'header')]" position="replace">
-            <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style" style="padding-left: 25mm !important; padding-right: 25mm !important; width: 100% !important; box-sizing: border-box !important;">
+            <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style" style="padding-left: 10mm !important; padding-right: 10mm !important; width: 100% !important; box-sizing: border-box !important;">
                 <style>
                     @import url('https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap');
                     body, .page, table, div, p, span, td, th {
@@ -24,13 +24,16 @@
                 </div>
             </div>
         </xpath>
-        <!-- Padding lateral (25mm / 2.54cm) y superior del cuerpo del reporte -->
+        <!-- Padding lateral (25mm / 2.54cm) EXCLUSIVO para el cuerpo del reporte -->
         <xpath expr="//div[contains(@class, 'article') or contains(@t-attf-class, 'article')]" position="attributes">
             <attribute name="style">padding-top: 0px !important; padding-left: 25mm !important; padding-right: 25mm !important; box-sizing: border-box !important;</attribute>
         </xpath>
-        <!-- Footer personalizado -->
+        <!-- Footer personalizado de ancho completo (100% sangrado) con QR -->
         <xpath expr="//div[contains(@class, 'footer') or contains(@t-attf-class, 'footer')]" position="replace">
-            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" style="margin: 0 !important; padding: 0 !important; width: 100% !important;">
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" style="margin: 0 !important; padding: 0 !important; width: 100% !important; position: relative; height: 110px; page-break-inside: avoid;">
+                <img src="/correspondence/static/src/img/footer.png" style="width: 100%; max-height: 95px; position: absolute; bottom: 0; left: 0; right: 0; margin: 0; padding: 0; display: block;" alt="Footer Image"/>
+                <t t-set="qr_img" t-value="doc.get_qr_code_url() if doc else False"/>
+                <img t-if="qr_img" t-att-src="qr_img" style="width: 65px; height: 65px; position: absolute; bottom: 12px; left: 15mm; z-index: 10;" alt="Código QR de Verificación"/>
             </div>
         </xpath>
     </template>
@@ -145,9 +148,6 @@
                         <p style="font-size: 9pt; font-style: italic; font-weight: normal; margin-top: 15pt; text-align: left; color: #000000;">
                             <span t-field="doc.author_initials"/>
                         </p>
-
-                        <!-- Pie de Página -->
-                        <t t-call="correspondence.report_qr_footer"/>
                     </div>
                 </t>
             </t>
@@ -218,9 +218,6 @@
                         <p style="font-size: 9pt; font-style: italic; font-weight: normal; margin-top: 15pt; text-align: left; color: #000000;">
                             <span t-field="doc.author_initials"/>
                         </p>
-
-                        <!-- Pie de Página -->
-                        <t t-call="correspondence.report_qr_footer"/>
                     </div>
                 </t>
             </t>
@@ -304,9 +301,6 @@
                         <p style="font-size: 9pt; font-style: italic; font-weight: normal; margin-top: 15pt; text-align: left; color: #000000;">
                             <span t-field="doc.author_initials"/>
                         </p>
-
-                        <!-- Pie de Página -->
-                        <t t-call="correspondence.report_qr_footer"/>
                     </div>
                 </t>
             </t>
@@ -338,7 +332,6 @@
                         <p style="font-size: 9pt; font-style: italic; font-weight: normal; margin-top: 15pt; text-align: left; color: #000000;">
                             <span t-field="doc.author_initials"/>
                         </p>
-                        <t t-call="correspondence.report_qr_footer"/>
                     </div>
                 </t>
             </t>
@@ -354,7 +347,7 @@
         <field name="format">Letter</field>
         <field name="orientation">Portrait</field>
         <field name="margin_top">35</field>
-        <field name="margin_bottom">0</field>
+        <field name="margin_bottom">28</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
         <field name="header_line" eval="False"/>
@@ -368,7 +361,7 @@
         <field name="format">Legal</field>
         <field name="orientation">Portrait</field>
         <field name="margin_top">35</field>
-        <field name="margin_bottom">0</field>
+        <field name="margin_bottom">28</field>
         <field name="margin_left">0</field>
         <field name="margin_right">0</field>
         <field name="header_line" eval="False"/>
