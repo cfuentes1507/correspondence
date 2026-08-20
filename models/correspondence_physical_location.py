@@ -21,7 +21,7 @@ class CorrespondencePhysicalLocation(models.Model):
         ('name_parent_uniq', 'unique(name, parent_id)', 'El nombre de la ubicación debe ser único por ubicación padre.')
     ]
 
-    display_name = fields.Char(string='Ubicación Completa', compute='_compute_display_name', store=True)
+    display_name = fields.Char(string='Ubicación Completa', compute='_compute_display_name', store=True, recursive=True)
 
     @api.depends('name', 'parent_id.display_name')
     def _compute_display_name(self):
